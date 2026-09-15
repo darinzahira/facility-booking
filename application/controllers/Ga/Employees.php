@@ -29,6 +29,7 @@
 			$this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
 			$this->form_validation->set_rules('status', 'Status', 'required');
+			$this->form_validation->set_rules('role', 'Role', 'required');
 
 			if ($this->form_validation->run() == FALSE)
             {
@@ -85,7 +86,7 @@
 					'Data Karyawan gagal dihapus.'
 				);
 			}
-			redirect(base_url() . 'index.php/ga/Departments');
+			redirect(base_url() . 'index.php/ga/Employees');
 		}
 
 		public function edit()
@@ -99,19 +100,19 @@
 
 		public function update()
 		{
-			$result = $this->Dept_model->update();
+			$result = $this->Emp_model->update();
 			if ($result) {
 				$this->session->set_flashdata(
 					'success',
-					'Department berhasil diubah.'
+					'Data Karyawan berhasil diubah.'
 				);
 			} else {
 				$this->session->set_flashdata(
 					'error',
-					'Department gagal diubah.'
+					'Data Karyawan gagal diubah.'
 				);
 			}
-			redirect(base_url() . 'index.php/ga/Departments');
+			redirect(base_url() . 'index.php/ga/Employees');
 		}
 
 	}

@@ -98,7 +98,7 @@
             <h6 class="collapse-header">User:</h6>
             <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Departments">Departemen</a>
             <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Employees">Karyawan</a>
-            <a class="collapse-item" href="">Driver</a>
+            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Drivers">Driver</a>
           </div>
         </div>
       </li>

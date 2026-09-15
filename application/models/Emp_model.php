@@ -42,7 +42,8 @@
 			$user_data = array(
 				'employee_id' => $employee_id,
 				'username'    => $this->input->post('username'),
-				'password'    => $password
+				'password'    => $password,
+				'role'    => $this->input->post('role')
 			);
 
 			$this->db->insert('users', $user_data);
@@ -84,8 +85,19 @@
 		// DELETE
 		public function delete($id)
 		{
-			$this->db->where('id', $id);
-    		return $this->db->delete('employees');
+			    $this->db->trans_start();
+
+				// Hapus User berdasarkan employee_id
+				$this->db->where('employee_id', $id);
+				$this->db->delete('users');
+
+				// Hapus Employee
+				$this->db->where('id', $id);
+				$this->db->delete('employees');
+
+				$this->db->trans_complete();
+
+				return $this->db->trans_status();
 		}
 
 		// EDIT
@@ -121,24 +133,45 @@
 		// UPDATE
 		public function update()
 		{
-			$employee_code = $this->input->post('employee_code');
-			$name = $this->input->post('name');
-			$department_id = $this->input->post('department_id');
-			$position = $this->input->post('position');
-			$phone = $this->input->post('phone');
-			$status = $this->input->post('status');
-			$updated_at = date('Y-m-d H:i:s');
 
-			$editdata = array(
-				'employee_code' => $employee_code, 
-				'name' => $name, 
-				'department_id' => $department_id, 
-				'position' => $position, 
-				'phone' => $phone, 
-				'status' => $status,
+			$this->db->trans_start();
+
+			$id = $this->input->post('id');
+
+			$employee_data = array(
+				'employee_code' => $this->input->post('employee_code'),
+				'name' => $this->input->post('name'),
+				'department_id' => $this->input->post('department_id'),
+				'position' => $this->input->post('position'),
+				'phone' => $this->input->post('phone'),
+				'status' => $this->input->post('status'),
+				'updated_at' => date('Y-m-d H:i:s')
 			);
+
 			$this->db->where('id', $id);
-			return $this->db->update('employees', $editdata);
+			$this->db->update('employees', $employee_data);
+
+			$user_data = array(
+				'employee_id' => $id,
+				'username'    => $this->input->post('username'),
+				'role'    => $this->input->post('role')
+			);
+
+			$password = $this->input->post('password');
+
+			if (!empty($password)) {
+				$user_data['password'] = password_hash(
+					$password,
+					PASSWORD_DEFAULT
+				);
+			}
+
+			$this->db->where('employee_id', $id);
+			$this->db->update('users', $user_data);
+
+			$this->db->trans_complete();
+
+			return $this->db->trans_status();
 		}
 
 		// GET ROLE

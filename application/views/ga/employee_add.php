@@ -108,6 +108,18 @@
             </div>
           </div>
 
+          <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Role Karyawan : </label>
+            <div class="col-sm-10">
+              <select name="role" class="form-control" required>
+                <option value="">-- Pilih Role --</option>
+                <option value="admin">Admin</option>
+                <option value="employee">Employee</option>
+            </select>
+            <?php echo form_error('role', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+
            <div class="form-group row">
             <label class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">

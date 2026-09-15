@@ -89,6 +89,27 @@
           </div>
 
           <div class="form-group row">
+              <label for="password" class="col-sm-2 col-form-label">
+                  Password :
+              </label>
+
+              <div class="col-sm-10">
+                  <input
+                      type="password"
+                      name="password"
+                      class="form-control"
+                      placeholder="Kosongkan jika tidak ingin mengubah password"
+                  >
+
+                  <?php echo form_error(
+                      'password',
+                      '<small class="text-danger">',
+                      '</small>'
+                  ); ?>
+              </div>
+          </div>
+
+          <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Status Karyawan : </label>
             <div class="col-sm-10">
               <select name="status" class="form-control" required>
