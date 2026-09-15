@@ -62,8 +62,8 @@
 		{
 			$id = $this->uri->segment(4);
 			$data['detail'] = $this->Emp_model->get_detail($id);
-			$data['innerdata'] = 'employee_detail';
-			if (!$data['employee']) {
+			$data['innerdata'] = 'ga/employee_detail';
+			if (!$data['detail']) {
 				show_404();
 			}
 			$this->load->view('ga/template', $data);
@@ -72,17 +72,17 @@
 		public function delete()
 		{
 			$id = $this->uri->segment(4);
-			$result = $this->Dept_model->delete($id);
+			$result = $this->Emp_model->delete($id);
 
 			if ($result) {
 				$this->session->set_flashdata(
 					'success',
-					'Department berhasil dihapus.'
+					'Data Karyawan berhasil dihapus.'
 				);
 			} else {
 				$this->session->set_flashdata(
 					'error',
-					'Department gagal dihapus.'
+					'Data Karyawan gagal dihapus.'
 				);
 			}
 			redirect(base_url() . 'index.php/ga/Departments');
@@ -91,8 +91,9 @@
 		public function edit()
 		{
 			$id = $this->uri->segment(4);
-			$data['editdepartment'] = $this->Dept_model->edit($id);
-			$data['innerdata'] = 'ga/department_edit';
+			$data['editemployee'] = $this->Emp_model->edit($id);
+			$data['departments'] = $this->Dept_model->get_active();
+			$data['innerdata'] = 'ga/employee_edit';
 			$this->load->view('ga/template', $data);
 		}
 

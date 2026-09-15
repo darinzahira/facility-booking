@@ -3,7 +3,7 @@
     echo "<script>alert('Please Log in First!')</script>";
     redirect(base_url() . 'index.php/Login', 'refresh');
   }
-  else if ($this->session->userdata('role') != 'ga') {
+  else if ($this->session->userdata('role') != 'admin') {
     echo "<script>alert('You do not have permission to access this page!')</script>";
     redirect(base_url() . 'index.php/Login', 'refresh');
   }

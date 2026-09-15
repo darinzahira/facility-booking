@@ -71,13 +71,9 @@
 
                 redirect(base_url() . 'index.php/employee/Dashboard');
 
-            } elseif ($user->role == 'ga') {
-
-                redirect(base_url() . 'index.php/ga/Dashboard');
-
             } elseif ($user->role == 'admin') {
 
-                redirect('admin/dashboard');
+                redirect(base_url() . 'index.php/ga/Dashboard');
 
             } else {
 

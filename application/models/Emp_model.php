@@ -5,9 +5,11 @@
 		// Read
 		public function list()
 		{
-			$this->db->select('employees.* , departments.id , departments.department_name');
+			$this->db->select('employees.* , departments.id , departments.department_name, users.id, users.last_login');
 			$this->db->from('employees');
 			$this->db->join('departments' , 'departments.id = employees.department_id');
+			$this->db->join('users' , 'users.employee_id = employees.id');
+			$this->db->order_by('employees.id', 'ASC');
 			$sql = $this->db->get('');
 
 			return $sql->result();
@@ -49,14 +51,15 @@
 			return $this->db->trans_status();
 		}
 
-		// DETAIL
+		// DETAIL  
 		public function get_detail($id)
 		{
 			$this->db->select('
 				employees.*,
 				departments.department_name,
 				users.id AS user_id,
-				users.username
+				users.username,
+				users.role
 			');
 
 			$this->db->from('employees');
@@ -88,12 +91,31 @@
 		// EDIT
 		public function edit($id)
 		{
-			$this->db->select('*');
-			$this->db->from('employees');
-			$this->db->where('id', $id);
-			$sql = $this->db->get('');
+			$this->db->select('
+				employees.*,
+				departments.department_name,
+				users.id AS user_id,
+				users.username,
+				users.role
+			');
 
-			return $sql->result();
+			$this->db->from('employees');
+
+			$this->db->join(
+				'departments',
+				'departments.id = employees.department_id',
+				'left'
+			);
+
+			$this->db->join(
+				'users',
+				'users.employee_id = employees.id',
+				'left'
+			);
+
+			$this->db->where('employees.id', $id);
+
+			return $this->db->get()->row();
 		}
 
 		// UPDATE
@@ -117,6 +139,16 @@
 			);
 			$this->db->where('id', $id);
 			return $this->db->update('employees', $editdata);
+		}
+
+		// GET ROLE
+		public function get_role()
+		{
+			$this->db->select('*');
+			$this->db->from('users');
+			$sql = $this->db->get('');
+
+			return $sql->result();
 		}
 		
 	}

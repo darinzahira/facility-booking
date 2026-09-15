@@ -43,6 +43,7 @@
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Updated At</th>
+                <th>Last Login</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -55,6 +56,7 @@
                 $employee_code = $list->employee_code;
                 $name = $list->name;
                 $status = $list->status;
+                $last_login = $list->last_login;
                 $created_at = $list->created_at;
                 $updated_at = $list->updated_at;
               ?>
@@ -69,6 +71,7 @@
                     <?php endif ?></td>
                 <td><?= $created_at ?></td>
                 <td><?= $updated_at ?></td>
+                <td><?= $last_login ?></td>
                 <td>
                   <a href="<?php echo base_url(); ?>index.php/ga/Employees/detail/<?= $id ?>" class="btn btn-outline-info btn-sm">
                   <i class="far fa-eye"></i>
