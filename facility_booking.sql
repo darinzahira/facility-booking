@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Sep 2026 pada 21.32
+-- Waktu pembuatan: 16 Sep 2026 pada 03.08
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 7.4.33
 
@@ -121,7 +121,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `employee_id`, `username`, `password`, `role`, `status`, `last_login`, `created_at`, `updated_at`) VALUES
-(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-09-15 22:36:53', '2026-09-15 14:43:58', NULL),
+(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-09-16 08:03:35', '2026-09-15 14:43:58', NULL),
 (2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, NULL, '2026-09-15 14:43:58', NULL),
 (3, 3, 'dewi', '$2y$10$Ko0rGLL/y0Z1Av7kMvJKDeaZOS6tW1YDnrx0tjIrAPyhvjq6x0vdS', 'employee', 0, NULL, '0000-00-00 00:00:00', NULL),
 (6, 6, 'bayu', '$2y$10$gSZvlUarIHwhxjE5lRjVGORxL3vpJWQ8.eaxZWc.Pj7OziQSx80gK', 'employee', 0, NULL, '0000-00-00 00:00:00', NULL),
@@ -146,6 +146,13 @@ CREATE TABLE `vehicles` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `vehicles`
+--
+
+INSERT INTO `vehicles` (`id`, `vehicle_code`, `plate_number`, `vehicle_name`, `brand`, `model`, `status`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 'VE001', 'N1234ASD', 'BYD', NULL, NULL, 'Perbaikan', NULL, '2026-09-16 03:02:18', NULL);
 
 --
 -- Indexes for dumped tables
@@ -221,7 +228,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

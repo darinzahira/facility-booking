@@ -110,7 +110,7 @@
         <div id="collapseUtilities1" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Fasilitas:</h6>
-            <a class="collapse-item" href="">Kendaraan</a>
+            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Vehicles">Kendaraan</a>
             <a class="collapse-item" href="">Kamar</a>
             <a class="collapse-item" href="">Ruang Meeting</a>
           </div>
