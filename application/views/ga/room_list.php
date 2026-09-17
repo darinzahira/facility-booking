@@ -2,9 +2,9 @@
   <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Departemen</h1>
+    <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Kamar</h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url();?>index.php/ga/Departments/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Departemen</a>
+      <a href="<?php echo base_url();?>index.php/ga/Rooms/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Data Kamar</a>
     </p>
 
     <!-- DataTales Example -->
@@ -12,11 +12,7 @@
       <?php if ($this->session->flashdata('success')): ?>
 
           <div class="alert alert-success">
-            <?php echo $this->session->flashdata('success'); ?>
-
-            <button type="button" class="close" data-dismiss="alert">
-                <span>&times;</span>
-            </button>
+              <?php echo $this->session->flashdata('success'); ?>
           </div>
 
       <?php endif; ?>
@@ -33,7 +29,7 @@
 
     <?php endif; ?>
       <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-info">List Departemen</h6>
+        <h6 class="m-0 font-weight-bold text-info">List Kamar</h6>
       </div>
       <div class="card-body">
 
@@ -42,7 +38,9 @@
             <thead>
               <tr>
                 <th>ID.</th>
-                <th>Nama Departemen</th>
+                <th>Kode Kamar</th>
+                <th>Nama Kamar</th>
+                <th>Kapasitas</th>
                 <th>Status</th>
                 <th>Created At</th>
                 <th>Updated At</th>
@@ -52,29 +50,35 @@
             <tbody>
               <?php  
                 $i = 0;
-                foreach ($deptlist as $dept): 
+                foreach ($list as $list): 
                 $i++;
-                $id = $dept->id;
-                $department_name = $dept->department_name;
-                $status = $dept->status;
-                $created_at = $dept->created_at;
-                $updated_at = $dept->updated_at;
+                $id = $list->id;
+                $room_code = $list->room_code;
+                $room_name = $list->room_name;
+                $capacity = $list->capacity;
+                $status = $list->status;
+                $created_at = $list->created_at;
+                $updated_at = $list->updated_at;
               ?>
               <tr>
                 <td><?= $i ?>.</td>
-                <td><?= $department_name ?></td>
-                <td><?php if ($status == 1): ?> 
-                        Aktif 
+                <td><?= $room_code ?></td>
+                <td><?= $room_name ?></td>
+                <td><?= $capacity ?></td>
+                <td><?php if ($status == 'Tersedia'): ?> 
+                        Tersedia 
+                    <?php elseif ($status == 'Terisi'): ?> 
+                        Terisi
                     <?php else: ?> 
-                        Tidak Aktif 
+                        Perbaikan
                     <?php endif ?></td>
                 <td><?= $created_at ?></td>
                 <td><?= $updated_at ?></td>
                 <td>
-                  <a href="<?php echo base_url(); ?>index.php/ga/Departments/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
+                  <a href="<?php echo base_url(); ?>index.php/ga/Rooms/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
                     <i class="far fa-edit"></i> Edit
                   </a>
-                  <a href="<?php echo base_url(); ?>index.php/ga/Departments/delete/<?= $id ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you Sure to Delete?')"><i class="far fa-trash-alt"></i> Remove</a>
+                  <a href="<?php echo base_url(); ?>index.php/ga/Rooms/delete/<?= $id ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you Sure to Delete?')"><i class="far fa-trash-alt"></i> Remove</a>
                 </td>
               </tr>
               <?php endforeach; ?>

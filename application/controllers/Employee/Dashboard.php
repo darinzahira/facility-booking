@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboard extends CI_Controller
 {
-    //ini construct
     public function __construct()
     {
         parent::__construct();
@@ -13,12 +12,9 @@ class Dashboard extends CI_Controller
 
     public function index()
     {
-        // $data['username'] = $this->session->userdata('username');
-        // $data['role']     = $this->session->userdata('role');
+    
+        $data['innerdata'] = 'employee/dashboard';
+		$this->load->view('employee/template', $data);
 
-        // $data['notidata'] = 'adminnoti_tour';
-        // $data['innerdata'] = 'staff_home';
-
-        $this->load->view('employee/dashboard');
     }
 }

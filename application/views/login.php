@@ -27,9 +27,7 @@
 
     <!-- Outer Row -->
     <div class="row justify-content-center">
-
-      <div class="col-xl-8 col-lg-6 col-md-9">
-
+      <div class="col-xl-10 col-lg-6 col-md-6">
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
@@ -41,7 +39,19 @@
                     <h5 class="my-4 text-secondary">Login</h5>
                   </div>
                   <form class="user" method="post" action="<?php echo base_url(); ?>index.php/Login/login">
-                    <div class="form-group">
+
+                  <?php if ($this->session->flashdata('error')): ?>
+
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?= $this->session->flashdata('error'); ?>
+
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                  <?php endif; ?>  
+                  <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Username" required>
                     </div>
                     <div class="form-group">

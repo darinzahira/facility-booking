@@ -3,7 +3,7 @@
     echo "<script>alert('Please Log in First!')</script>";
     redirect(base_url() . 'index.php/Login', 'refresh');
   }
-  else if ($this->session->userdata('role') != 'admin') {
+  else if ($this->session->userdata('role') != 'employee') {
     echo "<script>alert('You do not have permission to access this page!')</script>";
     redirect(base_url() . 'index.php/Login', 'refresh');
   }
@@ -62,7 +62,7 @@
     <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url();?>index.php/ga/Dashboard">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url();?>index.php/employee/Dashboard">
         <div class="sidebar-brand-icon rotate-n-15">
           <em><i class="far fa-flag"></i></em>
         </div>
@@ -74,62 +74,13 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo base_url();?>index.php/ga/Dashboard">
+        <a class="nav-link" href="<?php echo base_url();?>index.php/employee/Dashboard">
           <i class="fas fa-home"></i>
           <span>Dashboard</span></a>
       </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Master Data :
-      </div>
-
-      <!-- Management Nav Item -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-user-friends"></i>
-          <span>User</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">User:</h6>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Departments">Departemen</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Employees">Karyawan</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Drivers">Driver</a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities1" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-suitcase"></i>
-          <span>Fasilitas</span>
-        </a>
-        <div id="collapseUtilities1" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Fasilitas:</h6>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Vehicles">Kendaraan</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Rooms">Kamar</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Meeting">Ruang Meeting</a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-suitcase"></i>
-          <span>Jadwal</span>
-        </a>
-        <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Jadwal:</h6>
-            <a class="collapse-item" href="">Kalender Bulanan</a>
-            <a class="collapse-item" href="">Kalender Harian</a>
-            <a class="collapse-item" href="">Detail Jadwal</a>
-          </div>
-        </div>
-      </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider">

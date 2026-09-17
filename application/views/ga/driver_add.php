@@ -55,7 +55,7 @@
           <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Notes : </label>
             <div class="col-sm-10">
-              <input type="text" name="notes" class="form-control" id="notes" placeholder="" required autofocus value="<?php echo set_value('notes');?>">
+              <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?php echo set_value('notes');?>">
             </div>
           </div>
 

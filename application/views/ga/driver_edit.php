@@ -22,6 +22,7 @@
       <div class="card-body">
         <form method="post" action="<?php echo base_url(); ?>index.php/ga/Drivers/update" >
 
+        <input type="hidden" name="id" value="<?= $id ?>"> 
           <div class="form-group row">
             <label for="employee_id" class="col-sm-2 col-form-label">Nama Karyawan : </label>
             <div class="col-sm-10">
@@ -40,22 +41,22 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Kode Driver : </label>
+            <label for="driver_code" class="col-sm-2 col-form-label">Kode Driver : </label>
             <div class="col-sm-10">
-              <input type="text" name="driver_code" class="form-control" id="driver_code" placeholder="" required autofocus value="<?$driver_code?>">
+              <input type="text" name="driver_code" class="form-control" id="driver_code" placeholder="" required autofocus value="<?= $driver_code?>">
             </div>
             <?php echo form_error('driver_code', '<small class="text-danger">', '</small>'); ?>
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Driver : </label>
+            <label for="status" class="col-sm-2 col-form-label">Status Driver : </label>
             <div class="col-sm-10">
               <select name="status" class="form-control" required>
                 <option value="">-- Pilih Status --</option>
-                <option value="1" <?= ($status == 1) ? 'selected' : '' ?>>
+                <option value="Aktif" <?= ($status == 'Aktif') ? 'selected' : '' ?>>
                     Aktif
                 </option>
-                <option value="0" <?= ($status == 0) ? 'selected' : '' ?>>
+                <option value="Tidak Aktif" <?= ($status == 'Tidak Aktif') ? 'selected' : '' ?>>
                     Tidak Aktif
                 </option>
             </select>
@@ -64,9 +65,9 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Notes : </label>
+            <label for="notes" class="col-sm-2 col-form-label">Notes : </label>
             <div class="col-sm-10">
-              <input type="text" name="notes" class="form-control" id="notes" placeholder="" required autofocus value="<?$notes?>">
+              <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?= $notes?>">
             </div>
           </div>
 
