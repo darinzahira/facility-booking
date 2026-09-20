@@ -64,6 +64,23 @@
 			$status = $this->input->post('status');
 			$updated_at = date('Y-m-d H:i:s');
 
+			// Ambil data lama
+			$old_data = $this->edit($id);
+
+			// Cek apakah ada perubahan data
+			$room_changed = (
+				$old_data->room_code != $room_code||
+				$old_data->room_name != $room_name||
+				$old_data->capacity != $capacity||
+				$old_data->notes != $notes||
+				$old_data->status != $status
+			);
+
+			// Kalau tidak ada perubahan data
+			if (!$room_changed){
+				return 'no_change';
+			}
+
 			$editdata = array(
 				'room_code' => $room_code, 
 				'room_name' => $room_name, 
@@ -79,6 +96,27 @@
 			$this->db->where('id', $id);
 			return $this->db->update('rooms', $editdata);
 		}
+
+		public function check_room_code($room_code, $id)
+		{
+			$this->db->where('room_code', $room_code);
+			$this->db->where('id !=', $id);
+
+			$query = $this->db->get('rooms');
+
+			return $query->num_rows() > 0;
+		}
+
+		public function check_room_name($room_name, $id)
+		{
+			$this->db->where('room_name', $room_name);
+			$this->db->where('id !=', $id);
+
+			$query = $this->db->get('rooms');
+
+			return $query->num_rows() > 0;
+		}
+
 
 		// public function get_active()
 		// {

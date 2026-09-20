@@ -19,7 +19,7 @@
         Detail Data Karyawan
     </h1>
     <p class="mb-4 mt-3">
-        <a href="<?php echo base_url(); ?>index.php/ga/Employees" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
+        <a href="<?php echo base_url(); ?>ga/Employees" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
     </p>
 
     <!-- DataTales Example -->

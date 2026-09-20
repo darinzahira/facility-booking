@@ -64,6 +64,24 @@
 			$status = $this->input->post('status');
 			$updated_at = date('Y-m-d H:i:s');
 
+			// Ambil data lama
+			$old_data = $this->edit($id);
+
+			// Cek apakah ada perubahan data
+			$vehicle_changed = (
+				$old_data->vehicle_code != $vehicle_code ||
+				$old_data->plate_number != $plate_number ||
+				$old_data->vehicle_name != $vehicle_name ||
+				$old_data->notes != $notes ||
+				$old_data->status != $status
+			);
+
+			// Kalau tidak ada perubahan sama sekali
+			if (!$vehicle_changed)
+			{
+				return 'no_change';
+			}
+
 			$editdata = array(
 				'vehicle_code' => $vehicle_code, 
 				'plate_number' => $plate_number, 
@@ -80,10 +98,30 @@
 			return $this->db->update('vehicles', $editdata);
 		}
 
+		public function check_vehicle_code($vehicle_code, $id)
+		{
+			$this->db->where('vehicle_code', $vehicle_code);
+			$this->db->where('id !=', $id);
+
+			$query = $this->db->get('vehicles');
+
+			return $query->num_rows() > 0;
+		}
+
+		public function check_plate_number($plate_number, $id)
+		{
+			$this->db->where('plate_number', $plate_number);
+			$this->db->where('id !=', $id);
+
+			$query = $this->db->get('vehicles');
+
+			return $query->num_rows() > 0;
+		}
+
 		// public function get_active()
 		// {
 		// 	$this->db->where('status', 1);
 		// 	return $this->db->get('departments')->result();
-		// }
+		// } 
 	}
 ?>

@@ -1,11 +1,11 @@
 <?php 
   if ($this->session->userdata('role') == '') {
     echo "<script>alert('Please Log in First!')</script>";
-    redirect(base_url() . 'index.php/Login', 'refresh');
+    redirect(base_url() . 'Login', 'refresh');
   }
   else if ($this->session->userdata('role') != 'admin') {
     echo "<script>alert('You do not have permission to access this page!')</script>";
-    redirect(base_url() . 'index.php/Login', 'refresh');
+    redirect(base_url() . 'Login', 'refresh');
   }
 ?>
 <!DOCTYPE html>
@@ -51,6 +51,38 @@
     }
   </style>
 
+  <style>
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 50px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    border: none;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    padding: 0;
+}
+
+.password-toggle:hover {
+    color: #555;
+}
+
+.password-toggle:focus {
+    outline: none;
+    box-shadow: none;
+}
+</style>
+
 </head>
 
 <body id="page-top">
@@ -62,11 +94,11 @@
     <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url();?>index.php/ga/Dashboard">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url();?>ga/Dashboard">
         <div class="sidebar-brand-icon rotate-n-15">
           <em><i class="far fa-flag"></i></em>
         </div>
-        <div class="sidebar-brand-text mx-3">SaranaKita</div>
+        <div class="sidebar-brand-text mx-3">BookIn</div>
       </a>
 
       <!-- Divider -->
@@ -74,7 +106,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo base_url();?>index.php/ga/Dashboard">
+        <a class="nav-link" href="<?php echo base_url();?>ga/Dashboard">
           <i class="fas fa-home"></i>
           <span>Dashboard</span></a>
       </li>
@@ -96,9 +128,9 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">User:</h6>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Departments">Departemen</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Employees">Karyawan</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Drivers">Driver</a>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Departments">Departemen</a>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Employees">Karyawan</a>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Drivers">Driver</a>
           </div>
         </div>
       </li>
@@ -110,9 +142,9 @@
         <div id="collapseUtilities1" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Fasilitas:</h6>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Vehicles">Kendaraan</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Rooms">Kamar</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ga/Meeting">Ruang Meeting</a>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Vehicles">Kendaraan</a>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Rooms">Kamar</a>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Meeting">Ruang Meeting</a>
           </div>
         </div>
       </li>
@@ -142,18 +174,18 @@
       <!-- Tour Nav Item -->
       <li class="nav-item">
         <a class="nav-link" href="">
-          <i class="fas fa-bus"></i>
-          <span>Booking Kendaraan</span></a>
+          <i class="fas fa-fw fa-table"></i>
+          <span>Semua Booking</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="">
           <i class="fas fa-fw fa-table"></i>
-          <span>Booking Ruang Meeting</span></a>
+          <span>Menunggu Persetujuan</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="">
           <i class="fas fa-fw fa-table"></i>
-          <span>Booking Kamar</span></a>
+          <span>Riwayat</span></a>
       </li>
 
 
@@ -196,18 +228,6 @@
           <button id="sidebarToggleTop" class="btn btn-link text-info d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
-
-          <!-- Topbar Search -->
-          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-info" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -258,22 +278,12 @@
             </li>
 
           </ul>
-
+ 
         </nav>
         <!-- End of Topbar -->
          <?php $this->load->view($innerdata); ?>
       </div>
       <!-- End of Main Content -->
-
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Locals One Tour Guide Agency 2020</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
 
     </div>
     <!-- End of Content Wrapper -->
@@ -299,7 +309,7 @@
         <div class="modal-body">Are you sure to log out?</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-info" href="<?php echo base_url().'index.php/Login/logout'; ?>">Logout</a>
+          <a class="btn btn-info" href="<?php echo base_url().'Login/logout'; ?>">Logout</a>
         </div>
       </div>
     </div>
@@ -322,6 +332,27 @@
   <!-- Page level custom scripts -->
   <script src="<?php echo base_url(); ?>assets/backend/js/demo/datatables-demo.js"></script>
   
+  <script>
+document.getElementById('togglePassword').addEventListener('click', function () {
+
+    const password = document.querySelector('input[name="password"]');
+    const icon = this.querySelector('i');
+
+    if (password.type === 'password') {
+        password.type = 'text';
+
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        password.type = 'password';
+
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+
+});
+</script>
+
 </body>
 
 </html>

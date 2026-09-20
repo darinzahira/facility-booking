@@ -19,6 +19,45 @@
   <!-- Custom styles for this template-->
   <link href="<?php echo base_url(); ?>assets/backend/css/sb-admin-2.min.css" rel="stylesheet">
 
+  <style>
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 50px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    border: none;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    padding: 0;
+}
+
+.password-toggle:hover {
+    color: #555;
+}
+
+.password-toggle:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.login-alert {
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 13px;
+    padding: 10px 40px 10px 12px;
+}
+</style>
+
 </head>
 
 <body class="bg-gradient-light">
@@ -27,50 +66,81 @@
 
     <!-- Outer Row -->
     <div class="row justify-content-center">
-      <div class="col-xl-10 col-lg-6 col-md-6">
+      <div class="col-xl-7 col-lg-8 col-md-9">
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-              <div class="col-lg-6 mx-auto">
+              <div class="col-lg-8 mx-auto">
                 <div class="p-5">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4 font-weight-bold">SaranaKita</h1>
                     <h5 class="my-4 text-secondary">Login</h5>
                   </div>
-                  <form class="user" method="post" action="<?php echo base_url(); ?>index.php/Login/login">
-
+                  <form class="user" method="post" action="<?php echo base_url(); ?>Login/login">
+<!-- 
                   <?php if ($this->session->flashdata('error')): ?>
 
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <?= $this->session->flashdata('error'); ?>
-
                         <button type="button" class="close" data-dismiss="alert">
                             <span>&times;</span>
                         </button>
                     </div>
 
-                  <?php endif; ?>  
+                  <?php endif; ?> -->
+
+                  <?php if ($this->session->flashdata('error')): ?>
+
+                      <div class="login-alert alert alert-danger alert-dismissible fade show" role="alert">
+                          <?= $this->session->flashdata('error'); ?>
+
+                          <button type="button" class="close" data-dismiss="alert">
+                              <span>&times;</span>
+                          </button>
+                      </div>
+
+                  <?php endif; ?>
+
                   <div class="form-group">
-                      <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Username" required>
-                    </div>
-                    <div class="form-group">
-                      <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Password" required>
-                    </div>
-                    <div class="form-group">
+                      <input 
+                          type="text" 
+                          class="form-control form-control-user" 
+                          id="username" 
+                          name="username" 
+                          placeholder="Username" 
+                          required
+                      >
+                  </div>
+
+                  <div class="form-group password-wrapper">
+                      <input 
+                          type="password" 
+                          class="form-control form-control-user" 
+                          id="password" 
+                          name="password" 
+                          placeholder="Password" 
+                          required
+                      >
+
+                      <button type="button" id="togglePassword" class="password-toggle">
+                          <i class="fas fa-eye"></i>
+                      </button>
+                  </div>
+                    <!-- <div class="form-group">
                       <div class="custom-control custom-checkbox small">
                         <input type="checkbox" class="custom-control-input" id="customCheck">
                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
-                    </div>
-                    <button class="btn btn-primary btn-user btn-block font-weight-bold" type="submit">
-                      <big>Login</big>
-                    </button>
+                    </div> -->
+                  <button class="btn btn-primary btn-user btn-block font-weight-bold" type="submit">
+                    <big>Login</big>
+                  </button>
                   </form>
                   <hr>
-                  <div class="text-center">
-                    <a href="<?= base_url().'index.php/User/forgetpassword' ?>" class="pr-md-2"><i class="fas fa-key"></i> Forgot Password?</a> 
-                  </div>
+                  <!-- <div class="text-center">
+                    <a href="<?= base_url().'User/forgetpassword' ?>" class="pr-md-2"><i class="fas fa-key"></i> Forgot Password?</a> 
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -92,6 +162,25 @@
 
   <!-- Custom scripts for all pages-->
   <script src="<?php echo base_url(); ?>assets/backend/js/sb-admin-2.min.js"></script>
+
+  <script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+
+        const password = document.getElementById('password');
+        const icon = this.querySelector('i');
+
+        if (password.type === 'password') {
+            password.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            password.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+
+    });
+    </script>
 
 </body>
 

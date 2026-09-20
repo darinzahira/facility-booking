@@ -69,11 +69,11 @@
 
             if ($user->role == 'employee') {
 
-                redirect(base_url() . 'index.php/employee/Dashboard');
+                redirect(base_url() . 'employee/Dashboard');
 
             } elseif ($user->role == 'admin') {
 
-                redirect(base_url() . 'index.php/ga/Dashboard');
+                redirect(base_url() . 'ga/Dashboard');
 
             } else {
 
@@ -93,7 +93,7 @@
 		{
 			$this->load->library('session');
 			$this->session->sess_destroy();
-			redirect(base_url().'index.php/Login');
+			redirect(base_url().'Login');
 		}
 	}
 ?>

@@ -25,11 +25,27 @@
 			$this->form_validation->set_rules('name', 'Nama Karyawan', 'required');
 			$this->form_validation->set_rules('department_id', 'Departemen', 'required');
 			$this->form_validation->set_rules('position', 'Jabatan', 'required');
-			$this->form_validation->set_rules('phone', 'No Telpon', 'required');
+			$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
 			$this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			$this->form_validation->set_rules('role', 'Role', 'required');
+
+			// Pesan validasi
+			$this->form_validation->set_message(
+				'required',
+				'{field} wajib diisi.'
+			);
+
+			$this->form_validation->set_message(
+				'is_unique',
+				'{field} harus berbeda karena sudah digunakan.'
+			);
+
+			$this->form_validation->set_message(
+				'regex_match',
+				'{field} hanya boleh menggunakan angka.'
+			);
 
 			if ($this->form_validation->run() == FALSE)
             {
@@ -54,7 +70,7 @@
 						'Data Karyawan gagal ditambahkan.'
 					);
 				}
-				redirect(base_url() . 'index.php/ga/Employees');
+				redirect(base_url() . 'ga/Employees');
             }
 			
 		}
@@ -86,7 +102,7 @@
 					'Data Karyawan gagal dihapus.'
 				);
 			}
-			redirect(base_url() . 'index.php/ga/Employees');
+			redirect(base_url() . 'ga/Employees');
 		}
 
 		public function edit()
@@ -100,19 +116,109 @@
 
 		public function update()
 		{
-			$result = $this->Emp_model->update();
-			if ($result) {
-				$this->session->set_flashdata(
-					'success',
-					'Data Karyawan berhasil diubah.'
-				);
+			// $result = $this->Emp_model->update();
+			// if ($result) {
+			// 	$this->session->set_flashdata(
+			// 		'success',
+			// 		'Data Karyawan berhasil diubah.'
+			// 	);
+			// } else {
+			// 	$this->session->set_flashdata(
+			// 		'error',
+			// 		'Data Karyawan gagal diubah.'
+			// 	);
+			// }
+			// redirect(base_url() . 'ga/Employees');
+
+			$id = $this->input->post('id');
+
+			$this->form_validation->set_rules('employee_code','NIK Karyawan','required|callback_check_employee_code');
+			$this->form_validation->set_rules('name','Nama Karyawan','required');
+			$this->form_validation->set_rules('department_id','Departemen','required');
+			$this->form_validation->set_rules('position','Jabatan','required');
+			$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('username','Username','required|callback_check_username');
+			$this->form_validation->set_rules('status','Status','required');
+			$this->form_validation->set_rules('role','Role','required');
+
+			$this->form_validation->set_message(
+				'required',
+				'{field} wajib diisi.'
+			);
+
+			$this->form_validation->set_message(
+				'regex_match',
+				'{field} hanya boleh menggunakan angka.'
+			);
+
+			if ($this->form_validation->run() == FALSE)
+			{
+				$data['editemployee'] = $this->Emp_model->edit($id);
+				$data['departments'] = $this->Dept_model->get_active();
+				$data['innerdata'] = 'ga/employee_edit';
+
+				$this->load->view('ga/template', $data);
 			} else {
-				$this->session->set_flashdata(
-					'error',
-					'Data Karyawan gagal diubah.'
-				);
+				$result = $this->Emp_model->update();
+
+				if ($result === 'no_change')
+				{
+					$this->session->set_flashdata(
+						'warning',
+						'Tidak ada perubahan data yang dilakukan.'
+					);
+				}
+				elseif ($result)
+				{
+					$this->session->set_flashdata(
+						'success',
+						'Data Karyawan berhasil diubah.'
+					);
+				}
+				else
+				{
+					$this->session->set_flashdata(
+						'error',
+						'Data Karyawan gagal diubah.'
+					);
+				}
+
+				redirect(base_url() . 'ga/Employees');
 			}
-			redirect(base_url() . 'index.php/ga/Employees');
+		}
+
+		public function check_employee_code($employee_code)
+		{
+			$id = $this->input->post('id');
+
+			if ($this->Emp_model->check_employee_code($employee_code, $id))
+			{
+				$this->form_validation->set_message(
+					'check_employee_code',
+					'NIK Karyawan harus berbeda karena sudah digunakan.'
+				);
+
+				return FALSE;
+			}
+
+			return TRUE;
+		}
+
+		public function check_username($username)
+		{
+			$id = $this->input->post('id');
+
+			if ($this->Emp_model->check_username($username, $id))
+			{
+				$this->form_validation->set_message(
+					'check_username',
+					'Username harus berbeda karena sudah digunakan.'
+				);
+
+				return FALSE;
+			}
+
+			return TRUE;
 		}
 
 	}

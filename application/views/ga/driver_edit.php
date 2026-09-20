@@ -9,9 +9,9 @@
   <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i>Driver </h1>
+    <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Driver </h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url(); ?>index.php/ga/Drivers" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
+      <a href="<?php echo base_url(); ?>ga/Drivers" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
     </p>
 
     <!-- DataTales Example -->
@@ -19,8 +19,8 @@
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-info">Edit Data Driver</h6>
       </div>
-      <div class="card-body">
-        <form method="post" action="<?php echo base_url(); ?>index.php/ga/Drivers/update" >
+      <div class="card-body col-lg-10 mx-auto">
+        <form method="post" action="<?php echo base_url(); ?>ga/Drivers/update" >
 
         <input type="hidden" name="id" value="<?= $id ?>"> 
           <div class="form-group row">
@@ -30,7 +30,7 @@
                 <option value="">-- Pilih Karyawan --</option>
                 <?php foreach ($employees as $employees): ?>
 
-                    <option value="<?= $employees->id ?>" <?= ($employee_id ==$employees->id) ? 'selected' : '' ?>>
+                    <option value="<?= $employees->id ?>" <?= set_select('employee_id', $employees->id, $editdrivers->employee_id == $employees->id) ?>>
                         <?= $employees->name ?> .  <?= $employees->employee_code ?>
                     </option>
 

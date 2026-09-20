@@ -43,6 +43,7 @@
 				'employee_id' => $employee_id,
 				'username'    => $this->input->post('username'),
 				'password'    => $password,
+				'status'    => 1,
 				'role'    => $this->input->post('role')
 			);
 
@@ -138,14 +139,52 @@
 
 			$id = $this->input->post('id');
 
+			// Ambil data lama
+    		$old_data = $this->edit($id);
+
+			// Data baru
+			$employee_code = $this->input->post('employee_code');
+			$name          = $this->input->post('name');
+			$department_id = $this->input->post('department_id');
+			$position      = $this->input->post('position');
+			$phone         = $this->input->post('phone');
+			$status        = $this->input->post('status');
+
+			$username = $this->input->post('username');
+			$role     = $this->input->post('role');
+			$password = $this->input->post('password');
+
+			// Cek apakah ada perubahan
+			$employee_changed = (
+				$old_data->employee_code != $employee_code ||
+				$old_data->name != $name ||
+				$old_data->department_id != $department_id ||
+				$old_data->position != $position ||
+				$old_data->phone != $phone ||
+				$old_data->status != $status
+			);
+
+			$user_changed = (
+				$old_data->username != $username ||
+				$old_data->role != $role ||
+				!empty($password)
+			);
+
+			 // Kalau tidak ada perubahan sama sekali
+			if (!$employee_changed && !$user_changed)
+			{
+				$this->db->trans_rollback();
+				return 'no_change';
+			}
+
 			$employee_data = array(
-				'employee_code' => $this->input->post('employee_code'),
-				'name' => $this->input->post('name'),
-				'department_id' => $this->input->post('department_id'),
-				'position' => $this->input->post('position'),
-				'phone' => $this->input->post('phone'),
-				'status' => $this->input->post('status'),
-				'updated_at' => date('Y-m-d H:i:s')
+				'employee_code' => $employee_code,
+				'name'          => $name,
+				'department_id' => $department_id,
+				'position'      => $position,
+				'phone'         => $phone,
+				'status'        => $status,
+				'updated_at'    => date('Y-m-d H:i:s')
 			);
 
 			$this->db->where('id', $id);
@@ -153,11 +192,9 @@
 
 			$user_data = array(
 				'employee_id' => $id,
-				'username'    => $this->input->post('username'),
-				'role'    => $this->input->post('role')
+				'username'    => $username,
+				'role'        => $role
 			);
-
-			$password = $this->input->post('password');
 
 			if (!empty($password)) {
 				$user_data['password'] = password_hash(
@@ -171,7 +208,12 @@
 
 			$this->db->trans_complete();
 
-			return $this->db->trans_status();
+			if ($this->db->trans_status() === FALSE)
+			{
+				return FALSE;
+			}
+
+			return TRUE;
 		}
 
 		// GET ROLE
@@ -182,6 +224,26 @@
 			$sql = $this->db->get('');
 
 			return $sql->result();
+		}
+
+		public function check_employee_code($employee_code, $id)
+		{
+			$this->db->where('employee_code', $employee_code);
+			$this->db->where('id !=', $id);
+
+			$query = $this->db->get('employees');
+
+			return $query->num_rows() > 0;
+		}
+
+		public function check_username($username, $id)
+		{
+			$this->db->where('username', $username);
+			$this->db->where('employee_id !=', $id);
+
+			$query = $this->db->get('users');
+
+			return $query->num_rows() > 0;
 		}
 		
 	}

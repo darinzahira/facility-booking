@@ -22,8 +22,14 @@
 		public function store()
 		{
 			$this->form_validation->set_rules('employee_id', 'Nama Karyawan', 'required');
-			$this->form_validation->set_rules('driver_code', 'Kode Driver', 'required');
+			$this->form_validation->set_rules('driver_code', 'Kode Driver', 'required'); 
 			$this->form_validation->set_rules('status', 'Status', 'required');
+
+			// Pesan validasi
+			$this->form_validation->set_message(
+				'required',
+				'{field} wajib diisi.'
+			);
 
 			if ($this->form_validation->run() == FALSE)
             {
@@ -48,7 +54,7 @@
 						'Data Driver gagal ditambahkan.'
 					);
 				}
-				redirect(base_url() . 'index.php/ga/Drivers');
+				redirect(base_url() . 'ga/Drivers');
             }
 			
 		}
@@ -69,7 +75,7 @@
 					'Data Driver gagal dihapus.'
 				);
 			}
-			redirect(base_url() . 'index.php/ga/Drivers');
+			redirect(base_url() . 'ga/Drivers');
 		}
 
 		public function edit()
@@ -84,18 +90,42 @@
 		public function update()
 		{
 			$result = $this->Driver_model->update();
-			if ($result) {
+			// if ($result) {
+			// 	$this->session->set_flashdata(
+			// 		'success',
+			// 		'Data Driver berhasil diubah.'
+			// 	); 
+			// } else {
+			// 	$this->session->set_flashdata(
+			// 		'error',
+			// 		'Data Driver gagal diubah.'
+			// 	);
+			// }
+			// redirect(base_url() . 'ga/Drivers');
+
+			if ($result === 'no_change') {
+
+				$this->session->set_flashdata(
+					'warning',
+					'Tidak ada perubahan data yang dilakukan.'
+				);
+
+			} elseif ($result) {
+
 				$this->session->set_flashdata(
 					'success',
 					'Data Driver berhasil diubah.'
-				);
+				); 
+
 			} else {
+
 				$this->session->set_flashdata(
 					'error',
 					'Data Driver gagal diubah.'
 				);
 			}
-			redirect(base_url() . 'index.php/ga/Drivers');
+
+			redirect(base_url() . 'ga/Drivers');
 		}
 
 	}

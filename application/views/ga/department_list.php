@@ -4,7 +4,7 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Departemen</h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url();?>index.php/ga/Departments/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Departemen</a>
+      <a href="<?php echo base_url();?>ga/Departments/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Departemen</a>
     </p>
 
     <!-- DataTales Example -->
@@ -31,7 +31,17 @@
             </button>
         </div>
 
-    <?php endif; ?>
+      <?php endif; ?>
+
+      <?php if ($this->session->flashdata('warning')): ?>
+          <div class="alert alert-warning">
+              <?= $this->session->flashdata('warning'); ?>
+              <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+          </div>
+      <?php endif; ?>
+
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-info">List Departemen</h6>
       </div>
@@ -71,14 +81,31 @@
                 <td><?= $created_at ?></td>
                 <td><?= $updated_at ?></td>
                 <td>
-                  <a href="<?php echo base_url(); ?>index.php/ga/Departments/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
+                  <a href="<?php echo base_url(); ?>ga/Departments/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
                     <i class="far fa-edit"></i> Edit
                   </a>
-                  <a href="<?php echo base_url(); ?>index.php/ga/Departments/delete/<?= $id ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you Sure to Delete?')"><i class="far fa-trash-alt"></i> Remove</a>
+                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Remove</a>
                 </td>
               </tr>
               <?php endforeach; ?>
-            </tbody>
+              <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Hapus?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">Hapus Data?</div>
+                  <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-info" href="<?php echo base_url(); ?>ga/Departments/delete/<?= $id ?>">Hapus</a>
+                  </div>
+                </div>
+              </div>
+              </div>
+             </tbody>
           </table>
         </div>
 
