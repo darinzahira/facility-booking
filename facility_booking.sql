@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Sep 2026 pada 02.50
+-- Waktu pembuatan: 21 Sep 2026 pada 19.59
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 7.4.33
 
@@ -24,6 +24,44 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `booking_code` varchar(30) NOT NULL,
+  `employee_id` int(11) UNSIGNED NOT NULL,
+  `facility_type` enum('vehicle','room','meeting_room') NOT NULL,
+  `vehicle_id` int(11) UNSIGNED DEFAULT NULL,
+  `room_id` int(11) DEFAULT NULL,
+  `meeting_room_id` int(11) DEFAULT NULL,
+  `driver_id` int(11) DEFAULT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `purpose` text NOT NULL,
+  `status` enum('pending','approved','rejected','cancelled') NOT NULL DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `rejection_reason` text DEFAULT NULL,
+  `approved_by` int(11) UNSIGNED DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `booking_code`, `employee_id`, `facility_type`, `vehicle_id`, `room_id`, `meeting_room_id`, `driver_id`, `start_date`, `end_date`, `start_time`, `end_time`, `purpose`, `status`, `notes`, `rejection_reason`, `approved_by`, `approved_at`, `created_at`, `updated_at`) VALUES
+(1, 'BK-20260921235405', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-09-21 23:54:05', NULL),
+(2, 'BK-20260921235518', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-09-21 23:55:18', NULL),
+(3, 'BK-20260921235931', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-09-21 23:59:31', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `departments`
 --
 
@@ -40,9 +78,9 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`id`, `department_name`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'HRGA', 1, '2026-09-15 14:38:12', '2026-09-15 20:04:43'),
+(1, 'HRGA', 1, '2026-09-15 14:38:12', '2026-09-20 19:29:43'),
 (2, 'Operasional', 1, '2026-09-15 14:38:12', NULL),
-(4, 'IT', 1, '2026-09-15 21:44:33', NULL);
+(6, 'IT', 1, '2026-09-20 01:02:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -65,8 +103,8 @@ CREATE TABLE `drivers` (
 --
 
 INSERT INTO `drivers` (`id`, `employee_id`, `driver_code`, `status`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 7, 'Driver_Ops', 'Aktif', 'Driver operasional', '2026-09-15 20:00:32', NULL),
-(4, 8, 'Driver_AKW', 'Tidak Aktif', 'Driver pak Akwan', '2026-09-16 20:46:08', '2026-09-16 21:16:40');
+(5, 11, 'Driver_Ops', 'Aktif', 'Driver Operasional', '2026-09-20 19:32:23', '2026-09-20 19:56:07'),
+(6, 12, 'Driver_AKW', 'Aktif', 'Driver pak Akwan', '2026-09-20 19:49:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -91,13 +129,62 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `employee_code`, `name`, `department_id`, `position`, `phone`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'EMP001', 'Anggi', 1, 'Staff GA', NULL, 1, '2026-09-15 14:39:10', NULL),
+(1, 'EMP001', 'Anggi', 2, 'Staff GA', '087977542121', 1, '2026-09-15 14:39:10', '2026-09-20 19:22:46'),
 (2, 'EMP002', 'Darin', 2, NULL, NULL, 1, '2026-09-15 14:39:10', NULL),
-(3, 'EMP003', 'Dewi', 1, 'Recruiter', '087654324566', 1, '2026-09-15 20:05:38', NULL),
-(4, 'EMP004', 'Bayu', 4, 'Recruiter', '087654324568', 1, '2026-09-15 23:49:49', '2026-09-16 00:26:54'),
-(6, 'EMP006', 'Bayu', 2, 'Recruiter', '087654324566', 0, '2026-09-16 00:33:26', '2026-09-16 00:53:12'),
-(7, 'EMP007', 'Michael', 1, 'Driver', '087654399571', 1, '2026-09-16 01:00:10', NULL),
-(8, 'EMP008', 'Eko', 1, 'Driver', '087654324569', 1, '2026-09-16 01:53:43', NULL);
+(11, 'EMP003', 'Michael', 1, 'Driver', '087654324566', 1, '2026-09-20 19:30:31', NULL),
+(12, 'EMP004', 'Eko', 1, 'Driver', '087654324568', 1, '2026-09-20 19:44:44', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `meeting_rooms`
+--
+
+CREATE TABLE `meeting_rooms` (
+  `id` int(11) NOT NULL,
+  `room_code` varchar(30) NOT NULL,
+  `room_name` varchar(100) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `location` varchar(100) NOT NULL,
+  `status` enum('Tersedia','Tidak Tersedia','Perbaikan') NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `meeting_rooms`
+--
+
+INSERT INTO `meeting_rooms` (`id`, `room_code`, `room_name`, `capacity`, `location`, `status`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 'RE001', 'Ruang Meeting Lantai 3', 8, 'Lantai 3', 'Tersedia', NULL, '2026-09-16 18:47:28', '2026-09-17 00:05:27'),
+(2, 'RE002', 'Ruang Meeting Lantai 4', 10, 'Lantai 4', 'Tidak Tersedia', NULL, '2026-09-16 18:47:28', '2026-09-20 23:22:04');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `rooms`
+--
+
+CREATE TABLE `rooms` (
+  `id` int(11) NOT NULL,
+  `room_code` varchar(30) NOT NULL,
+  `room_name` varchar(100) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `status` enum('Tersedia','Terisi','Perbaikan') NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `rooms`
+--
+
+INSERT INTO `rooms` (`id`, `room_code`, `room_name`, `capacity`, `status`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 'RM001', 'Kamar 1A', 3, 'Tersedia', 'Kamar Pak Akwan', '2026-09-16 17:12:27', NULL),
+(2, 'RM002', 'Kamar 2A', 0, 'Terisi', 'Ruang Arsip Divisi Pajak', '2026-09-16 17:12:27', NULL),
+(4, 'RM003', 'Kamar 3A', 4, 'Terisi', '', '2026-09-20 21:34:47', '2026-09-20 21:57:10');
 
 -- --------------------------------------------------------
 
@@ -122,12 +209,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `employee_id`, `username`, `password`, `role`, `status`, `last_login`, `created_at`, `updated_at`) VALUES
-(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-09-17 00:25:09', '2026-09-15 14:43:58', NULL),
-(2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, '2026-09-17 00:07:49', '2026-09-15 14:43:58', NULL),
-(3, 3, 'dewi', '$2y$10$Ko0rGLL/y0Z1Av7kMvJKDeaZOS6tW1YDnrx0tjIrAPyhvjq6x0vdS', 'employee', 0, NULL, '0000-00-00 00:00:00', NULL),
-(6, 6, 'bayu', '$2y$10$gSZvlUarIHwhxjE5lRjVGORxL3vpJWQ8.eaxZWc.Pj7OziQSx80gK', 'employee', 0, NULL, '0000-00-00 00:00:00', NULL),
-(7, 7, 'michael', '$2y$10$XHcPn8D3n46I09/JKE8ITe8AQ47/My3AbxyRsLUfffGmQQloxUTia', 'employee', 0, NULL, '0000-00-00 00:00:00', NULL),
-(8, 8, 'eko', '$2y$10$/hT42X1iTtKK2/Q5pIlie.E45ms6MY87LA1RkOjSMZ8s9qmLrwBr2', 'employee', 0, NULL, '0000-00-00 00:00:00', NULL);
+(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-09-22 00:17:17', '2026-09-15 14:43:58', NULL),
+(2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, '2026-09-22 00:47:53', '2026-09-15 14:43:58', NULL),
+(11, 11, 'michael', '$2y$10$XU2Kp5gd29M7Tdt9maBxTeb4qASATT0SW8mTdwajpMdnEaj5UCpQC', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL),
+(12, 12, 'eko', '$2y$10$lrA/P9tP9ln.dTt/WGmVJe1qcK51QSWSOYzgFRLjVejYD.fUAGcm6', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -154,17 +239,33 @@ CREATE TABLE `vehicles` (
 
 INSERT INTO `vehicles` (`id`, `vehicle_code`, `plate_number`, `vehicle_name`, `brand`, `model`, `status`, `notes`, `created_at`, `updated_at`) VALUES
 (1, 'VE001', 'N1234ASD', 'BYD', NULL, NULL, 'Aktif', NULL, '2026-09-16 03:02:18', '2026-09-16 22:05:32'),
-(3, 'VE002', 'B9876DE', 'Mobilio', NULL, NULL, 'Aktif', 'Mobil Operasional', '2026-09-16 22:05:21', NULL);
+(3, 'VE002', 'B9876DE', 'Mobilio', NULL, NULL, 'Aktif', 'Mobil Operasional', '2026-09-16 22:05:21', '2026-09-20 21:20:30');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indeks untuk tabel `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_booking_code` (`booking_code`),
+  ADD KEY `idx_employee_id` (`employee_id`),
+  ADD KEY `idx_vehicle_id` (`vehicle_id`),
+  ADD KEY `idx_room_id` (`room_id`),
+  ADD KEY `idx_meeting_room_id` (`meeting_room_id`),
+  ADD KEY `idx_driver_id` (`driver_id`),
+  ADD KEY `idx_approved_by` (`approved_by`),
+  ADD KEY `idx_booking_date` (`start_date`,`end_date`),
+  ADD KEY `idx_status` (`status`);
+
+--
 -- Indeks untuk tabel `departments`
 --
 ALTER TABLE `departments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQUE` (`department_name`);
 
 --
 -- Indeks untuk tabel `drivers`
@@ -181,6 +282,20 @@ ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `employee_code` (`employee_code`),
   ADD KEY `employee_dept` (`department_id`);
+
+--
+-- Indeks untuk tabel `meeting_rooms`
+--
+ALTER TABLE `meeting_rooms`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQUE` (`room_code`);
+
+--
+-- Indeks untuk tabel `rooms`
+--
+ALTER TABLE `rooms`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQUE` (`room_code`);
 
 --
 -- Indeks untuk tabel `users`
@@ -203,38 +318,67 @@ ALTER TABLE `vehicles`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT untuk tabel `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `drivers`
 --
 ALTER TABLE `drivers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT untuk tabel `meeting_rooms`
+--
+ALTER TABLE `meeting_rooms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `rooms`
+--
+ALTER TABLE `rooms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
+
+--
+-- Ketidakleluasaan untuk tabel `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `fk_booking_approved_by` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_booking_driver` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_booking_employee` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_booking_meeting_room` FOREIGN KEY (`meeting_room_id`) REFERENCES `meeting_rooms` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_booking_room` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_booking_vehicle` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicles` (`id`) ON UPDATE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `drivers`
