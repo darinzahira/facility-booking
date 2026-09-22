@@ -69,7 +69,7 @@
 
             if ($user->role == 'employee') {
 
-                redirect(base_url() . 'employee/Dashboard');
+                redirect(base_url() . 'employee/Bookings');
 
             } elseif ($user->role == 'admin') {
 

@@ -83,4 +83,96 @@ class Booking_model extends CI_Model
         return $this->db->get()->row();
     }
 
+    public function get_all()
+    {
+        $this->db->select('
+            bookings.*,
+            employees.name
+        ');
+
+        $this->db->from('bookings');
+
+        $this->db->join(
+            'employees',
+            'employees.id = bookings.employee_id',
+            'left'
+        );
+
+        $this->db->order_by('bookings.created_at', 'DESC');
+
+        return $this->db->get()->result();
+    }
+
+    public function update_status($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('bookings', $data);
+    }
+
+    public function get_detail_admin($id)
+    {
+        $this->db->select('
+            bookings.*,
+
+            employees.name,
+
+            vehicles.vehicle_name,
+            vehicles.plate_number,
+
+            rooms.room_name,
+
+            meeting_rooms.room_name AS meeting_room_name,
+
+            driver_employee.name AS driver_name
+        ');
+
+        $this->db->from('bookings');
+
+        // Pemohon
+        $this->db->join(
+            'employees',
+            'employees.id = bookings.employee_id',
+            'left'
+        );
+
+        // Kendaraan
+        $this->db->join(
+            'vehicles',
+            'vehicles.id = bookings.vehicle_id',
+            'left'
+        );
+
+        // Ruangan
+        $this->db->join(
+            'rooms',
+            'rooms.id = bookings.room_id',
+            'left'
+        );
+
+        // Meeting Room
+        $this->db->join(
+            'meeting_rooms',
+            'meeting_rooms.id = bookings.meeting_room_id',
+            'left'
+        );
+
+        // Driver
+        $this->db->join(
+            'drivers',
+            'drivers.id = bookings.driver_id',
+            'left'
+        );
+
+        // Nama driver diambil dari employees
+        $this->db->join(
+            'employees AS driver_employee',
+            'driver_employee.id = drivers.employee_id',
+            'left'
+        );
+
+        $this->db->where('bookings.id', $id);
+
+        return $this->db->get()->row();
+    }
+
 }
