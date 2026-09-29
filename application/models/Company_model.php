@@ -1,13 +1,13 @@
 <?php  
 
-	class Dept_model extends CI_Model
+	class Company_model extends CI_Model
 	{
 		// Read
-		public function deptlist()
+		public function list()
 		{
 			$this->db->select('*');
 			$this->db->where('isdelete', 1);
-			$this->db->from('departments');
+			$this->db->from('company');
 			$sql = $this->db->get('');
 
 			return $sql->result();
@@ -16,17 +16,19 @@
 		// CREATE (STORE)
 		public function store()
 		{
-			$dept_name = $this->input->post('dept_name');
+			$company_name = $this->input->post('company_name');
+			$company_code = $this->input->post('company_code');
 			$status = $this->input->post('status');
 			$created_at = date('Y-m-d H:i:s');
 
 			$data = array(
-				'department_name' => $dept_name, 
+				'company_code' => $company_code, 
+				'company_name' => $company_name, 
 				'status' => $status,
 				'created_at' => $created_at
 			);
 
-			$result = $this->db->insert('departments', $data);
+			$result = $this->db->insert('company', $data);
 			return $result;
 		}
 
@@ -34,7 +36,7 @@
 		public function delete($id)
 		{
 			$this->db->where('id', $id);
-			$this->db->update('departments', [
+			$this->db->update('company', [
 				'isdelete' => 0
 			]);
 
@@ -45,7 +47,7 @@
 		public function edit($id)
 		{
 			$this->db->select('*');
-			$this->db->from('departments');
+			$this->db->from('company');
 			$this->db->where('id', $id);
 			$sql = $this->db->get('');
 
@@ -56,7 +58,8 @@
 		public function update()
 		{
 			$id = $this->input->post('id');
-			$dept_name = $this->input->post('dept_name');
+			$company_code = $this->input->post('company_code');
+			$company_name = $this->input->post('company_name');
 			$status = $this->input->post('status');
 			$updated_at = date('Y-m-d H:i:s');
 
@@ -65,7 +68,8 @@
 
 			// Cek apakah ada perubahan
 			if (
-				$old_data->department_name == $dept_name &&
+				$old_data->company_code == $company_code &&
+				$old_data->company_name == $company_name &&
 				$old_data->status == $status
 			) {
 				return 'no_change';
@@ -73,12 +77,13 @@
 
 			
 			$editdata = array(
-				'department_name' => $dept_name, 
+				'company_code' => $company_code, 
+				'company_name' => $company_name, 
 				'status' => $status,
 				'updated_at' => $updated_at
 			);
 			$this->db->where('id', $id);
-			return $this->db->update('departments', $editdata);
+			return $this->db->update('company', $editdata);
 		}
 
 		// AMBIL DEPARTEMEN AKTIF
@@ -86,17 +91,29 @@
 		{
 			$this->db->where('status', 1);
 			$this->db->where('isdelete', 1);
-			return $this->db->get('departments')->result();
+			return $this->db->get('company')->result();
 		}
 
 		// CEK NAMA DEPARTEMEN
-		public function check_department_name($department_name, $id)
+		public function check_company_code($company_code, $id)
 		{
-			$this->db->where('department_name', $department_name);
+			$this->db->where('company_code', $company_code);
 			$this->db->where('id !=', $id);
 			$this->db->where('isdelete', 1);
 
-			$query = $this->db->get('departments');
+			$query = $this->db->get('company');
+
+			return $query->num_rows() > 0;
+		}
+
+		// CEK NAMA DEPARTEMEN
+		public function check_company_name($company_name, $id)
+		{
+			$this->db->where('company_name', $company_name);
+			$this->db->where('id !=', $id);
+			$this->db->where('isdelete', 1);
+
+			$query = $this->db->get('company');
 
 			return $query->num_rows() > 0;
 		}
@@ -106,7 +123,7 @@
 		{
 			$this->db->where('id', $id);
 			$this->db->where('isdelete', 1);
-			return $this->db->get('departments')->row();
+			return $this->db->get('company')->row();
 		}
 
 

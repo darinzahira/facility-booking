@@ -10,6 +10,7 @@
     $username = $detail->username;
     $created_at = $detail->created_at;
     $role = $detail->role;
+    $company_name = $detail->company_name;
 ?>
 <!-- Begin Page Content -->
   <div class="container-fluid">
@@ -36,6 +37,13 @@
           <label class="col-4 col-lg-3 font-weight-bold">NIK Karyawan : </label>
           <div class="col-8 col-lg-9">
             <?= $employee_code ?>
+          </div>
+        </div>
+
+	      <div class="row pl-lg-5">
+          <label class="col-4 col-lg-3 font-weight-bold">Perusahaan       : </label>
+          <div class="col-8 col-lg-9">
+            <?= $company_name ?>
           </div>
         </div>
 

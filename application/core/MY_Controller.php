@@ -3,26 +3,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller
 {
-    public function __construct()
+    protected function check_login()
     {
-        parent::__construct();
-
-        // Cek apakah user sudah login
         if (!$this->session->userdata('logged_in')) {
-            redirect('login');
+            redirect('Login');
         }
     }
 
-    protected function check_role($roles = array())
+    protected function check_admin()
     {
-        $user_role = $this->session->userdata('role');
+        $this->check_login();
 
-        if (!in_array($user_role, $roles)) {
-            show_error(
-                'Anda tidak memiliki akses ke halaman ini.',
-                403,
-                'Access Denied'
-            );
+        if ($this->session->userdata('role') != 'admin') {
+            redirect('employee/Dashboard');
+        }
+    }
+
+    protected function check_employee()
+    {
+        $this->check_login();
+
+        if ($this->session->userdata('role') != 'employee') {
+            redirect('ga/Dashboard');
         }
     }
 }

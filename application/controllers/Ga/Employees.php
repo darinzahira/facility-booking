@@ -1,9 +1,12 @@
 <?php  
 
-	class Employees extends CI_Controller
+	class Employees extends MY_Controller
 	{
 		public function index()
 		{
+			
+			$this->check_admin();
+		
 			$this->load->helper(array('form', 'url'));
 			$this->load->library('form_validation');
 			
@@ -15,6 +18,7 @@
 		public function add()
 		{
 			$data['departments'] = $this->Dept_model->get_active();
+			$data['company'] = $this->Company_model->get_active();
 			$data['innerdata'] = 'ga/employee_add';
 			$this->load->view('ga/template', $data);
 		}
@@ -24,6 +28,7 @@
 			$this->form_validation->set_rules('employee_code', 'NIK Karyawan', 'required|is_unique[employees.employee_code]');
 			$this->form_validation->set_rules('name', 'Nama Karyawan', 'required');
 			$this->form_validation->set_rules('department_id', 'Departemen', 'required');
+			$this->form_validation->set_rules('company_id', 'Perusahaan', 'required');
 			$this->form_validation->set_rules('position', 'Jabatan', 'required');
 			$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
 			$this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
@@ -50,6 +55,7 @@
 			if ($this->form_validation->run() == FALSE)
             {
 				$data['departments'] = $this->Dept_model->get_active();
+				$data['company'] = $this->Company_model->get_active();
 				$data['innerdata'] = 'ga/employee_add';
 				$this->load->view('ga/template', $data);
             }
@@ -110,6 +116,7 @@
 			$id = $this->uri->segment(4);
 			$data['editemployee'] = $this->Emp_model->edit($id);
 			$data['departments'] = $this->Dept_model->get_active();
+			$data['company'] = $this->Company_model->get_active();
 			$data['innerdata'] = 'ga/employee_edit';
 			$this->load->view('ga/template', $data);
 		}
@@ -135,6 +142,7 @@
 			$this->form_validation->set_rules('employee_code','NIK Karyawan','required|callback_check_employee_code');
 			$this->form_validation->set_rules('name','Nama Karyawan','required');
 			$this->form_validation->set_rules('department_id','Departemen','required');
+			$this->form_validation->set_rules('company_id','Perusahaan','required');
 			$this->form_validation->set_rules('position','Jabatan','required');
 			$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
 			$this->form_validation->set_rules('username','Username','required|callback_check_username');

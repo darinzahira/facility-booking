@@ -53,6 +53,24 @@
           </div>
 
           <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label" >Driver : </label>
+            <div class="col-sm-10">
+              <select name="requires_driver" class="form-control">
+                <option value="">-- Pilih Status --</option>
+                <option value="Tidak"
+                    <?= set_select('requires_driver', 'Tidak'); ?>>
+                    Tidak Wajib
+                </option>
+                <option value="Ya"
+                    <?= set_select('requires_driver', 'Ya'); ?>>
+                    Wajib
+                </option>
+              </select>
+              <?php echo form_error('requires_driver', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+
+          <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Notes : </label>
             <div class="col-sm-10">
               <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?php echo set_value('notes');?>">

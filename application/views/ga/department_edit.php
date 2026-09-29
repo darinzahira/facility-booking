@@ -25,7 +25,7 @@
 
           <input type="hidden" name="id" value="<?= $id ?>">
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Nama Departemen : </label>
+            <label for="name" class="col-sm-2 col-form-label">Nama Departemen<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="dept_name" class="form-control" id="dept_name" placeholder="" autofocus value="<?= set_value('dept_name', $department_name) ?>">
               <?php echo form_error('dept_name', '<small class="text-danger">', '</small>'); ?>
@@ -33,14 +33,13 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Departemen : </label>
+            <label for="name" class="col-sm-2 col-form-label">Status Departemen<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control" autofocus>
                 <option value="">-- Pilih Status --</option>
                   <option value="1" <?= set_select('status', '1', $status == 1) ?>>
                       Aktif
                   </option>
-
                   <option value="0" <?= set_select('status', '0', $status == 0) ?>>
                       Tidak Aktif
                   </option>

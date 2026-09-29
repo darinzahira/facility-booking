@@ -16,7 +16,7 @@
         <form method="post" action="<?php echo base_url(); ?>ga/Drivers/store" >
 
           <div class="form-group row">
-            <label for="employee_id" class="col-sm-2 col-form-label">Nama Karyawan : </label>
+            <label for="employee_id" class="col-sm-2 col-form-label">Nama Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="employee_id" class="form-control">
                 <option value="">-- Pilih Karyawan --</option>
@@ -33,7 +33,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Kode Driver : </label>
+            <label for="name" class="col-sm-2 col-form-label">Kode Driver<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="driver_code" class="form-control" id="driver_code" placeholder="" autofocus value="<?php echo set_value('driver_code');?>">
               <?php echo form_error('driver_code', '<small class="text-danger">', '</small>'); ?>
@@ -41,7 +41,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Driver : </label>
+            <label for="name" class="col-sm-2 col-form-label">Status Driver<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control">
                 <option value="">-- Pilih Status --</option>
@@ -53,7 +53,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Notes : </label>
+            <label for="name" class="col-sm-2 col-form-label">Notes</label>
             <div class="col-sm-10">
               <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?php echo set_value('notes');?>">
             </div>

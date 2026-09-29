@@ -1,24 +1,13 @@
 <?php
 
-class Bookings extends CI_Controller
+class Bookings extends MY_Controller
 {
     public function __construct()
     {
         parent::__construct();
 
         // Pastikan user sudah login
-        if (!$this->session->userdata('logged_in')) {
-            redirect('login');
-        }
-
-        // Pastikan hanya employee
-        if ($this->session->userdata('role') != 'employee') {
-            show_error(
-                'Anda tidak memiliki akses ke halaman ini.',
-                403,
-                'Access Denied'
-            );
-        }
+        $this->check_employee();
 
         $this->load->model('Booking_model');
         $this->load->library('form_validation');
@@ -46,6 +35,55 @@ class Bookings extends CI_Controller
         $data['innerdata'] = 'employee/booking_detail';
 
         $this->load->view('employee/template', $data);
+    }
+
+    public function cancel($id)
+    {
+        $employee_id = $this->session->userdata('employee_id');
+
+        // Ambil booking milik employee yang sedang login
+        $booking = $this->Booking_model->get_detail($id, $employee_id);
+
+        // Kalau booking tidak ditemukan
+        if (!$booking) {
+            show_404();
+        }
+
+        // Hanya booking pending dan approved yang bisa dibatalkan
+        if ($booking->status != 'pending' && $booking->status != 'approved') {
+
+            $this->session->set_flashdata(
+                'error',
+                'Booking ini tidak dapat dibatalkan.'
+            );
+
+            redirect('employee/Bookings/detail/' . $id);
+            return;
+        }
+
+        $data = array(
+            'status'     => 'cancelled',
+            'updated_at' => date('Y-m-d H:i:s')
+        );
+
+        $result = $this->Booking_model->update_status($id, $data);
+
+        if ($result) {
+
+            $this->session->set_flashdata(
+                'success',
+                'Booking berhasil dibatalkan.'
+            );
+
+        } else {
+
+            $this->session->set_flashdata(
+                'error',
+                'Booking gagal dibatalkan.'
+            );
+        }
+
+        redirect('employee/Bookings/detail/' . $id);
     }
 
     public function add()
@@ -114,5 +152,14 @@ class Bookings extends CI_Controller
         }
 
         redirect(base_url() . 'employee/Bookings');
+    }
+
+    
+    public function edit()
+    {
+        $id = $this->uri->segment(4);
+        $data['editdata'] = $this->Booking_model->get_detail($id, $employee_id);
+        $data['innerdata'] = 'employee/booking_edit';
+        $this->load->view('employee/template', $data);
     }
 }

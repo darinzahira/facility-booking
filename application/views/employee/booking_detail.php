@@ -239,6 +239,49 @@
                 Kembali
             </a>
 
+            <?php if ($booking->status == 'pending'): ?>
+
+            <a
+                href="<?= base_url('employee/Bookings/edit/' . $booking->id); ?>"
+                class="btn btn-info"
+            >
+                <i class="fas fa-edit"></i>
+                Edit
+            </a>
+
+            <?php endif; ?>
+
+            <?php if ($booking->status == 'pending' || $booking->status == 'approved'): ?>
+
+            <a
+                href=""
+                class="btn btn-danger"
+                data-toggle="modal" data-target="#cancelModal"
+            >
+                <i class="fas fa-times"></i>
+                Batalkan
+            </a>
+
+            <?php endif; ?>
+
+            <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Batalkan</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">Apakah Anda yakin ingin membatalkan peminjaman ini?</div>
+                <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Tidak</button>
+                <a class="btn btn-info" href="<?= base_url('employee/Bookings/cancel/' . $booking->id); ?>">Ya</a>
+                </div>
+            </div>
+            </div>
+            </div>
+
         </div>
 
     </div>

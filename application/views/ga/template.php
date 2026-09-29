@@ -1,13 +1,4 @@
-<?php 
-  if ($this->session->userdata('role') == '') {
-    echo "<script>alert('Please Log in First!')</script>";
-    redirect(base_url() . 'Login', 'refresh');
-  }
-  else if ($this->session->userdata('role') != 'admin') {
-    echo "<script>alert('You do not have permission to access this page!')</script>";
-    redirect(base_url() . 'Login', 'refresh');
-  }
-?>
+<?php if ($this->session->userdata('role') == 'admin'): ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SaranaKita</title>
+  <title>Bookhub</title>
 
   <link rel="icon" type="image/png" href="<?php echo base_url(); ?>assets/logo.png">
 
@@ -94,11 +85,11 @@
     <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url();?>ga/Dashboard">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url();?>ga/Bookings">
         <div class="sidebar-brand-icon rotate-n-15">
           <em><i class="far fa-flag"></i></em>
         </div>
-        <div class="sidebar-brand-text mx-3">BookIn</div>
+        <div class="sidebar-brand-text mx-3">Bookhub</div>
       </a>
 
       <!-- Divider -->
@@ -128,6 +119,7 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">User:</h6>
+            <a class="collapse-item" href="<?php echo base_url();?>ga/Companies">Perusahaan</a>
             <a class="collapse-item" href="<?php echo base_url();?>ga/Departments">Departemen</a>
             <a class="collapse-item" href="<?php echo base_url();?>ga/Employees">Karyawan</a>
             <a class="collapse-item" href="<?php echo base_url();?>ga/Drivers">Driver</a>
@@ -356,3 +348,4 @@ document.getElementById('togglePassword').addEventListener('click', function () 
 </body>
 
 </html>
+<?php endif; ?>

@@ -24,7 +24,7 @@
 
         <input type="hidden" name="id" value="<?= $id ?>"> 
           <div class="form-group row">
-            <label for="employee_id" class="col-sm-2 col-form-label">Nama Karyawan : </label>
+            <label for="employee_id" class="col-sm-2 col-form-label">Nama Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="employee_id" class="form-control" required>
                 <option value="">-- Pilih Karyawan --</option>
@@ -41,7 +41,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="driver_code" class="col-sm-2 col-form-label">Kode Driver : </label>
+            <label for="driver_code" class="col-sm-2 col-form-label">Kode Driver<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="driver_code" class="form-control" id="driver_code" placeholder="" required autofocus value="<?= $driver_code?>">
             </div>
@@ -49,7 +49,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="status" class="col-sm-2 col-form-label">Status Driver : </label>
+            <label for="status" class="col-sm-2 col-form-label">Status Driver<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control" required>
                 <option value="">-- Pilih Status --</option>

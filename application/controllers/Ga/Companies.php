@@ -1,6 +1,6 @@
 <?php  
 
-	class Departments extends MY_Controller
+	class Companies extends MY_Controller
 	{
 		public function index()
 		{
@@ -10,20 +10,21 @@
 			$this->load->helper(array('form', 'url'));
 			$this->load->library('form_validation');
 			
-            $data['deptlist'] = $this->Dept_model->deptlist();
-			$data['innerdata'] = 'ga/department_list';
+            $data['list'] = $this->Company_model->list();
+			$data['innerdata'] = 'ga/company_list';
 			$this->load->view('ga/template', $data);
 		}
 
 		public function add()
 		{
-			$data['innerdata'] = 'ga/dept_add';
+			$data['innerdata'] = 'ga/company_add';
 			$this->load->view('ga/template', $data);
 		}
 
 		public function store()
 		{
-			$this->form_validation->set_rules('dept_name', 'Nama Departemen', 'required');
+			$this->form_validation->set_rules('company_code', 'Kode Perusahaan', 'required');
+			$this->form_validation->set_rules('company_name', 'Nama Perusahaan', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 
 			// Pesan validasi
@@ -34,27 +35,27 @@
 
 			if ($this->form_validation->run() == FALSE)
             {
-				$data['innerdata'] = 'ga/dept_add';
+				$data['innerdata'] = 'ga/company_add';
 				$this->load->view('ga/template', $data);
             }
             else
             {
-                $result = $this->Dept_model->store();
+                $result = $this->Company_model->store();
 				 if ($result) {
 
 					$this->session->set_flashdata(
 						'success',
-						'Department berhasil ditambahkan.'
+						'Perusahaan berhasil ditambahkan.'
 					);
 
 				} else {
 
 					$this->session->set_flashdata(
 						'error',
-						'Department gagal ditambahkan.'
+						'Perusahaan gagal ditambahkan.'
 					);
 				}
-				redirect(base_url() . 'ga/Departments');
+				redirect(base_url() . 'ga/Companies');
             }
 			
 		}
@@ -62,52 +63,46 @@
 		public function delete()
 		{
 			$id = $this->uri->segment(4);
-			$result = $this->Dept_model->delete($id);
+			$result = $this->Company_model->delete($id);
 
 			if ($result) {
 				$this->session->set_flashdata(
 					'success',
-					'Department berhasil dihapus.'
+					'Perusahaan berhasil dihapus.'
 				);
 			} else {
 				$this->session->set_flashdata(
 					'error',
-					'Department gagal dihapus.'
+					'Perusahaan gagal dihapus.'
 				);
 			}
-			redirect(base_url() . 'ga/Departments');
+			redirect(base_url() . 'ga/Companies');
 		}
 
 		public function edit()
 		{
 			$id = $this->uri->segment(4);
-			$data['editdepartment'] = $this->Dept_model->edit($id);
-			$data['innerdata'] = 'ga/department_edit';
+			$data['editdata'] = $this->Company_model->edit($id);
+			$data['innerdata'] = 'ga/company_edit';
 			$this->load->view('ga/template', $data);
 		}
 
 		public function update()
 		{
-			// $result = $this->Dept_model->update();
-			// if ($result) {
-			// 	$this->session->set_flashdata(
-			// 		'success',
-			// 		'Department berhasil diubah.'
-			// 	);
-			// } else {
-			// 	$this->session->set_flashdata(
-			// 		'error',
-			// 		'Department gagal diubah.'
-			// 	);
-			// }
-			// redirect(base_url() . 'ga/Departments');
+			
 			$id = $this->input->post('id');
 
-			// Validasi nama departemen
+			// Validasi nama perusahaan
 			$this->form_validation->set_rules(
-				'dept_name',
-				'Nama Departemen',
-				'required|trim|callback_check_department_name'
+				'company_code',
+				'Kode Perusahaan',
+				'required|trim|callback_check_company_code'
+			);
+
+			$this->form_validation->set_rules(
+				'company_name',
+				'Nama Perusahaan',
+				'required|trim|callback_check_company_name'
 			);
 
 			// Validasi status
@@ -120,15 +115,13 @@
 			if ($this->form_validation->run() == FALSE)
 			{
 				// Ambil kembali data departemen yang sedang diedit
-				$data['editdepartment'] = $this->Dept_model->edit($id);
-
-				$data['innerdata'] = 'ga/department_edit';
-
+				$data['editdata'] = $this->Company_model->edit($id);
+				$data['innerdata'] = 'ga/company_edit';
 				$this->load->view('ga/template', $data);
 			}
 			else
 			{
-				$result = $this->Dept_model->update();
+				$result = $this->Company_model->update();
 
 				if ($result === 'no_change') {
 
@@ -141,33 +134,50 @@
 
 					$this->session->set_flashdata(
 						'success',
-						'Department berhasil diubah.'
+						'Perusahaan berhasil diubah.'
 					);
 
 				} else {
 
 					$this->session->set_flashdata(
 						'error',
-						'Department gagal diubah.'
+						'Perusahaan gagal diubah.'
 					);
 				}
 
-				redirect(base_url() . 'ga/Departments');
+				redirect(base_url() . 'ga/Companies');
 			}
 		}
 
-		public function check_department_name($dept_name)
+		public function check_company_name($company_name)
 		{
 			$id = $this->input->post('id');
 
-			if ($this->Dept_model->check_department_name($dept_name, $id))
+			if ($this->Company_model->check_company_name($company_name, $id))
 			{
 				$this->form_validation->set_message(
-					'check_department_name',
-					'Nama Departemen harus berbeda karena sudah digunakan.'
+					'check_company_name',
+					'Nama Perusahaan harus berbeda karena sudah digunakan.'
 				);
 
-				return FALSE; 
+				return FALSE;
+			}
+
+			return TRUE;
+		}
+
+		public function check_company_code($company_code)
+		{
+			$id = $this->input->post('id');
+
+			if ($this->Company_model->check_company_code($company_code, $id))
+			{
+				$this->form_validation->set_message(
+					'check_company_code',
+					'Kode Perusahaan harus berbeda karena sudah digunakan.'
+				);
+
+				return FALSE;
 			}
 
 			return TRUE;

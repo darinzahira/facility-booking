@@ -6,6 +6,7 @@
 		public function list()
 		{
 			$this->db->select('*');
+			$this->db->where('isdelete', 1);
 			$this->db->from('rooms');
 			$sql = $this->db->get('');
 
@@ -39,7 +40,11 @@
 		public function delete($id)
 		{
 			$this->db->where('id', $id);
-    		return $this->db->delete('rooms');
+			$this->db->update('rooms', [
+				'isdelete' => 0
+			]);
+
+			return $this->db->affected_rows() > 0;
 		}
 
 		// // EDIT
@@ -101,6 +106,7 @@
 		{
 			$this->db->where('room_code', $room_code);
 			$this->db->where('id !=', $id);
+			$this->db->where('isdelete', 1);
 
 			$query = $this->db->get('rooms');
 
@@ -111,6 +117,7 @@
 		{
 			$this->db->where('room_name', $room_name);
 			$this->db->where('id !=', $id);
+			$this->db->where('isdelete', 1);
 
 			$query = $this->db->get('rooms');
 

@@ -1,13 +1,13 @@
 <?php  
 
-	class Dept_model extends CI_Model
+	class Employeesim_model extends CI_Model
 	{
 		// Read
-		public function deptlist()
+		public function list()
 		{
 			$this->db->select('*');
 			$this->db->where('isdelete', 1);
-			$this->db->from('departments');
+			$this->db->from('employee_sims');
 			$sql = $this->db->get('');
 
 			return $sql->result();
@@ -16,17 +16,21 @@
 		// CREATE (STORE)
 		public function store()
 		{
-			$dept_name = $this->input->post('dept_name');
-			$status = $this->input->post('status');
+			$employee_id = $this->input->post('employee_id');
+			$sim_type = $this->input->post('sim_type');
+			$sim_number = $this->input->post('sim_number');
+			$expired_date = $this->input->post('expired_date');
 			$created_at = date('Y-m-d H:i:s');
 
 			$data = array(
-				'department_name' => $dept_name, 
-				'status' => $status,
+				'employee_id' => $employee_id, 
+				'sim_type' => $sim_type, 
+				'sim_number' => $sim_number, 
+				'expired_date' => $expired_date, 
 				'created_at' => $created_at
 			);
 
-			$result = $this->db->insert('departments', $data);
+			$result = $this->db->insert('employee_sims', $data);
 			return $result;
 		}
 
@@ -34,7 +38,7 @@
 		public function delete($id)
 		{
 			$this->db->where('id', $id);
-			$this->db->update('departments', [
+			$this->db->update('empolyee_sims', [
 				'isdelete' => 0
 			]);
 
@@ -45,7 +49,7 @@
 		public function edit($id)
 		{
 			$this->db->select('*');
-			$this->db->from('departments');
+			$this->db->from('employee_sims');
 			$this->db->where('id', $id);
 			$sql = $this->db->get('');
 
@@ -56,8 +60,10 @@
 		public function update()
 		{
 			$id = $this->input->post('id');
-			$dept_name = $this->input->post('dept_name');
-			$status = $this->input->post('status');
+			$employee_id = $this->input->post('employee_id');
+			$sim_type = $this->input->post('sim_type');
+			$sim_number = $this->input->post('sim_number');
+			$expired_date = $this->input->post('expired_date');
 			$updated_at = date('Y-m-d H:i:s');
 
 			// Ambil data lama
@@ -78,7 +84,7 @@
 				'updated_at' => $updated_at
 			);
 			$this->db->where('id', $id);
-			return $this->db->update('departments', $editdata);
+			return $this->db->update('employee_sims', $editdata);
 		}
 
 		// AMBIL DEPARTEMEN AKTIF
@@ -86,7 +92,7 @@
 		{
 			$this->db->where('status', 1);
 			$this->db->where('isdelete', 1);
-			return $this->db->get('departments')->result();
+			return $this->db->get('employee_sims')->result();
 		}
 
 		// CEK NAMA DEPARTEMEN
@@ -96,7 +102,7 @@
 			$this->db->where('id !=', $id);
 			$this->db->where('isdelete', 1);
 
-			$query = $this->db->get('departments');
+			$query = $this->db->get('employee_sims');
 
 			return $query->num_rows() > 0;
 		}
@@ -106,7 +112,7 @@
 		{
 			$this->db->where('id', $id);
 			$this->db->where('isdelete', 1);
-			return $this->db->get('departments')->row();
+			return $this->db->get('employee_sims')->row();
 		}
 
 

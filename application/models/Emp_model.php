@@ -5,10 +5,12 @@
 		// Read
 		public function list()
 		{
-			$this->db->select('employees.* , departments.id , departments.department_name, users.id, users.last_login');
+			$this->db->select('employees.*, departments.department_name, users.last_login, company.company_name');
 			$this->db->from('employees');
 			$this->db->join('departments' , 'departments.id = employees.department_id');
 			$this->db->join('users' , 'users.employee_id = employees.id');
+			$this->db->join('company' , 'company.id = employees.company_id');
+			$this->db->where('employees.isdelete', 1);
 			$this->db->order_by('employees.id', 'ASC');
 			$sql = $this->db->get('');
 
@@ -24,6 +26,7 @@
 				'employee_code' => $this->input->post('employee_code'),
 				'name' => $this->input->post('name'),
 				'department_id' => $this->input->post('department_id'),
+				'company_id' => $this->input->post('company_id'),
 				'position' => $this->input->post('position'),
 				'phone' => $this->input->post('phone'),
 				'status' => $this->input->post('status'),
@@ -31,14 +34,11 @@
 			);
 
 			$this->db->insert('employees', $employee_data);
-
 			$employee_id = $this->db->insert_id();
-
 			$password = password_hash(
 				$this->input->post('password'),
 				PASSWORD_DEFAULT
 			);
-
 			$user_data = array(
 				'employee_id' => $employee_id,
 				'username'    => $this->input->post('username'),
@@ -49,37 +49,18 @@
 
 			$this->db->insert('users', $user_data);
 			$this->db->trans_complete();
-
 			return $this->db->trans_status();
 		}
 
 		// DETAIL  
 		public function get_detail($id)
 		{
-			$this->db->select('
-				employees.*,
-				departments.department_name,
-				users.id AS user_id,
-				users.username,
-				users.role
-			');
-
+			$this->db->select('employees.*, departments.department_name, users.id AS user_id, users.username, users.role, company.*');
 			$this->db->from('employees');
-
-			$this->db->join(
-				'departments',
-				'departments.id = employees.department_id',
-				'left'
-			);
-
-			$this->db->join(
-				'users',
-				'users.employee_id = employees.id',
-				'left'
-			);
-
+			$this->db->join('departments', 'departments.id = employees.department_id', 'left');
+			$this->db->join('company', 'company.id = employees.company_id', 'left');
+			$this->db->join('users','users.employee_id = employees.id','left');
 			$this->db->where('employees.id', $id);
-
 			return $this->db->get()->row();
 		}
 
@@ -90,11 +71,15 @@
 
 				// Hapus User berdasarkan employee_id
 				$this->db->where('employee_id', $id);
-				$this->db->delete('users');
+				$this->db->update('users', [
+					'isdelete' => 0
+				]);
 
 				// Hapus Employee
 				$this->db->where('id', $id);
-				$this->db->delete('employees');
+				$this->db->update('employees', [
+					'isdelete' => 0
+				]);
 
 				$this->db->trans_complete();
 
@@ -109,7 +94,8 @@
 				departments.department_name,
 				users.id AS user_id,
 				users.username,
-				users.role
+				users.role,
+				company.*
 			');
 
 			$this->db->from('employees');
@@ -117,6 +103,12 @@
 			$this->db->join(
 				'departments',
 				'departments.id = employees.department_id',
+				'left'
+			);
+
+			$this->db->join(
+				'company',
+				'company.id = employees.company_id',
 				'left'
 			);
 
@@ -146,6 +138,7 @@
 			$employee_code = $this->input->post('employee_code');
 			$name          = $this->input->post('name');
 			$department_id = $this->input->post('department_id');
+			$company_id = $this->input->post('company_id');
 			$position      = $this->input->post('position');
 			$phone         = $this->input->post('phone');
 			$status        = $this->input->post('status');
@@ -159,6 +152,7 @@
 				$old_data->employee_code != $employee_code ||
 				$old_data->name != $name ||
 				$old_data->department_id != $department_id ||
+				$old_data->company_id != $company_id ||
 				$old_data->position != $position ||
 				$old_data->phone != $phone ||
 				$old_data->status != $status
@@ -181,6 +175,7 @@
 				'employee_code' => $employee_code,
 				'name'          => $name,
 				'department_id' => $department_id,
+				'company_id' => $company_id,
 				'position'      => $position,
 				'phone'         => $phone,
 				'status'        => $status,
@@ -230,6 +225,7 @@
 		{
 			$this->db->where('employee_code', $employee_code);
 			$this->db->where('id !=', $id);
+			$this->db->where('isdelete', 1);
 
 			$query = $this->db->get('employees');
 
@@ -240,6 +236,7 @@
 		{
 			$this->db->where('username', $username);
 			$this->db->where('employee_id !=', $id);
+			$this->db->where('isdelete', 1);
 
 			$query = $this->db->get('users');
 

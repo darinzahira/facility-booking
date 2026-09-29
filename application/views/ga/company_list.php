@@ -2,9 +2,9 @@
   <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Kendaraan</h1>
+    <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Perusahaan</h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url();?>ga/Vehicles/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Data Kendaraan</a>
+      <a href="<?php echo base_url();?>ga/Companies/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Perusahaan</a>
     </p>
 
     <!-- DataTales Example -->
@@ -13,8 +13,9 @@
 
           <div class="alert alert-success">
             <?php echo $this->session->flashdata('success'); ?>
+
             <button type="button" class="close" data-dismiss="alert">
-              <span>&times;</span>
+                <span>&times;</span>
             </button>
           </div>
 
@@ -24,6 +25,7 @@
 
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?= $this->session->flashdata('error'); ?>
+
             <button type="button" class="close" data-dismiss="alert">
                 <span>&times;</span>
             </button>
@@ -41,7 +43,7 @@
       <?php endif; ?>
 
       <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-info">List Kendaraan</h6>
+        <h6 class="m-0 font-weight-bold text-info">List Perusahaan</h6>
       </div>
       <div class="card-body">
 
@@ -50,11 +52,9 @@
             <thead>
               <tr>
                 <th>ID.</th>
-                <th>Kode Kendaraan</th>
-                <th>Nomor Polisi</th>
-                <th>Nama Kendaraan</th>
+                <th>Kode Perusahaan</th>
+                <th>Nama Perusahaan</th>
                 <th>Status</th>
-                <th>Driver</th>
                 <th>Created At</th>
                 <th>Updated At</th>
                 <th>Action</th>
@@ -66,38 +66,28 @@
                 foreach ($list as $list): 
                 $i++;
                 $id = $list->id;
-                $vehicle_code = $list->vehicle_code;
-                $plate_number = $list->plate_number;
-                $vehicle_name = $list->vehicle_name;
+                $company_code = $list->company_code;
+                $company_name = $list->company_name;
                 $status = $list->status;
-                $requires_driver = $list->requires_driver;
                 $created_at = $list->created_at;
                 $updated_at = $list->updated_at;
               ?>
               <tr>
                 <td><?= $i ?>.</td>
-                <td><?= $vehicle_code ?></td>
-                <td><?= $plate_number ?></td>
-                <td><?= $vehicle_name ?></td>
-                <td><?php if ($status == 'Aktif'): ?> 
+                <td><?= $company_code ?></td>
+                <td><?= $company_name ?></td>
+                <td><?php if ($status == 'aktif'): ?> 
                         Aktif 
-                    <?php elseif ($status == 'Perbaikan'): ?> 
-                        Perbaikan
                     <?php else: ?> 
                         Tidak Aktif 
-                    <?php endif ?></td>
-                <td><?php if ($requires_driver == 'Ya'): ?> 
-                        Wajib 
-                    <?php else: ?> 
-                        Tidak Wajib
                     <?php endif ?></td>
                 <td><?= $created_at ?></td>
                 <td><?= $updated_at ?></td>
                 <td>
-                  <a href="<?php echo base_url(); ?>ga/Vehicles/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
+                  <a href="<?php echo base_url(); ?>ga/Companies/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
                     <i class="far fa-edit"></i> Edit
                   </a>
-                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Remove</a>
+                  <a href="#" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Remove</a>
                 </td>
               </tr>
               <?php endforeach; ?>
@@ -113,14 +103,15 @@
                   <div class="modal-body">Hapus Data?</div>
                   <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-info" href="<?php echo base_url(); ?>ga/Vehicles/delete/<?= $id ?>">Hapus</a>
+                    <a class="btn btn-info" href="<?php echo base_url(); ?>ga/Companies/delete/<?= $id ?>">Hapus</a>
                   </div>
                 </div>
               </div>
               </div>
-            </tbody>
+             </tbody>
           </table>
         </div>
+
       </div>
     </div>
 

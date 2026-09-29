@@ -1,13 +1,11 @@
 <?php  
-  foreach ($editvehicle as $e)
-  {
-    $id = $e->id;
-    $vehicle_code = $e->vehicle_code;
-    $vehicle_name = $e->vehicle_name;
-    $plate_number = $e->plate_number;
-    $notes = $e->notes;
-    $status = $e->status;
-  }  
+    $id = $editvehicle->id;
+    $vehicle_code = $editvehicle->vehicle_code;
+    $vehicle_name = $editvehicle->vehicle_name;
+    $plate_number = $editvehicle->plate_number;
+    $notes = $editvehicle->notes;
+    $status = $editvehicle->status;
+    $requires_driver = $editvehicle->requires_driver;
 ?>
 <!-- Begin Page Content -->
   <div class="container-fluid">
@@ -68,6 +66,21 @@
             </select>
             <?php echo form_error('status', '<small class="text-danger">', '</small>'); ?>
             </div>
+          </div>
+
+          <div class="form-group row">
+              <label for="name" class="col-sm-2 col-form-label">Driver :</label>
+              <div class="col-sm-10">
+              <select name="requires_driver" class="form-control">
+                  <option value="Tidak" <?= set_select('requires_driver', 'Tidak', $requires_driver == 'Tidak') ?>>
+                      Tidak Wajib
+                  </option>
+                  <option value="Ya" <?= set_select('requires_driver', 'Ya', $requires_driver == 'Ya') ?>>
+                      Wajib
+                  </option>
+              </select>            
+              <?php echo form_error('requires_driver', '<small class="text-danger">', '</small>'); ?>
+              </div>
           </div>
 
           <div class="form-group row">

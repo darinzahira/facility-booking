@@ -36,7 +36,13 @@
                         <tr>
                             <td><?= $no++; ?></td>
                             <td><?= $booking->booking_code; ?></td>
-                            <td><?= $booking->facility_type; ?></td>
+                            <td><?php if ($booking->facility_type == 'vehicle'): ?> 
+                                    Kendaraan
+                                <?php elseif ($booking->facility_type == 'room'): ?> 
+                                    Kamar
+                                <?php else: ?> 
+                                    Ruang Meeting
+                                <?php endif ?></td>
                             <td><?= $booking->start_date; ?> - <?= $booking->end_date; ?></td>
                             <td><?php if ($booking->status == 'pending'): ?> 
                                     Menunggu Persetujuan 

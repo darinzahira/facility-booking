@@ -1,24 +1,13 @@
 <?php
 
-class Bookings extends CI_Controller
+class Bookings extends MY_Controller
 {
     public function __construct()
     {
         parent::__construct();
 
         // Pastikan user sudah login
-        if (!$this->session->userdata('logged_in')) {
-            redirect('login');
-        }
-
-        // Hanya admin/GA
-        if ($this->session->userdata('role') != 'admin') {
-            show_error(
-                'Anda tidak memiliki akses ke halaman ini.',
-                403,
-                'Access Denied'
-            );
-        }
+        $this->check_admin();
 
         $this->load->model('Booking_model');
         $this->load->helper('url');
@@ -40,6 +29,9 @@ class Bookings extends CI_Controller
         if (!$data['booking']) {
             show_404();
         }
+
+        $data['vehicles'] = $this->Vehicle_model->get_active();
+        $data['drivers']   = $this->Driver_model->get_active();
 
         $data['innerdata'] = 'ga/booking_detail';
 

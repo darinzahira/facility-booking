@@ -1,9 +1,12 @@
 <?php  
 
-	class Vehicles extends CI_Controller
+	class Vehicles extends MY_Controller
 	{
 		public function index()
 		{
+			
+			$this->check_admin();
+		
 			$this->load->helper(array('form', 'url'));
 			$this->load->library('form_validation');
 			
@@ -24,6 +27,7 @@
 			$this->form_validation->set_rules('plate_number', 'Plat Kendaraan', 'required|is_unique[vehicles.plate_number]');
 			$this->form_validation->set_rules('vehicle_name', 'Brand Kendaraan', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
+			$this->form_validation->set_rules('requires_driver', 'Status Driver', 'required');
 
 			// Pesan validasi
 			$this->form_validation->set_message(
@@ -99,6 +103,7 @@
 			$this->form_validation->set_rules('plate_number', 'Plat Kendaraan', 'required|trim|callback_check_plate_number');
 			$this->form_validation->set_rules('vehicle_name', 'Brand Kendaraan', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
+			$this->form_validation->set_rules('requires_driver', 'Status Driver', 'required');
 
 			if ($this->form_validation->run() == FALSE)
 			{
@@ -110,19 +115,20 @@
 			else
 			{
 				$result = $this->Vehicle_model->update();
-				
-				if ($result == 'no_change'){
 
-					$this->session->set_flashdata(
-						'warning',
-						'Tidak ada perubahan data yang dilakukan.'
-					);
-				} elseif ($result) {
+				if ($result == TRUE) {
 					$this->session->set_flashdata(
 						'success',
 						'Data Kendaraan berhasil diubah.'
 					);
-				} else {
+				} 
+				elseif ($result == 'no_change'){
+					$this->session->set_flashdata(
+						'warning',
+						'Tidak ada perubahan data yang dilakukan.'
+					);
+				}
+				else {
 					$this->session->set_flashdata(
 						'error',
 						'Data Kendaraan gagal diubah.'

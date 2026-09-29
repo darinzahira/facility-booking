@@ -16,7 +16,7 @@
         <form method="post" action="<?php echo base_url(); ?>ga/Departments/store" >
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Nama Departemen : </label>
+            <label for="name" class="col-sm-2 col-form-label">Nama Departemen<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="dept_name" class="form-control" id="dept_name" placeholder="" autofocus value="<?php echo set_value('dept_name');?>">
               <?php echo form_error('dept_name', '<small class="text-danger">', '</small>'); ?>
@@ -24,7 +24,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Departemen : </label>
+            <label for="name" class="col-sm-2 col-form-label">Status Departemen<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control" >
                 <option value="">-- Pilih Status --</option>

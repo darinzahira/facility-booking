@@ -1,9 +1,12 @@
 <?php  
 
-	class Rooms extends CI_Controller
+	class Rooms extends MY_Controller
 	{
 		public function index()
 		{
+			
+			$this->check_admin();
+		
 			$this->load->helper(array('form', 'url'));
 			$this->load->library('form_validation');
 			

@@ -29,7 +29,7 @@
 
           <input type="hidden" name="id" value="<?= $id ?>">
           <div class="form-group row">
-            <label for="room_code" class="col-sm-2 col-form-label">Kode Ruangan : </label>
+            <label for="room_code" class="col-sm-2 col-form-label">Kode Ruangan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="room_code" class="form-control" id="room_code" placeholder=""  autofocus value="<?= set_value('room_code', $room_code) ?>">
               <?php echo form_error('room_code', '<small class="text-danger">', '</small>'); ?>
@@ -37,7 +37,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="room_name" class="col-sm-2 col-form-label">Nama Ruangan : </label>
+            <label for="room_name" class="col-sm-2 col-form-label">Nama Ruangan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="room_name" class="form-control" id="room_name" placeholder=""  autofocus value="<?= set_value('room_name', $room_name) ?>">
               <?php echo form_error('room_name', '<small class="text-danger">', '</small>'); ?>
@@ -45,7 +45,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="capacity" class="col-sm-2 col-form-label">Kapasitas : </label>
+            <label for="capacity" class="col-sm-2 col-form-label">Kapasitas<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="capacity" class="form-control" id="capacity" placeholder="" autofocus value="<?= set_value('capacity', $capacity) ?>">
               <?php echo form_error('capacity', '<small class="text-danger">', '</small>'); ?>
@@ -53,7 +53,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="location" class="col-sm-2 col-form-label">Lokasi : </label>
+            <label for="location" class="col-sm-2 col-form-label">Lokasi<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="location" class="form-control" id="location" placeholder=""  autofocus value="<?= set_value('location', $location) ?>">
               <?php echo form_error('location', '<small class="text-danger">', '</small>'); ?>
@@ -61,7 +61,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Ruangan : </label>
+            <label for="name" class="col-sm-2 col-form-label">Status Ruangan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control">
                 <option value="">-- Pilih Status --</option>
@@ -80,7 +80,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Notes : </label>
+            <label for="name" class="col-sm-2 col-form-label">Notes</label>
             <div class="col-sm-10">
               <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?= $notes ?>">
             </div>

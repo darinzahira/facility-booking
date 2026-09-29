@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SaranaKita</title>
+  <title>Bookhub</title>
   <link rel="icon" type="image/png" href="<?php echo base_url(); ?>assets/logo.png">
 
   <!-- Custom fonts for this template-->
@@ -74,7 +74,7 @@
               <div class="col-lg-8 mx-auto">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4 font-weight-bold">SaranaKita</h1>
+                    <h1 class="h4 text-gray-900 mb-4 font-weight-bold">Bookhub</h1>
                     <h5 class="my-4 text-secondary">Login</h5>
                   </div>
                   <form class="user" method="post" action="<?php echo base_url(); ?>Login/login">

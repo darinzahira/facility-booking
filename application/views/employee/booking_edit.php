@@ -1,3 +1,16 @@
+<?php  
+  foreach ($editdata as $e)
+  {
+    $id = $e->id;
+    $facility_type = $e->facility_type;
+    $start_date = $e->start_date;
+    $end_date = $e->end_date;
+    $start_time = $e->start_time;
+    $end_time = $e->end_time;
+    $purpose = $e->purpose;
+  } 
+?>
+
 <div class="card shadow mb-4">
 
     <div class="card-header">
@@ -11,6 +24,7 @@
         <form method="post"
               action="<?= base_url(); ?>employee/Bookings/store">
 
+            <input type="hidden" name="id" value="<?= $id ?>">
             <div class="form-group">
                 <label>Fasilitas<span class="text-danger"> *</span></label>
                 <select name="facility_type" class="form-control" >
@@ -22,7 +36,7 @@
                         Kamar
                     </option>
                     <option value="meeting_room" <?= set_select('facility_type', 'meeting_room'); ?>>
-                        Ruang Meeting
+                        Meeting Room
                     </option>
                 </select>
                 <?php echo form_error( 'facility_type', '<small class="text-danger">', '</small>' ); ?>
@@ -31,7 +45,7 @@
 
             <div class="form-group">
                 <label>Tanggal Mulai<span class="text-danger"> *</span></label>
-                <input type="date" name="start_date" class="form-control" value="<?= set_value('start_date'); ?>">
+                <input type="date" name="start_date" class="form-control" value="<?= set_value('start_date', $start_date); ?>">
                 <?php echo form_error('start_date','<small class="text-danger">', '</small>'); ?>
             </div>
 
@@ -41,7 +55,7 @@
                     type="date"
                     name="end_date"
                     class="form-control"
-                    value="<?= set_value('end_date'); ?>"
+                    value="<?= set_value('end_date',$end_date); ?>"
                 >
 
                 <?php echo form_error(
@@ -59,7 +73,7 @@
                     type="time"
                     name="start_time"
                     class="form-control"
-                    value="<?= set_value('start_time'); ?>"
+                    value="<?= set_value('start_time',$start_time); ?>"
                 >
             </div>
 
@@ -71,7 +85,7 @@
                     type="time"
                     name="end_time"
                     class="form-control"
-                    value="<?= set_value('end_time'); ?>"
+                    value="<?= set_value('end_time',$end_time); ?>"
                 >
             </div>
 
@@ -83,7 +97,7 @@
                     name="purpose"
                     class="form-control"
                     rows="4"
-                ><?= set_value('purpose'); ?></textarea>
+                ><?= set_value('purpose', $purpose); ?></textarea>
 
                 <?php echo form_error(
                     'purpose',
@@ -97,7 +111,7 @@
                 type="submit"
                 class="btn btn-info"
             >
-                Ajukan Peminjaman
+                Simpan
             </button>
 
             <a

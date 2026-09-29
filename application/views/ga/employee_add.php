@@ -16,7 +16,7 @@
         <form method="post" action="<?php echo base_url(); ?>ga/Employees/store" >
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">NIK Karyawan : </label>
+            <label for="name" class="col-sm-2 col-form-label">NIK Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="employee_code" class="form-control" id="employee_code" placeholder="" autofocus value="<?php echo set_value('employee_code');?>">
               <?php echo form_error('employee_code', '<small class="text-danger">', '</small>'); ?>
@@ -24,7 +24,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Nama Karyawan : </label>
+            <label for="name" class="col-sm-2 col-form-label">Nama Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="name" class="form-control" id="name" placeholder="" autofocus value="<?php echo set_value('name');?>">
               <?php echo form_error('name', '<small class="text-danger">', '</small>'); ?>
@@ -32,7 +32,25 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Departemen : </label>
+            <label for="name" class="col-sm-2 col-form-label">Perusahaan<span class="text-danger"> *</span></label>
+            <div class="col-sm-10">
+              <select name="company_id" class="form-control">
+                <option value="">-- Pilih Perusahaan --</option>
+                <?php foreach ($company as $company): ?>
+
+                    <option value="<?= $company->id ?>" <?php echo set_select('company_id', $company->id); ?>>
+                        <?= $company->company_name ?>
+                    </option>
+
+                <?php endforeach; ?>
+            </select>
+            <?php echo form_error('company_id', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+          
+
+          <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Departemen<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="department_id" class="form-control">
                 <option value="">-- Pilih Departemen --</option>
@@ -49,7 +67,7 @@
           </div>
           
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Jabatan : </label>
+            <label for="name" class="col-sm-2 col-form-label">Jabatan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="position" class="form-control" id="position" placeholder="" autofocus value="<?php echo set_value('position');?>">
               <?php echo form_error('position', '<small class="text-danger">', '</small>'); ?>
@@ -57,7 +75,7 @@
           </div>
           
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">No Telpon : </label>
+            <label for="name" class="col-sm-2 col-form-label">No Telpon<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="phone" class="form-control" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="phone" placeholder="" autofocus value="<?php echo set_value('phone');?>">
               <?php echo form_error('phone', '<small class="text-danger">', '</small>'); ?>
@@ -65,7 +83,7 @@
           </div>
 
           <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Username :</label>
+              <label class="col-sm-2 col-form-label">Username<span class="text-danger"> *</span></label>
               <div class="col-sm-10">
                   <input type="text" name="username" class="form-control" id="username" placeholder="" autofocus value="<?= set_value('username'); ?>">
                   <?php echo form_error(
@@ -78,8 +96,7 @@
 
           <div class="form-group row">
               <label class="col-sm-2 col-form-label">
-                  Password :
-              </label>
+                  Password<span class="text-danger"> *</span></label>
 
               <div class="col-sm-10 password-wrapper">
                   <input
@@ -100,7 +117,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Karyawan : </label>
+            <label for="name" class="col-sm-2 col-form-label">Status Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control">
                 <option value="">-- Pilih Status --</option>
@@ -112,7 +129,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Role Karyawan : </label>
+            <label for="name" class="col-sm-2 col-form-label">Role Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="role" class="form-control">
                 <option value="">-- Pilih Role --</option>

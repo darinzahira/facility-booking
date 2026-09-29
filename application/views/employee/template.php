@@ -1,13 +1,4 @@
-<?php 
-  if ($this->session->userdata('role') == '') {
-    echo "<script>alert('Please Log in First!')</script>";
-    redirect(base_url() . 'index.php/Login', 'refresh');
-  }
-  else if ($this->session->userdata('role') != 'employee') {
-    echo "<script>alert('You do not have permission to access this page!')</script>";
-    redirect(base_url() . 'index.php/Login', 'refresh');
-  }
-?>
+<?php if ($this->session->userdata('role') == 'employee'): ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -266,3 +257,4 @@
 </body>
 
 </html>
+<?php endif; ?>

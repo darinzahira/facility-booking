@@ -73,7 +73,7 @@
 
             } elseif ($user->role == 'admin') {
 
-                redirect(base_url() . 'ga/Dashboard');
+                redirect(base_url() . 'ga/Bookings');
 
             } else {
 

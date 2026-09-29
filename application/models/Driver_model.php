@@ -99,8 +99,15 @@
 
 		public function get_active()
 		{
-			$this->db->where('status', 1);
-			return $this->db->get('employees')->result();
+			$this->db->select('drivers.*, employees.name, employees.employee_code');
+			$this->db->from('drivers');
+			$this->db->join(
+				'employees',
+				'employees.id = drivers.employee_id'
+			);
+			$this->db->where('drivers.status', 'Aktif');
+
+			return $this->db->get()->result();
 		}
 	}
 ?>

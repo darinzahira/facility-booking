@@ -16,7 +16,7 @@
         <form method="post" action="<?php echo base_url(); ?>ga/Rooms/store" >       
 
           <div class="form-group row">
-            <label for="room_code" class="col-sm-2 col-form-label">Kode Kamar : </label>
+            <label for="room_code" class="col-sm-2 col-form-label">Kode Kamar<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="room_code" class="form-control" id="room_code" placeholder="" autofocus value="<?php echo set_value('room_code');?>">
             <?php echo form_error('room_code', '<small class="text-danger">', '</small>'); ?>
@@ -24,7 +24,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="room_name" class="col-sm-2 col-form-label">Nama Kamar : </label>
+            <label for="room_name" class="col-sm-2 col-form-label">Nama Kamar<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="room_name" class="form-control" id="room_name" placeholder="" autofocus value="<?php echo set_value('room_name');?>">
             <?php echo form_error('room_name', '<small class="text-danger">', '</small>'); ?>
@@ -32,7 +32,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="capacity" class="col-sm-2 col-form-label">Kapasitas : </label>
+            <label for="capacity" class="col-sm-2 col-form-label">Kapasitas<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <input type="text" name="capacity" class="form-control" id="capacity" placeholder="" autofocus value="<?php echo set_value('capacity');?>">
             <?php echo form_error('capacity', '<small class="text-danger">', '</small>'); ?>
@@ -40,7 +40,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Kamar : </label>
+            <label for="name" class="col-sm-2 col-form-label">Status Kamar<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="status" class="form-control">
                 <option value="">-- Pilih Status --</option>
@@ -53,7 +53,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Notes : </label>
+            <label for="name" class="col-sm-2 col-form-label">Notes</label>
             <div class="col-sm-10">
               <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?php echo set_value('notes');?>">
             </div>
