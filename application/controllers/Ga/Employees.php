@@ -85,6 +85,7 @@
 		{
 			$id = $this->uri->segment(4);
 			$data['detail'] = $this->Emp_model->get_detail($id);
+			$data['simdata'] = $this->Employee_sim_model->get_by_employee($id);
 			$data['innerdata'] = 'ga/employee_detail';
 			if (!$data['detail']) {
 				show_404();
@@ -117,25 +118,13 @@
 			$data['editemployee'] = $this->Emp_model->edit($id);
 			$data['departments'] = $this->Dept_model->get_active();
 			$data['company'] = $this->Company_model->get_active();
+			$data['simdata'] = $this->Employee_sim_model->get_by_employee($id);
 			$data['innerdata'] = 'ga/employee_edit';
 			$this->load->view('ga/template', $data);
 		}
 
 		public function update()
 		{
-			// $result = $this->Emp_model->update();
-			// if ($result) {
-			// 	$this->session->set_flashdata(
-			// 		'success',
-			// 		'Data Karyawan berhasil diubah.'
-			// 	);
-			// } else {
-			// 	$this->session->set_flashdata(
-			// 		'error',
-			// 		'Data Karyawan gagal diubah.'
-			// 	);
-			// }
-			// redirect(base_url() . 'ga/Employees');
 
 			$id = $this->input->post('id');
 
@@ -148,6 +137,7 @@
 			$this->form_validation->set_rules('username','Username','required|callback_check_username');
 			$this->form_validation->set_rules('status','Status','required');
 			$this->form_validation->set_rules('role','Role','required');
+			$this->form_validation->set_rules('sim_number','Nomor SIM','regex_match[/^[0-9]+$/]');
 
 			$this->form_validation->set_message(
 				'required',
@@ -163,36 +153,109 @@
 			{
 				$data['editemployee'] = $this->Emp_model->edit($id);
 				$data['departments'] = $this->Dept_model->get_active();
+				$data['company'] = $this->Company_model->get_active();
+				$data['simdata'] = $this->Employee_sim_model->get_by_employee($id);
 				$data['innerdata'] = 'ga/employee_edit';
 
 				$this->load->view('ga/template', $data);
-			} else {
-				$result = $this->Emp_model->update();
 
-				if ($result === 'no_change')
+				return;
+			} 
+			
+			$sim_photo = null;
+			
+			if (!empty($_FILES['sim_photo']['name']))
+			{
+				$config['upload_path']   = './uploads/sim/';
+				$config['allowed_types'] = 'jpg|jpeg|png';
+				$config['max_size']      = 2048; // 2 MB
+				$config['encrypt_name']  = TRUE;
+
+				$this->load->library('upload', $config);
+
+				if (!$this->upload->do_upload('sim_photo'))
+				{
+					$this->session->set_flashdata(
+						'error',
+						$this->upload->display_errors('', '')
+					);
+
+					redirect(base_url() . 'ga/Employees/edit/' . $id);
+					return;
+				}
+
+				$upload_data = $this->upload->data();
+
+				$sim_photo = $upload_data['file_name'];
+			}
+
+			$result = $this->Emp_model->update();
+
+			if ($result === 'no_change')
+			{
+				/*
+				* Kalau Employee tidak berubah tetapi ada
+				* upload foto SIM, foto tetap bisa disimpan.
+				*/
+
+				if ($sim_photo !== null)
+				{
+					$sim_data = array(
+						'employee_id' => $id,
+						'sim_photo'   => $sim_photo
+					);
+
+					$this->Employee_sim_model->update_photo(
+						$id,
+						$sim_data
+					);
+
+					$this->session->set_flashdata(
+						'success',
+						'Foto SIM berhasil diubah.'
+					);
+				}
+				else
 				{
 					$this->session->set_flashdata(
 						'warning',
 						'Tidak ada perubahan data yang dilakukan.'
 					);
 				}
-				elseif ($result)
+			}
+			elseif ($result)
+			{
+				/*
+				* Employee berhasil diubah
+				*/
+
+				if ($sim_photo !== null)
 				{
-					$this->session->set_flashdata(
-						'success',
-						'Data Karyawan berhasil diubah.'
+					$sim_data = array(
+						'employee_id' => $id,
+						'sim_photo'   => $sim_photo
 					);
-				}
-				else
-				{
-					$this->session->set_flashdata(
-						'error',
-						'Data Karyawan gagal diubah.'
+
+					$this->Employee_sim_model->update_photo(
+						$id,
+						$sim_data
 					);
 				}
 
-				redirect(base_url() . 'ga/Employees');
+				$this->session->set_flashdata(
+					'success',
+					'Data Karyawan berhasil diubah.'
+				);
 			}
+			else
+			{
+				$this->session->set_flashdata(
+					'error',
+					'Data Karyawan gagal diubah.'
+				);
+			}
+
+			redirect(base_url() . 'ga/Employees');
 		}
 
 		public function check_employee_code($employee_code)

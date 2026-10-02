@@ -24,8 +24,12 @@
         <h6 class="m-0 font-weight-bold text-info">Edit Data Karyawan</h6>
       </div>
       <div class="card-body col-lg-10 mx-auto">
-        <form method="post" action="<?php echo base_url(); ?>ga/Employees/update" >
+        <form method="post" action="<?php echo base_url(); ?>ga/Employees/update" enctype="multipart/form-data" >
 
+        <h5 class="font-weight-bold text-info mb-4">
+            Data Karyawan
+        </h5>        
+        
         <input type="hidden" name="id" value="<?= $id ?>">  
         <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">NIK Karyawan<span class="text-danger"> *</span></label>
@@ -94,6 +98,28 @@
           </div>
 
           <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Status Karyawan<span class="text-danger"> *</span></label>
+            <div class="col-sm-10">
+              <select name="status" class="form-control">
+                <option value="">-- Pilih Status --</option>
+                <option value="1" <?= set_select('status', '1', $status == 1) ?>>
+                    Aktif
+                </option>
+                <option value="0" <?= set_select('status', '0', $status == 0) ?>>
+                    Tidak Aktif
+                </option>
+            </select>
+            <?php echo form_error('status', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+
+            <hr>
+
+          <h5 class="font-weight-bold text-info mb-4">
+              Data User
+          </h5>
+
+          <div class="form-group row">
               <label class="col-sm-2 col-form-label">Username<span class="text-danger"> *</span></label>
               <div class="col-sm-10">
                   <input type="text" name="username" class="form-control" id="username" placeholder="" autofocus value="<?= set_value('username', $username) ?>">
@@ -130,22 +156,6 @@
           </div>
 
           <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">Status Karyawan<span class="text-danger"> *</span></label>
-            <div class="col-sm-10">
-              <select name="status" class="form-control">
-                <option value="">-- Pilih Status --</option>
-                <option value="1" <?= set_select('status', '1', $status == 1) ?>>
-                    Aktif
-                </option>
-                <option value="0" <?= set_select('status', '0', $status == 0) ?>>
-                    Tidak Aktif
-                </option>
-            </select>
-            <?php echo form_error('status', '<small class="text-danger">', '</small>'); ?>
-            </div>
-          </div>
-
-          <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Role Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
               <select name="role" class="form-control">
@@ -160,6 +170,118 @@
             <?php echo form_error('role', '<small class="text-danger">', '</small>'); ?>
             </div>
           </div>
+
+
+          <hr>
+
+          <h5 class="font-weight-bold text-info mb-4">
+              Data SIM
+          </h5>
+
+          <div class="form-group row">
+              <label class="col-sm-2 col-form-label">
+                  Jenis SIM
+              </label>
+
+              <div class="col-sm-10">
+                  <select name="sim_type" class="form-control">
+
+                      <option value="">-- Pilih Jenis SIM --</option>
+
+                      <option value="SIM A"
+                          <?= ($simdata && $simdata->sim_type == 'SIM A') ? 'selected' : ''; ?>>
+                          SIM A
+                      </option>
+
+                      <option value="SIM B1"
+                          <?= ($simdata && $simdata->sim_type == 'SIM B1') ? 'selected' : ''; ?>>
+                          SIM B1
+                      </option>
+
+                      <option value="SIM B2"
+                          <?= ($simdata && $simdata->sim_type == 'SIM B2') ? 'selected' : ''; ?>>
+                          SIM B2
+                      </option>
+
+                      <option value="SIM C"
+                          <?= ($simdata && $simdata->sim_type == 'SIM C') ? 'selected' : ''; ?>>
+                          SIM C
+                      </option>
+
+                      <option value="SIM D"
+                          <?= ($simdata && $simdata->sim_type == 'SIM D') ? 'selected' : ''; ?>>
+                          SIM D
+                      </option>
+
+                  </select>
+              <?php echo form_error('sim_type', '<small class="text-danger">', '</small>'); ?>
+
+              </div>
+          </div>
+
+          <div class="form-group row">
+              <label class="col-sm-2 col-form-label">
+                  Nomor SIM
+              </label>
+
+              <div class="col-sm-10">
+                  <input type="text"
+                        name="sim_number"
+                        class="form-control"
+                        value="<?= $simdata ? $simdata->sim_number : ''; ?>">
+              <?php echo form_error('sim_number', '<small class="text-danger">', '</small>'); ?>
+              </div>
+          </div>
+
+          <div class="form-group row">
+              <label class="col-sm-2 col-form-label">
+                  Masa Berlaku
+              </label>
+
+              <div class="col-sm-10">
+                  <input type="date"
+                        name="expired_date"
+                        class="form-control"
+                        value="<?= $simdata ? $simdata->expired_date : ''; ?>">
+             <?php echo form_error('expired_date', '<small class="text-danger">', '</small>'); ?>
+              </div>
+          </div>
+
+          <div class="form-group row">
+                <label class="col-sm-2 col-form-label">
+                    Upload SIM
+                </label>
+
+                <div class="col-sm-10">
+
+                    <input type="file"
+                        name="sim_photo"
+                        class="form-control-file"
+                        accept=".jpg,.jpeg,.png">
+
+                    <small class="form-text text-muted">
+                        Format JPG, JPEG, atau PNG. Maksimal 2 MB.
+                    </small>
+
+                    <?php if (!empty($simdata) && !empty($simdata->sim_photo)): ?>
+
+                        <div class="mt-3">
+
+                            <p class="mb-2">
+                                Foto SIM saat ini:
+                            </p>
+
+                            <img src="<?= base_url('uploads/sim/' . $simdata->sim_photo); ?>"
+                                alt="Foto SIM"
+                                style="max-width: 300px; max-height: 200px;"
+                                class="img-thumbnail">
+
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+            </div>
 
            <div class="form-group row">
             <label class="col-sm-2 col-form-label"></label>

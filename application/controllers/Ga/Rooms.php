@@ -23,8 +23,8 @@
 
 		public function store()
 		{
-			$this->form_validation->set_rules('room_code', 'Kode Kamar', 'required|is_unique[rooms.room_code]');
-			$this->form_validation->set_rules('room_name', 'Nama Kamar', 'required|is_unique[rooms.room_name]');
+			$this->form_validation->set_rules('room_code', 'Kode Kamar', 'required|trim|callback_check_room_code');
+			$this->form_validation->set_rules('room_name', 'Nama Kamar', 'required|trim|callback_check_room_name');
 			$this->form_validation->set_rules('capacity', 'Kapasitas', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 
@@ -127,7 +127,7 @@
 						'warning',
 						'Tidak ada perubahan data yang dilakukan.'
 					);
-				} elseif ($result) {
+				} elseif ($result == TRUE) {
 					$this->session->set_flashdata(
 						'success',
 						'Data Kamar berhasil diubah.'

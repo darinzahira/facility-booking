@@ -23,8 +23,8 @@
 
 		public function store()
 		{
-			$this->form_validation->set_rules('vehicle_code', 'Kode Kendaraan', 'required|is_unique[vehicles.vehicle_code]');
-			$this->form_validation->set_rules('plate_number', 'Plat Kendaraan', 'required|is_unique[vehicles.plate_number]');
+			$this->form_validation->set_rules('vehicle_code', 'Kode Kendaraan', 'required|trim|callback_check_vehicle_code');
+			$this->form_validation->set_rules('plate_number', 'Plat Kendaraan', 'required|trim|callback_check_plate_number');
 			$this->form_validation->set_rules('vehicle_name', 'Brand Kendaraan', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			$this->form_validation->set_rules('requires_driver', 'Status Driver', 'required');

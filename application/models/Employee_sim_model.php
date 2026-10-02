@@ -1,6 +1,6 @@
 <?php  
 
-	class Employeesim_model extends CI_Model
+	class Employee_sim_model extends CI_Model
 	{
 		// Read
 		public function list()
@@ -95,26 +95,28 @@
 			return $this->db->get('employee_sims')->result();
 		}
 
-		// CEK NAMA DEPARTEMEN
-		public function check_department_name($department_name, $id)
+		// Ambil data SIM berdasarkan employee
+		public function get_by_employee($employee_id)
 		{
-			$this->db->where('department_name', $department_name);
-			$this->db->where('id !=', $id);
-			$this->db->where('isdelete', 1);
-
-			$query = $this->db->get('employee_sims');
-
-			return $query->num_rows() > 0;
+			return $this->db
+				->where('employee_id', $employee_id)
+				->where('isdelete', 1)
+				->get('employee_sims')
+				->row();
 		}
 
-		// AMBIL DEPARTEMEN BY ID
-		public function get_by_id($id)
+		public function update_photo($employee_id, $data)
 		{
-			$this->db->where('id', $id);
-			$this->db->where('isdelete', 1);
-			return $this->db->get('employee_sims')->row();
-		}
+			$this->db->where('employee_id', $employee_id);
 
+			return $this->db->update(
+				'employee_sims',
+				array(
+					'sim_photo' => $data['sim_photo'],
+					'updated_at' => date('Y-m-d H:i:s')
+				)
+			);
+		}
 
 		
 	}

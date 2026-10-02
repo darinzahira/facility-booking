@@ -36,7 +36,7 @@
 
 			$result = $this->db->insert('vehicles', $data);
 			return $result;
-		}
+		} 
 
 		// DELETE
 		public function delete($id)
@@ -111,7 +111,7 @@
 
 		public function check_vehicle_code($vehicle_code, $id)
 		{
-			$this->db->where('vehicle_code', $vehicle_code);
+			$this->db->where('vehicle_code', $vehicle_code); 
 			$this->db->where('id !=', $id);
 			$this->db->where('isdelete', 1);
 

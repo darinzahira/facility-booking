@@ -23,8 +23,18 @@
 
 		public function store()
 		{
-			$this->form_validation->set_rules('company_code', 'Kode Perusahaan', 'required');
-			$this->form_validation->set_rules('company_name', 'Nama Perusahaan', 'required');
+			$this->form_validation->set_rules(
+				'company_code',
+				'Kode Perusahaan',
+				'required|trim|callback_check_company_code'
+			);
+
+			$this->form_validation->set_rules(
+				'company_name',
+				'Nama Perusahaan',
+				'required|trim|callback_check_company_name'
+			);
+			
 			$this->form_validation->set_rules('status', 'Status', 'required');
 
 			// Pesan validasi

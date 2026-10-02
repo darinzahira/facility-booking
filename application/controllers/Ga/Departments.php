@@ -23,7 +23,7 @@
 
 		public function store()
 		{
-			$this->form_validation->set_rules('dept_name', 'Nama Departemen', 'required');
+			$this->form_validation->set_rules('dept_name', 'Nama Departemen', 'required|trim|callback_check_department_name');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 
 			// Pesan validasi

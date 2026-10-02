@@ -23,13 +23,13 @@
 
 		public function store()
 		{
-			$this->form_validation->set_rules('room_code', 'Kode Kamar', 'required|is_unique[meeting_rooms.room_code]');
-			$this->form_validation->set_rules('room_name', 'Nama Kamar', 'required|is_unique[meeting_rooms.room_name]');
+			$this->form_validation->set_rules('room_code', 'Kode Kamar', 'required|trim|callback_check_room_code');
+			$this->form_validation->set_rules('room_name', 'Nama Kamar', 'required|trim|callback_check_room_name');
 			$this->form_validation->set_rules('capacity', 'Kapasitas', 'required');
 			$this->form_validation->set_rules('location', 'Lokasi', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 
-			// Pesan validasi
+			// Pesan validasi 
 			$this->form_validation->set_message(
 				'required',
 				'{field} wajib diisi.'
@@ -122,17 +122,21 @@
 			else
 			{
 				$result = $this->Meeting_model->update();
-				if ($result == 'no_change'){
 
-					$this->session->set_flashdata(
-						'warning',
-						'Tidak ada perubahan data yang dilakukan.'
-					);
-				} elseif ($result) {
+
+				if ($result == TRUE){
+
 					$this->session->set_flashdata(
 						'success',
 						'Data Ruang Meeting berhasil diubah.'
 					);
+				} elseif ($result == 'no_change') {
+					
+					$this->session->set_flashdata(
+						'warning',
+						'Tidak ada perubahan data yang dilakukan.'
+					);
+					
 				} else {
 					$this->session->set_flashdata(
 						'error',

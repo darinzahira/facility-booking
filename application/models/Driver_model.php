@@ -8,6 +8,7 @@
 			$this->db->select('drivers.* , employees.name , employees.employee_code');
 			$this->db->from('drivers');
             $this->db->join('employees' , 'employees.id = drivers.employee_id');
+			$this->db->where('drivers.isdelete', 1);
 			$sql = $this->db->get('');
 
 			return $sql->result();

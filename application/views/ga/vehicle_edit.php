@@ -29,24 +29,24 @@
             <label for="vehicle_code" class="col-sm-2 col-form-label">Kode Kendaraan : </label>
             <div class="col-sm-10">
               <input type="text" name="vehicle_code" class="form-control" id="vehicle_code" placeholder="" autofocus value="<?= set_value('vehicle_code', $vehicle_code) ?>">
-            </div>
             <?php echo form_error('vehicle_code', '<small class="text-danger">', '</small>'); ?>
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="plate_number" class="col-sm-2 col-form-label">Plat Kendaraan : </label>
             <div class="col-sm-10">
               <input type="text" name="plate_number" class="form-control" id="plate_number" placeholder="" autofocus value="<?= set_value('plate_number', $plate_number) ?>">
-            </div>
             <?php echo form_error('plate_number', '<small class="text-danger">', '</small>'); ?>
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="vehicle_name" class="col-sm-2 col-form-label">Brand Kendaraan : </label>
             <div class="col-sm-10">
               <input type="text" name="vehicle_name" class="form-control" id="vehicle_name" placeholder="" autofocus value="<?= set_value('vehicle_name', $vehicle_name) ?>">
-            </div>
             <?php echo form_error('vehicle_name', '<small class="text-danger">', '</small>'); ?>
+            </div>
           </div>
 
           <div class="form-group row">

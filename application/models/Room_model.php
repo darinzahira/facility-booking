@@ -74,10 +74,10 @@
 
 			// Cek apakah ada perubahan data
 			$room_changed = (
-				$old_data->room_code != $room_code||
-				$old_data->room_name != $room_name||
-				$old_data->capacity != $capacity||
-				$old_data->notes != $notes||
+				$old_data->room_code != $room_code &&
+				$old_data->room_name != $room_name &&
+				$old_data->capacity != $capacity &&
+				$old_data->notes != $notes &&
 				$old_data->status != $status
 			);
 
