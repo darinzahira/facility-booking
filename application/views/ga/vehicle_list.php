@@ -94,10 +94,13 @@
                 <td><?= $created_at ?></td>
                 <td><?= $updated_at ?></td>
                 <td>
-                  <a href="<?php echo base_url(); ?>ga/Vehicles/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
-                    <i class="far fa-edit"></i> Edit
+                  <a href="<?php echo base_url(); ?>ga/Vehicles/detail/<?= $id ?>" class="btn btn-outline-info btn-sm">
+                  <i class="far fa-eye"></i>
                   </a>
-                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Remove</a>
+                  <a href="<?php echo base_url(); ?>ga/Vehicles/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
+                    <i class="far fa-edit"></i> 
+                  </a>
+                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> </a>
                 </td>
               </tr>
               <?php endforeach; ?>

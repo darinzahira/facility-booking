@@ -26,6 +26,11 @@
 			$this->form_validation->set_rules('vehicle_code', 'Kode Kendaraan', 'required|trim|callback_check_vehicle_code');
 			$this->form_validation->set_rules('plate_number', 'Plat Kendaraan', 'required|trim|callback_check_plate_number');
 			$this->form_validation->set_rules('vehicle_name', 'Brand Kendaraan', 'required');
+			$this->form_validation->set_rules('jenis', 'Jenis Kendaraan', 'required');
+			$this->form_validation->set_rules('tahun', 'Tahun Kendaraan', 'required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('warna', 'Warna Kendaraan', 'required');
+			$this->form_validation->set_rules('kapasitas', 'Kapasitas', 'required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			$this->form_validation->set_rules('requires_driver', 'Status Driver', 'required');
 
@@ -36,37 +41,126 @@
 			);
 
 			$this->form_validation->set_message(
-				'is_unique',
-				'{field} harus berbeda karena sudah digunakan.'
+				'regex_match',
+				'{field} hanya boleh menggunakan angka.'
 			);
 
 			if ($this->form_validation->run() == FALSE)
-            {
+			{
 				$data['innerdata'] = 'ga/vehicle_add';
 				$this->load->view('ga/template', $data);
-            }
-            else
-            {
-                $result = $this->Vehicle_model->store();
-				 if ($result) {
+				return;
+			}
 
-					$this->session->set_flashdata(
-						'success',
-						'Data Kendaraan berhasil ditambahkan.'
-					);
+			// Foto kendaraan bersifat opsional
+			$vehicle_photo = null;
 
-				} else {
+			if (!empty($_FILES['vehicle_photo']['name']))
+			{
+				$upload_path = FCPATH . 'uploads/vehicles/';
 
+				if (!is_dir($upload_path) || !is_writable($upload_path))
+				{
 					$this->session->set_flashdata(
 						'error',
-						'Data Kendaraan gagal ditambahkan.'
+						'Folder upload foto kendaraan tidak ditemukan atau tidak dapat ditulis.'
 					);
+
+					redirect(base_url('ga/Vehicles/add'));
+					return;
 				}
-				redirect(base_url() . 'ga/Vehicles');
-            }
-			
+
+				$config['upload_path']   = $upload_path;
+				$config['allowed_types'] = 'jpg|jpeg|png';
+				$config['max_size']      = 2048;
+				$config['encrypt_name']  = TRUE;
+
+				$this->load->library('upload');
+				$this->upload->initialize($config);
+
+				if (!$this->upload->do_upload('vehicle_photo'))
+				{
+					$this->session->set_flashdata(
+						'error',
+						strip_tags($this->upload->display_errors('', ''))
+					);
+
+					redirect(base_url('ga/Vehicles/add'));
+					return;
+				}
+
+				$upload_data = $this->upload->data();
+				$vehicle_photo = $upload_data['file_name'];
+			}
+
+			$result = $this->Vehicle_model->store($vehicle_photo);
+
+			if ($result)
+			{
+				$this->session->set_flashdata(
+					'success',
+					'Data Kendaraan berhasil ditambahkan.'
+				);
+			}
+			else
+			{
+				// Hapus file jika penyimpanan database gagal
+				if ($vehicle_photo !== null)
+				{
+					$file_path = FCPATH . 'uploads/vehicles/' . $vehicle_photo;
+
+					if (is_file($file_path))
+					{
+						unlink($file_path);
+					}
+				}
+
+				$this->session->set_flashdata(
+					'error',
+					'Data Kendaraan gagal ditambahkan.'
+				);
+			}
+
+			redirect(base_url('ga/Vehicles'));
 		}
 
+			// if ($this->form_validation->run() == FALSE)
+            // {
+			// 	$data['innerdata'] = 'ga/vehicle_add';
+			// 	$this->load->view('ga/template', $data);
+            // }
+            // else
+            // {
+            //     $result = $this->Vehicle_model->store();
+			// 	 if ($result) {
+
+			// 		$this->session->set_flashdata(
+			// 			'success',
+			// 			'Data Kendaraan berhasil ditambahkan.'
+			// 		);
+
+			// 	} else {
+
+			// 		$this->session->set_flashdata(
+			// 			'error',
+			// 			'Data Kendaraan gagal ditambahkan.'
+			// 		);
+			// 	}
+			// 	redirect(base_url() . 'ga/Vehicles');
+            // }
+			
+
+		public function detail()
+		{
+			$id = $this->uri->segment(4);
+			$data['vehicle'] = $this->Vehicle_model->get_detail($id);
+			$data['innerdata'] = 'ga/vehicle_detail';
+			if (!$data['vehicle']) {
+				show_404();
+			}
+			$this->load->view('ga/template', $data);
+		}
+		
 		public function delete()
 		{
 			$id = $this->uri->segment(4);
@@ -102,6 +196,11 @@
 			$this->form_validation->set_rules('vehicle_code','Kode Kendaraan','required|trim|callback_check_vehicle_code');
 			$this->form_validation->set_rules('plate_number', 'Plat Kendaraan', 'required|trim|callback_check_plate_number');
 			$this->form_validation->set_rules('vehicle_name', 'Brand Kendaraan', 'required');
+			$this->form_validation->set_rules('jenis', 'Jenis Kendaraan', 'required');
+			$this->form_validation->set_rules('tahun', 'Tahun Kendaraan', 'required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('warna', 'Warna Kendaraan', 'required');
+			$this->form_validation->set_rules('kapasitas', 'Kapasitas', 'required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('lokasi', 'Lokasi', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			$this->form_validation->set_rules('requires_driver', 'Status Driver', 'required');
 
@@ -114,27 +213,80 @@
 			}
 			else
 			{
-				$result = $this->Vehicle_model->update();
+				$vehicle_photo = null;
 
-				if ($result == TRUE) {
+				if (
+					isset($_FILES['vehicle_photo']) &&
+					!empty($_FILES['vehicle_photo']['name'])
+				)
+				{
+					$upload_path = FCPATH . 'uploads/vehicles/';
+
+					// Pastikan folder upload tersedia dan bisa ditulis
+					if (!is_dir($upload_path) || !is_writable($upload_path))
+					{
+						$this->session->set_flashdata(
+							'error',
+							'Folder upload tidak ditemukan atau tidak dapat ditulis: '
+							. $upload_path
+						);
+
+						redirect(base_url('ga/Vehicles/edit/' . $id));
+						return;
+					}
+
+					$config = array(
+						'upload_path'   => $upload_path,
+						'allowed_types' => 'jpg|jpeg|png',
+						'max_size'      => 2048,
+						'encrypt_name'  => TRUE
+					);
+
+					$this->load->library('upload');
+					$this->upload->initialize($config, TRUE);
+
+					if (!$this->upload->do_upload('vehicle_photo'))
+					{
+						$error = strip_tags(
+							$this->upload->display_errors('', '')
+						);
+
+						$this->session->set_flashdata('error', $error);
+
+						redirect(base_url('ga/Vehicles/edit/' . $id));
+						return;
+					}
+
+					$upload_data = $this->upload->data();
+					$vehicle_photo = $upload_data['file_name'];
+				}
+
+				// Lanjutkan proses update database
+				$result = $this->Vehicle_model->update($vehicle_photo);
+
+				if ($result === TRUE)
+				{
 					$this->session->set_flashdata(
 						'success',
 						'Data Kendaraan berhasil diubah.'
 					);
-				} 
-				elseif ($result == 'no_change'){
+				}
+				elseif ($result === 'no_change')
+				{
 					$this->session->set_flashdata(
 						'warning',
 						'Tidak ada perubahan data yang dilakukan.'
 					);
 				}
-				else {
+				else
+				{
 					$this->session->set_flashdata(
 						'error',
 						'Data Kendaraan gagal diubah.'
 					);
 				}
-				redirect(base_url() . 'ga/Vehicles');
+
+				redirect(base_url('ga/Vehicles'));
 			}
 		}
 

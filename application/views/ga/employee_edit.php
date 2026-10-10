@@ -31,6 +31,7 @@
         </h5>        
         
         <input type="hidden" name="id" value="<?= $id ?>">  
+        <input type="hidden" name="employee_id" value="<?= $id ?>">  
         <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">NIK Karyawan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
@@ -161,16 +162,15 @@
               <select name="role" class="form-control">
                 <option value="">-- Pilih Role --</option>
                 <option value="admin" <?= set_select('role', 'admin', $role == 'admin') ?>>
-                    Administrator
+                    Admin
                 </option>
                 <option value="employee" <?= set_select('role', 'employee', $role == 'employee') ?>>
-                    Employee
+                    Karyawan
                 </option>
             </select>
             <?php echo form_error('role', '<small class="text-danger">', '</small>'); ?>
             </div>
           </div>
-
 
           <hr>
 

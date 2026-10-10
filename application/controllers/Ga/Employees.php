@@ -23,28 +23,80 @@
 			$this->load->view('ga/template', $data);
 		}
 
+		// public function store()
+		// {
+		// 	$this->form_validation->set_rules('employee_code', 'NIK Karyawan', 'required|callback_check_employee_code');
+		// 	$this->form_validation->set_rules('name', 'Nama Karyawan', 'required');
+		// 	$this->form_validation->set_rules('department_id', 'Departemen', 'required');
+		// 	$this->form_validation->set_rules('company_id', 'Perusahaan', 'required');
+		// 	$this->form_validation->set_rules('position', 'Jabatan', 'required');
+		// 	$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
+		// 	$this->form_validation->set_rules('username', 'Username', 'required|callback_check_username');
+		// 	$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+		// 	$this->form_validation->set_rules('status', 'Status', 'required');
+		// 	$this->form_validation->set_rules('role', 'Role', 'required');
+		// 	$this->form_validation->set_rules('sim_number','Nomor SIM','required|regex_match[/^[0-9]+$/]');
+		// 	$this->form_validation->set_rules('sim_type','Jenis SIM','required');
+		// 	$this->form_validation->set_rules('expired_date','Masa Berlaku','required');
+
+		// 	// Pesan validasi
+		// 	$this->form_validation->set_message(
+		// 		'required',
+		// 		'{field} wajib diisi.'
+		// 	);
+
+		// 	$this->form_validation->set_message(
+		// 		'regex_match',
+		// 		'{field} hanya boleh menggunakan angka.'
+		// 	);
+
+		// 	if ($this->form_validation->run() == FALSE)
+        //     {
+		// 		$data['departments'] = $this->Dept_model->get_active();
+		// 		$data['company'] = $this->Company_model->get_active();
+		// 		$data['innerdata'] = 'ga/employee_add';
+		// 		$this->load->view('ga/template', $data);
+        //     }
+        //     else
+        //     {
+        //         $result = $this->Emp_model->store();
+		// 		 if ($result) {
+
+		// 			$this->session->set_flashdata(
+		// 				'success',
+		// 				'Data Karyawan berhasil ditambahkan.'
+		// 			);
+
+		// 		} else {
+
+		// 			$this->session->set_flashdata(
+		// 				'error',
+		// 				'Data Karyawan gagal ditambahkan.'
+		// 			);
+		// 		}
+		// 		redirect(base_url() . 'ga/Employees');
+        //     }
+			
+		// }
 		public function store()
 		{
-			$this->form_validation->set_rules('employee_code', 'NIK Karyawan', 'required|is_unique[employees.employee_code]');
+			$this->form_validation->set_rules('employee_code','NIK Karyawan','required|callback_check_employee_code');
 			$this->form_validation->set_rules('name', 'Nama Karyawan', 'required');
 			$this->form_validation->set_rules('department_id', 'Departemen', 'required');
 			$this->form_validation->set_rules('company_id', 'Perusahaan', 'required');
 			$this->form_validation->set_rules('position', 'Jabatan', 'required');
-			$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
-			$this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]');
-			$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+			$this->form_validation->set_rules('phone', 'No Telpon','required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('username', 'Username','required|callback_check_username');
+			$this->form_validation->set_rules('password', 'Password','required|min_length[6]');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			$this->form_validation->set_rules('role', 'Role', 'required');
+			$this->form_validation->set_rules('sim_number', 'Nomor SIM','required|regex_match[/^[0-9]+$/]');
+			$this->form_validation->set_rules('sim_type', 'Jenis SIM', 'required');
+			$this->form_validation->set_rules('expired_date', 'Masa Berlaku', 'required');
 
-			// Pesan validasi
 			$this->form_validation->set_message(
 				'required',
 				'{field} wajib diisi.'
-			);
-
-			$this->form_validation->set_message(
-				'is_unique',
-				'{field} harus berbeda karena sudah digunakan.'
 			);
 
 			$this->form_validation->set_message(
@@ -53,32 +105,91 @@
 			);
 
 			if ($this->form_validation->run() == FALSE)
-            {
+			{
 				$data['departments'] = $this->Dept_model->get_active();
 				$data['company'] = $this->Company_model->get_active();
 				$data['innerdata'] = 'ga/employee_add';
+
 				$this->load->view('ga/template', $data);
-            }
-            else
-            {
-                $result = $this->Emp_model->store();
-				 if ($result) {
+				return;
+			}
 
-					$this->session->set_flashdata(
-						'success',
-						'Data Karyawan berhasil ditambahkan.'
-					);
+			// Upload foto SIM bersifat opsional
+			$sim_photo = null;
 
-				} else {
+			if (
+				isset($_FILES['sim_photo']) &&
+				!empty($_FILES['sim_photo']['name'])
+			)
+			{
+				$upload_path = FCPATH . 'uploads/sim/';
 
+				if (!is_dir($upload_path) || !is_writable($upload_path))
+				{
 					$this->session->set_flashdata(
 						'error',
-						'Data Karyawan gagal ditambahkan.'
+						'Folder upload SIM tidak ditemukan atau tidak dapat ditulis.'
 					);
+
+					redirect(base_url('ga/Employees/add'));
+					return;
 				}
-				redirect(base_url() . 'ga/Employees');
-            }
-			
+
+				$config = array(
+					'upload_path'   => $upload_path,
+					'allowed_types' => 'jpg|jpeg|png',
+					'max_size'      => 2048,
+					'encrypt_name'  => TRUE
+				);
+
+				$this->load->library('upload');
+				$this->upload->initialize($config, TRUE);
+
+				if (!$this->upload->do_upload('sim_photo'))
+				{
+					$this->session->set_flashdata(
+						'error',
+						strip_tags($this->upload->display_errors('', ''))
+					);
+
+					redirect(base_url('ga/Employees/add'));
+					return;
+				}
+
+				$upload_data = $this->upload->data();
+				$sim_photo = $upload_data['file_name'];
+			}
+
+			// Simpan employee, user, dan SIM
+			$result = $this->Emp_model->store($sim_photo);
+
+			if ($result)
+			{
+				$this->session->set_flashdata(
+					'success',
+					'Data Karyawan berhasil ditambahkan.'
+				);
+			}
+			else
+			{
+				// Hapus foto jika penyimpanan database gagal
+				if ($sim_photo !== null)
+				{
+					$file_path = FCPATH . 'uploads/sim/' . $sim_photo;
+
+					if (is_file($file_path))
+					{
+						unlink($file_path);
+					}
+				}
+
+				$this->session->set_flashdata(
+					'error',
+					'Data Karyawan gagal ditambahkan.'
+				);
+			}
+
+			redirect(base_url('ga/Employees'));
 		}
 
 		public function detail()
@@ -166,7 +277,7 @@
 			
 			if (!empty($_FILES['sim_photo']['name']))
 			{
-				$config['upload_path']   = './uploads/sim/';
+				$config['upload_path']   = FCPATH . 'uploads/sim/';
 				$config['allowed_types'] = 'jpg|jpeg|png';
 				$config['max_size']      = 2048; // 2 MB
 				$config['encrypt_name']  = TRUE;
@@ -182,6 +293,7 @@
 
 					redirect(base_url() . 'ga/Employees/edit/' . $id);
 					return;
+
 				}
 
 				$upload_data = $this->upload->data();
@@ -189,69 +301,46 @@
 				$sim_photo = $upload_data['file_name'];
 			}
 
-			$result = $this->Emp_model->update();
+			$employee_result = $this->Emp_model->update();
+			$sim_result = $this->Employee_sim_model->update();
 
-			if ($result === 'no_change')
+			$photo_result = 'no_change';
+
+			if ($sim_photo !== null)
 			{
-				/*
-				* Kalau Employee tidak berubah tetapi ada
-				* upload foto SIM, foto tetap bisa disimpan.
-				*/
-
-				if ($sim_photo !== null)
-				{
-					$sim_data = array(
-						'employee_id' => $id,
-						'sim_photo'   => $sim_photo
-					);
-
-					$this->Employee_sim_model->update_photo(
-						$id,
-						$sim_data
-					);
-
-					$this->session->set_flashdata(
-						'success',
-						'Foto SIM berhasil diubah.'
-					);
-				}
-				else
-				{
-					$this->session->set_flashdata(
-						'warning',
-						'Tidak ada perubahan data yang dilakukan.'
-					);
-				}
+				$photo_result = $this->Employee_sim_model->update_photo(
+					$id,
+					$sim_photo
+				);
 			}
-			elseif ($result)
+
+			if (
+				$employee_result === 'no_change' &&
+				$sim_result === 'no_change' &&
+				$photo_result === 'no_change'
+			)
 			{
-				/*
-				* Employee berhasil diubah
-				*/
-
-				if ($sim_photo !== null)
-				{
-					$sim_data = array(
-						'employee_id' => $id,
-						'sim_photo'   => $sim_photo
-					);
-
-					$this->Employee_sim_model->update_photo(
-						$id,
-						$sim_data
-					);
-				}
-
 				$this->session->set_flashdata(
-					'success',
-					'Data Karyawan berhasil diubah.'
+					'warning',
+					'Tidak ada perubahan data yang dilakukan.'
+				);
+			}
+			elseif (
+				$employee_result === FALSE ||
+				$sim_result === FALSE ||
+				$photo_result === FALSE
+			)
+			{
+				$this->session->set_flashdata(
+					'error',
+					'Data Karyawan gagal diubah.'
 				);
 			}
 			else
 			{
 				$this->session->set_flashdata(
-					'error',
-					'Data Karyawan gagal diubah.'
+					'success',
+					'Data Karyawan berhasil diubah.'
 				);
 			}
 

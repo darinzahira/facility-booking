@@ -13,7 +13,7 @@
         <h6 class="m-0 font-weight-bold text-info">Tambah Data Kendaraan</h6>
       </div>
       <div class="card-body col-lg-10 mx-auto">
-        <form method="post" action="<?php echo base_url(); ?>ga/Vehicles/store" >       
+        <form method="post" action="<?php echo base_url(); ?>ga/Vehicles/store" enctype="multipart/form-data">       
 
           <div class="form-group row">
             <label for="vehicle_code" class="col-sm-2 col-form-label">Kode Kendaraan : </label>
@@ -36,6 +36,46 @@
             <div class="col-sm-10">
               <input type="text" name="vehicle_name" class="form-control" id="vehicle_name" placeholder="" autofocus value="<?php echo set_value('vehicle_name');?>">
               <?php echo form_error('vehicle_name', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+ 
+          <div class="form-group row">
+            <label for="jenis" class="col-sm-2 col-form-label">Jenis Kendaraan : </label>
+            <div class="col-sm-10">
+              <input type="text" name="jenis" class="form-control" id="jenis" placeholder="" autofocus value="<?php echo set_value('jenis');?>">
+              <?php echo form_error('jenis', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+ 
+          <div class="form-group row">
+            <label for="tahun" class="col-sm-2 col-form-label">Tahun Kendaraan : </label>
+            <div class="col-sm-10">
+              <input type="text" name="tahun" class="form-control" id="tahun" placeholder="" autofocus value="<?php echo set_value('tahun');?>">
+              <?php echo form_error('tahun', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+ 
+          <div class="form-group row">
+            <label for="warna" class="col-sm-2 col-form-label">Warna Kendaraan : </label>
+            <div class="col-sm-10">
+              <input type="text" name="warna" class="form-control" id="warna" placeholder="" autofocus value="<?php echo set_value('warna');?>">
+              <?php echo form_error('warna', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+ 
+          <div class="form-group row">
+            <label for="kapasitas" class="col-sm-2 col-form-label">Kapasitas : </label>
+            <div class="col-sm-10">
+              <input type="text" name="kapasitas" class="form-control" id="kapasitas" placeholder="" autofocus value="<?php echo set_value('kapasitas');?>">
+              <?php echo form_error('kapasitas', '<small class="text-danger">', '</small>'); ?>
+            </div>
+          </div>
+ 
+          <div class="form-group row">
+            <label for="lokasi" class="col-sm-2 col-form-label">Lokasi : </label>
+            <div class="col-sm-10">
+              <input type="text" name="lokasi" class="form-control" id="lokasi" placeholder="" autofocus value="<?php echo set_value('lokasi');?>">
+              <?php echo form_error('lokasi', '<small class="text-danger">', '</small>'); ?>
             </div>
           </div>
 
@@ -75,6 +115,24 @@
             <div class="col-sm-10">
               <input type="text" name="notes" class="form-control" id="notes" placeholder="" autofocus value="<?php echo set_value('notes');?>">
             </div>
+          </div>
+
+          <div class="form-group row">
+              <label for="vehicle_photo" class="col-sm-2 col-form-label">
+                  Foto Kendaraan :
+              </label>
+
+              <div class="col-sm-10">
+                  <input type="file"
+                        name="vehicle_photo"
+                        id="vehicle_photo"
+                        class="form-control-file"
+                        accept=".jpg,.jpeg,.png">
+
+                  <small class="form-text text-muted">
+                      Format JPG, JPEG, atau PNG. Maksimal 2 MB.
+                  </small>
+              </div>
           </div>
 
            <div class="form-group row">

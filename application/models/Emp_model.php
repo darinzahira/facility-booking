@@ -18,7 +18,7 @@
 		}
 
 		// CREATE (STORE)
-		public function store()
+		public function store($sim_photo = null)
 		{
 			$this->db->trans_start();
 
@@ -48,6 +48,20 @@
 			);
 
 			$this->db->insert('users', $user_data);
+			// Simpan data SIM menggunakan model khusus SIM
+			$sim_result = $this->Employee_sim_model->store(
+				$employee_id,
+				$sim_photo
+			);
+
+			if (
+				$this->db->trans_status() === FALSE ||
+				$sim_result === FALSE
+			)
+			{
+				$this->db->trans_rollback();
+				return FALSE;
+			}
 			$this->db->trans_complete();
 			return $this->db->trans_status();
 		}
@@ -154,10 +168,6 @@
 			$role     = $this->input->post('role');
 			$password = $this->input->post('password');
 
-			$sim_type     = $this->input->post('sim_type');
-			$sim_number   = $this->input->post('sim_number');
-			$expired_date = $this->input->post('expired_date');
-
 			// Cek apakah ada perubahan
 			$employee_changed = (
 				$old_data->employee_code != $employee_code ||
@@ -175,36 +185,8 @@
 				!empty($password)
 			);
 
-			$sim_data = $this->db
-				->where('employee_id', $id)
-				->where('isdelete', 1)
-				->get('employee_sims')
-				->row();
-
-			$sim_changed = false;
-
-			if ($sim_data) {
-
-				$sim_changed = (
-					$sim_data->sim_type != $sim_type ||
-					$sim_data->sim_number != $sim_number ||
-					$sim_data->expired_date != $expired_date
-				);
-
-			} else {
-
-				// Kalau sebelumnya belum ada SIM
-				if (
-					!empty($sim_type) ||
-					!empty($sim_number) ||
-					!empty($expired_date)
-				) {
-					$sim_changed = true;
-				}
-			}			
-
 			 // Kalau tidak ada perubahan sama sekali
-			if (!$employee_changed && !$user_changed && !$sim_changed)
+			if (!$employee_changed && !$user_changed)
 			{
 				$this->db->trans_rollback();
 				return 'no_change';
@@ -239,43 +221,6 @@
 
 			$this->db->where('employee_id', $id);
 			$this->db->update('users', $user_data);
-
-			// SIM
-			if ($sim_data) {
-
-				// Update data SIM yang sudah ada
-				$sim_update = array(
-					'sim_type'     => $sim_type,
-					'sim_number'   => $sim_number,
-					'expired_date' => $expired_date,
-					'updated_at'   => date('Y-m-d H:i:s')
-				);
-
-				$this->db->where('employee_id', $id);
-				$this->db->where('isdelete', 1);
-				$this->db->update('employee_sims', $sim_update);
-
-			} else {
-
-				// Insert data SIM baru
-				if (
-					!empty($sim_type) ||
-					!empty($sim_number) ||
-					!empty($expired_date)
-				) {
-
-					$sim_insert = array(
-						'employee_id'  => $id,
-						'sim_type'     => $sim_type,
-						'sim_number'   => $sim_number,
-						'expired_date' => $expired_date,
-						'isdelete'     => 1,
-						'created_at'   => date('Y-m-d H:i:s')
-					);
-
-					$this->db->insert('employee_sims', $sim_insert);
-				}
-			}
 
 			$this->db->trans_complete();
 

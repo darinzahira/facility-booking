@@ -14,24 +14,19 @@
 		}
 
 		// CREATE (STORE)
-		public function store()
+		public function store($employee_id, $sim_photo = null)
 		{
-			$employee_id = $this->input->post('employee_id');
-			$sim_type = $this->input->post('sim_type');
-			$sim_number = $this->input->post('sim_number');
-			$expired_date = $this->input->post('expired_date');
-			$created_at = date('Y-m-d H:i:s');
-
 			$data = array(
-				'employee_id' => $employee_id, 
-				'sim_type' => $sim_type, 
-				'sim_number' => $sim_number, 
-				'expired_date' => $expired_date, 
-				'created_at' => $created_at
+				'employee_id' => $employee_id,
+				'sim_type'    => $this->input->post('sim_type'),
+				'sim_number'  => $this->input->post('sim_number'),
+				'expired_date'=> $this->input->post('expired_date'),
+				'sim_photo'   => $sim_photo,
+				'created_at'  => date('Y-m-d H:i:s'),
+				'isdelete'    => 1
 			);
 
-			$result = $this->db->insert('employee_sims', $data);
-			return $result;
+			return $this->db->insert('employee_sims', $data);
 		}
 
 		// DELETE
@@ -59,7 +54,7 @@
 		// UPDATE
 		public function update()
 		{
-			$id = $this->input->post('id');
+			// $id = $this->input->post('id');
 			$employee_id = $this->input->post('employee_id');
 			$sim_type = $this->input->post('sim_type');
 			$sim_number = $this->input->post('sim_number');
@@ -67,33 +62,45 @@
 			$updated_at = date('Y-m-d H:i:s');
 
 			// Ambil data lama
-		    $old_data = $this->get_by_id($id);
+		    $old_data = $this->get_by_employee($employee_id);
+
+			if (!$old_data)
+			{
+				$sim_data = array(
+					'employee_id' => $employee_id,
+					'sim_type' => $sim_type,
+					'sim_number' => $sim_number,
+					'expired_date' => $expired_date,
+					'updated_at' => $updated_at,
+					'isdelete' => 1
+				);
+
+				return $this->db->insert('employee_sims', $sim_data);
+			}
+
+			$sim_changed = (
+				$old_data->sim_type != $sim_type ||
+				$old_data->sim_number != $sim_number ||
+				$old_data->expired_date != $expired_date
+			);
 
 			// Cek apakah ada perubahan
-			if (
-				$old_data->department_name == $dept_name &&
-				$old_data->status == $status
-			) {
+			if (!$sim_changed)
+			{
 				return 'no_change';
 			}
 
-			
-			$editdata = array(
-				'department_name' => $dept_name, 
-				'status' => $status,
+			$sim_data = array(
+				'sim_type' => $sim_type,
+				'sim_number' => $sim_number,
+				'expired_date' => $expired_date,
 				'updated_at' => $updated_at
 			);
-			$this->db->where('id', $id);
-			return $this->db->update('employee_sims', $editdata);
-		}
+			
+			$this->db->where('id', $old_data->id);
 
-		// AMBIL DEPARTEMEN AKTIF
-		public function get_active()
-		{
-			$this->db->where('status', 1);
-			$this->db->where('isdelete', 1);
-			return $this->db->get('employee_sims')->result();
-		}
+			return $this->db->update('employee_sims', $sim_data);
+		} 
 
 		// Ambil data SIM berdasarkan employee
 		public function get_by_employee($employee_id)
@@ -105,17 +112,33 @@
 				->row();
 		}
 
-		public function update_photo($employee_id, $data)
+		public function update_photo($employee_id, $sim_photo)
 		{
-			$this->db->where('employee_id', $employee_id);
+			$old_data = $this->get_by_employee($employee_id);
 
-			return $this->db->update(
-				'employee_sims',
-				array(
-					'sim_photo' => $data['sim_photo'],
-					'updated_at' => date('Y-m-d H:i:s')
-				)
+			// Kalau data SIM belum ada
+			if (!$old_data)
+			{
+				$data = array(
+					'employee_id' => $employee_id,
+					'sim_photo' => $sim_photo,
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s'),
+					'isdelete' => 1
+				);
+
+				return $this->db->insert('employee_sims', $data);
+			}
+
+			// Kalau data SIM sudah ada
+			$data = array(
+				'sim_photo' => $sim_photo,
+				'updated_at' => date('Y-m-d H:i:s')
 			);
+
+			$this->db->where('id', $old_data->id);
+
+			return $this->db->update('employee_sims', $data);
 		}
 
 		
