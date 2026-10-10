@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 02 Okt 2026 pada 02.53
+-- Waktu pembuatan: 10 Okt 2026 pada 05.39
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 7.4.33
 
@@ -164,10 +164,12 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `employee_code`, `name`, `company_id`, `department_id`, `position`, `phone`, `status`, `created_at`, `updated_at`, `isdelete`) VALUES
-(1, 'EMP001', 'Anggi', 3, 2, 'Staff GA', '087977542121', 1, '2026-09-15 14:39:10', '2026-09-30 05:46:55', 1),
+(1, 'EMP001', 'Anggi', 3, 2, 'Staff GA', '087977542121', 1, '2026-09-15 14:39:10', '2026-10-03 16:04:42', 1),
 (2, 'EMP002', 'Darin', 2, 2, 'Recruiter', '087654324568', 1, '2026-09-15 14:39:10', '2026-09-23 23:44:02', 1),
 (11, 'EMP003', 'Michael', 2, 1, 'Driver', '087654324566', 1, '2026-09-20 19:30:31', NULL, 1),
-(12, 'EMP004', 'Eko', 2, 1, 'Driver', '087654324568', 1, '2026-09-20 19:44:44', NULL, 0);
+(12, 'EMP004', 'Eko', 2, 1, 'Driver', '087654324568', 1, '2026-09-20 19:44:44', NULL, 0),
+(14, 'EMP004', 'Bayu', 3, 1, 'Staff GA', '087654324569', 1, '2026-10-10 02:46:59', NULL, 1),
+(15, 'EMP005', 'Dewi', 5, 1, 'Recruiter', '087654324566', 1, '2026-10-10 03:35:03', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -192,7 +194,8 @@ CREATE TABLE `employee_sims` (
 --
 
 INSERT INTO `employee_sims` (`id`, `employee_id`, `sim_type`, `sim_number`, `expired_date`, `sim_photo`, `isdelete`, `created_at`, `updated_at`) VALUES
-(1, 1, 'SIM C', '123456789765', '2026-09-30', NULL, 1, '2026-09-30 05:46:55', '2026-09-30 05:46:55');
+(1, 1, 'SIM C', '123456789765', '2026-09-30', NULL, 1, '2026-09-30 05:46:55', '2026-09-30 05:46:55'),
+(2, 15, 'SIM A', '123456789765', '2026-10-31', '26d15fd3e9e14e3e9c478ed44db19e28.jpg', 1, '2026-10-10 03:35:03', '2026-10-10 03:35:03');
 
 -- --------------------------------------------------------
 
@@ -273,10 +276,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `employee_id`, `username`, `password`, `role`, `status`, `last_login`, `created_at`, `updated_at`, `isdelete`) VALUES
-(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-10-01 19:38:17', '2026-09-15 14:43:58', NULL, 1),
+(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-10-10 10:30:50', '2026-09-15 14:43:58', NULL, 1),
 (2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, '2026-09-26 13:46:38', '2026-09-15 14:43:58', NULL, 1),
 (11, 11, 'michael', '$2y$10$XU2Kp5gd29M7Tdt9maBxTeb4qASATT0SW8mTdwajpMdnEaj5UCpQC', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1),
-(12, 12, 'eko', '$2y$10$lrA/P9tP9ln.dTt/WGmVJe1qcK51QSWSOYzgFRLjVejYD.fUAGcm6', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 0);
+(12, 12, 'eko', '$2y$10$lrA/P9tP9ln.dTt/WGmVJe1qcK51QSWSOYzgFRLjVejYD.fUAGcm6', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 0),
+(14, 14, 'bayu', '$2y$10$LuCSrl6oGI/Rf42lEcV5leDcI4I2UyXyAz.RuCXT2Tt/xqUSCVCwS', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1),
+(15, 15, 'dewi', '$2y$10$.ojEdjEoo7Zpogl4WnSb/.13QVtBKVWasT.YoQL9b9pRoyaXvPsJW', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -299,17 +304,20 @@ CREATE TABLE `vehicles` (
   `notes` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `isdelete` tinyint(4) NOT NULL DEFAULT 1
+  `isdelete` tinyint(4) NOT NULL DEFAULT 1,
+  `vehicle_photo` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `vehicles`
 --
 
-INSERT INTO `vehicles` (`id`, `vehicle_code`, `plate_number`, `vehicle_name`, `jenis`, `tahun`, `warna`, `kapasitas`, `lokasi`, `requires_driver`, `status`, `notes`, `created_at`, `updated_at`, `isdelete`) VALUES
-(1, 'VE001', 'N1234ASD', 'BYD', NULL, '', '', 0, '0', 'Ya', 'Perbaikan', NULL, '2026-09-16 03:02:18', '2026-09-23 23:28:23', 1),
-(3, 'VE002', 'B9876DE', 'Mobilio', NULL, '', '', 0, '0', 'Ya', 'Aktif', 'Mobil Operasional', '2026-09-16 22:05:21', '2026-10-01 20:09:26', 1),
-(5, 'VE003', 'N1234ASC', 'Mobilio', NULL, '', '', 0, '0', 'Ya', 'Aktif', '', '2026-09-23 23:27:26', '2026-09-23 23:34:35', 0);
+INSERT INTO `vehicles` (`id`, `vehicle_code`, `plate_number`, `vehicle_name`, `jenis`, `tahun`, `warna`, `kapasitas`, `lokasi`, `requires_driver`, `status`, `notes`, `created_at`, `updated_at`, `isdelete`, `vehicle_photo`) VALUES
+(1, 'VE001', 'N1234ASD', 'BYD', 'MPV', '2025', 'Putih', 8, 'Head Office', 'Ya', 'Perbaikan', NULL, '2026-09-16 03:02:18', '2026-10-10 02:08:31', 1, 'f23f0c7ddff39fd87fb2805224ad9e35.jpg'),
+(3, 'VE002', 'B9876DE', 'Mobilio', 'MPV', '2015', 'Putih', 8, 'Head Office', 'Ya', 'Aktif', 'Mobil Operasional', '2026-09-16 22:05:21', '2026-10-10 02:14:12', 1, '9b7206067021e7bc323970f24e9f0b59.jpg'),
+(5, 'VE003', 'N1234ASC', 'Mobilio', NULL, '', '', 0, '0', 'Ya', 'Aktif', '', '2026-09-23 23:27:26', '2026-09-23 23:34:35', 0, NULL),
+(9, 'VE003', 'N1234ASS', 'Mobilio', 'MPV', '2016', 'Putih', 8, 'Head Office', 'Tidak', 'Aktif', '', '2026-10-10 00:22:31', NULL, 1, NULL),
+(10, 'VE004', 'B9876DD', 'BYD', 'MPV', '2025', 'Biru', 7, 'Head Office', 'Tidak', 'Aktif', '', '2026-10-10 01:43:52', NULL, 1, 'efe2d44dd8e7e25d43f5164059c98391.jpg');
 
 --
 -- Indexes for dumped tables
@@ -355,7 +363,6 @@ ALTER TABLE `drivers`
 --
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `employee_code` (`employee_code`),
   ADD KEY `employee_dept` (`department_id`),
   ADD KEY `employee_com` (`company_id`);
 
@@ -389,9 +396,7 @@ ALTER TABLE `users`
 -- Indeks untuk tabel `vehicles`
 --
 ALTER TABLE `vehicles`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UNIQUE` (`vehicle_code`),
-  ADD UNIQUE KEY `UNIQUE1` (`plate_number`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
@@ -425,13 +430,13 @@ ALTER TABLE `drivers`
 -- AUTO_INCREMENT untuk tabel `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `employee_sims`
 --
 ALTER TABLE `employee_sims`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `meeting_rooms`
@@ -449,13 +454,13 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

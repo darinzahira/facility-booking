@@ -2,12 +2,18 @@
     $id = $editemployee->id;
     $employee_code = $editemployee->employee_code;
     $name = $editemployee->name;
+    $department_name = $editemployee->department_name;
     $position = $editemployee->position;
     $phone = $editemployee->phone;
     $status = $editemployee->status;
     $username = $editemployee->username;
     $created_at = $editemployee->created_at;
     $role = $editemployee->role;
+    $company_name = $editemployee->company_name;
+    $sim_type = $editemployee->sim_type;
+    $sim_number = $editemployee->sim_number;
+    $expired_date = $editemployee->expired_date;
+    $sim_photo = $editemployee->sim_photo;
 ?>
 <!-- Begin Page Content -->
   <div class="container-fluid">
@@ -185,34 +191,27 @@
 
               <div class="col-sm-10">
                   <select name="sim_type" class="form-control">
-
                       <option value="">-- Pilih Jenis SIM --</option>
-
                       <option value="SIM A"
                           <?= ($simdata && $simdata->sim_type == 'SIM A') ? 'selected' : ''; ?>>
                           SIM A
                       </option>
-
                       <option value="SIM B1"
                           <?= ($simdata && $simdata->sim_type == 'SIM B1') ? 'selected' : ''; ?>>
                           SIM B1
                       </option>
-
                       <option value="SIM B2"
                           <?= ($simdata && $simdata->sim_type == 'SIM B2') ? 'selected' : ''; ?>>
                           SIM B2
                       </option>
-
                       <option value="SIM C"
                           <?= ($simdata && $simdata->sim_type == 'SIM C') ? 'selected' : ''; ?>>
                           SIM C
                       </option>
-
                       <option value="SIM D"
                           <?= ($simdata && $simdata->sim_type == 'SIM D') ? 'selected' : ''; ?>>
                           SIM D
                       </option>
-
                   </select>
               <?php echo form_error('sim_type', '<small class="text-danger">', '</small>'); ?>
 
@@ -248,40 +247,41 @@
           </div>
 
           <div class="form-group row">
-                <label class="col-sm-2 col-form-label">
-                    Upload SIM
-                </label>
+          <label for="vehicle_photo" class="col-sm-2 col-form-label">
+              Upload SIM
+          </label>
 
-                <div class="col-sm-10">
+          <div class="col-sm-10">
 
-                    <input type="file"
-                        name="sim_photo"
-                        class="form-control-file"
-                        accept=".jpg,.jpeg,.png">
+              <?php if (!empty($sim_photo)): ?>
 
-                    <small class="form-text text-muted">
-                        Format JPG, JPEG, atau PNG. Maksimal 2 MB.
-                    </small>
+                  <div class="mb-3">
+                      <img
+                          src="<?= base_url('uploads/vehicles/' . $vehicle_photo) ?>"
+                          alt="Foto Kendaraan"
+                          style="max-width: 300px; max-height: 200px; object-fit: contain;"
+                          class="img-thumbnail">
+                  </div>
 
-                    <?php if (!empty($simdata) && !empty($simdata->sim_photo)): ?>
+              <?php else: ?>
 
-                        <div class="mt-3">
+                  <p class="text-muted">Belum ada foto kendaraan.</p>
 
-                            <p class="mb-2">
-                                Foto SIM saat ini:
-                            </p>
+              <?php endif; ?>
 
-                            <img src="<?= base_url('uploads/sim/' . $simdata->sim_photo); ?>"
-                                alt="Foto SIM"
-                                style="max-width: 300px; max-height: 200px;"
-                                class="img-thumbnail">
+              <input type="file"
+                    name="vehicle_photo"
+                    id="vehicle_photo"
+                    class="form-control-file"
+                    accept=".jpg,.jpeg,.png">
 
-                        </div>
+              <small class="form-text text-muted">
+                  Kosongkan jika tidak ingin mengganti foto.
+                  Format JPG, JPEG, atau PNG. Maksimal 2 MB.
+              </small>
 
-                    <?php endif; ?>
-
-                </div>
-            </div>
+          </div>
+      </div>
 
            <div class="form-group row">
             <label class="col-sm-2 col-form-label"></label>
