@@ -233,9 +233,9 @@
 
             <a
                 href="<?= base_url('employee/Bookings'); ?>"
-                class="btn btn-secondary"
+                class="btn btn-info"
             >
-                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-angle-left"></i>
                 Kembali
             </a>
 

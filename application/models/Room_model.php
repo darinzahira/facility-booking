@@ -124,11 +124,13 @@
 			return $query->num_rows() > 0;
 		}
 
+		public function get_active()
+		{
+			$this->db->where('status', 'Tersedia');
+			$this->db->where('isdelete', 1);
 
-		// public function get_active()
-		// {
-		// 	$this->db->where('status', 1);
-		// 	return $this->db->get('departments')->result();
-		// }
+			return $this->db->get('rooms')->result();
+		}
+
 	}
 ?>

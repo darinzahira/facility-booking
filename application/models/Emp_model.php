@@ -285,6 +285,26 @@
 
 			return $this->db->get('employees')->row();
 		}
+
+		public function get_active_with_company()
+		{
+			$this->db->select('
+				employees.id,
+				employees.name,
+				employees.employee_code,
+				employees.position,
+				employees.company_id,
+				company.company_name
+			');
+
+			$this->db->from('employees');
+			$this->db->join('company' , 'company.id = employees.company_id');
+
+			$this->db->where('employees.status', 1);
+			$this->db->where('employees.isdelete', 1);
+
+			return $this->db->get()->result();
+		}
 				
 	}
 ?>

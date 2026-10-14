@@ -8,7 +8,6 @@ class Bookings extends MY_Controller
 
         // Pastikan user sudah login
         $this->check_admin();
-
         $this->load->model('Booking_model');
         $this->load->helper('url');
     }
@@ -19,46 +18,25 @@ class Bookings extends MY_Controller
         $data['innerdata'] = 'ga/booking_list';
         $this->load->view('ga/template', $data);
     }
+
+    public function pending()
+    {
+        $data['bookings'] = $this->Booking_model->get_pending();
+        $data['innerdata'] = 'ga/booking_list_pending';
+        $this->load->view('ga/template', $data);
+    }
     
     public function store()
     {
         $this->load->library('form_validation');
+        $facility_type = $this->input->post('facility_type');
 
-        $this->form_validation->set_rules(
-            'employee_id',
-            'Nama Karyawan',
-            'required|integer'
-        );
-
-        $this->form_validation->set_rules(
-            'facility_type',
-            'Fasilitas',
-            'required|in_list[vehicle,room,meeting_room]'
-        );
-
-        $this->form_validation->set_rules(
-            'start_date',
-            'Tanggal Mulai',
-            'required'
-        );
-
-        $this->form_validation->set_rules(
-            'end_date',
-            'Tanggal Selesai',
-            'required'
-        );
-
-        $this->form_validation->set_rules(
-            'start_time',
-            'Jam Mulai',
-            'required'
-        );
-
-        $this->form_validation->set_rules(
-            'end_time',
-            'Jam Selesai',
-            'required'
-        );
+        $this->form_validation->set_rules('employee_id','Nama Karyawan','required|integer');
+        $this->form_validation->set_rules('facility_type','Fasilitas','required|in_list[vehicle,room,meeting_room]');
+        $this->form_validation->set_rules('start_date','Tanggal Mulai','required');
+        $this->form_validation->set_rules('end_date','Tanggal Selesai','required');
+        $this->form_validation->set_rules('start_time','Jam Mulai','required');
+        $this->form_validation->set_rules('end_time','Jam Selesai','required');
 
         $this->form_validation->set_rules(
             'purpose',
@@ -66,109 +44,63 @@ class Bookings extends MY_Controller
             'required|trim'
         );
 
+         // Validasi pilihan fasilitas sesuai jenis booking
+        if ($facility_type == 'vehicle') {
+            $this->form_validation->set_rules(
+                'vehicle_id', 'Kendaraan', 'required|integer'
+            );
+        } elseif ($facility_type == 'room') {
+            $this->form_validation->set_rules(
+                'room_id', 'Ruangan', 'required|integer'
+            );
+        } elseif ($facility_type == 'meeting_room') {
+            $this->form_validation->set_rules(
+                'meeting_room_id', 'Meeting Room', 'required|integer'
+            );
+        }
+
         $this->form_validation->set_message(
             'required',
             '{field} wajib diisi.'
         );
 
         if ($this->form_validation->run() == FALSE) {
+            $data = $this->load_booking_form_data();
             $data['innerdata'] = 'ga/booking_add';
-            $data['employees'] = $this->Emp_model->get_active();
 
             $this->load->view('ga/template', $data);
             return;
         }
 
-        $start_date = $this->input->post('start_date');
-        $end_date   = $this->input->post('end_date');
-        $start_time = $this->input->post('start_time');
-        $end_time   = $this->input->post('end_time');
+        $result = $this->Booking_model->store();
 
-        // Validasi rentang tanggal
-        if ($end_date < $start_date) {
-            $this->session->set_flashdata(
-                'error',
-                'Tanggal selesai tidak boleh mendahului tanggal mulai.'
-            );
-
-            redirect('ga/Bookings/add');
-            return;
-        }
-
-        // Validasi jam jika booking berlangsung pada tanggal yang sama
-        if (
-            $start_date == $end_date &&
-            $end_time <= $start_time
-        ) {
-            $this->session->set_flashdata(
-                'error',
-                'Jam selesai harus setelah jam mulai.'
-            );
-
-            redirect('ga/Bookings/add');
-            return;
-        }
-
-        $employee_id = $this->input->post('employee_id');
-
-        // Pastikan karyawan masih aktif
-        $employee = $this->Emp_model->get_active_by_id($employee_id);
-
-        if (!$employee) {
-            $this->session->set_flashdata(
-                'error',
-                'Data karyawan tidak ditemukan atau tidak aktif.'
-            );
-
-            redirect('ga/Bookings/add');
-            return;
-        }
-
-        $data = array(
-            'booking_code'     => 'BK-' . date('YmdHis') . '-' . mt_rand(100, 999),
-            'employee_id'      => $employee_id,
-            'facility_type'    => $this->input->post('facility_type'),
-            'vehicle_id'       => NULL,
-            'room_id'          => NULL,
-            'meeting_room_id'  => NULL,
-            'driver_id'        => NULL,
-            'start_date'       => $start_date,
-            'end_date'         => $end_date,
-            'start_time'       => $start_time,
-            'end_time'         => $end_time,
-            'purpose'          => $this->input->post('purpose'),
-            'status'           => 'pending',
-            'notes'            => NULL,
-            'rejection_reason' => NULL,
-            'approved_by'      => NULL,
-            'approved_at'      => NULL,
-            'created_at'       => date('Y-m-d H:i:s'),
-            'updated_at'       => NULL
-        );
-
-        $result = $this->Booking_model->store($data);
-
-        if ($result) {
+        if ($result === TRUE) {
             $this->session->set_flashdata(
                 'success',
-                'Pengajuan booking berhasil ditambahkan.'
+                'Booking berhasil dibuat dan disetujui.'
             );
 
             redirect('ga/Bookings');
-        } else {
-            $this->session->set_flashdata(
-                'error',
-                'Pengajuan booking gagal ditambahkan.'
-            );
-
-            redirect('ga/Bookings/add');
+            return;
         }
+
+        // Jika gagal, tampilkan form kembali tanpa redirect
+        // agar data yang telah diisi tidak hilang.
+        $data = $this->load_booking_form_data();
+        $data['innerdata'] = 'ga/booking_add';
+        $data['booking_error'] = $result;
+
+        $this->load->view('ga/template', $data);
     }
 
     public function add()
     {
         $data['innerdata'] = 'ga/booking_add';
-        $data['employees'] = $this->Emp_model->get_active();
+        $data['employees'] = $this->Emp_model->get_active_with_company();
+        $data['vehicles'] = $this->Vehicle_model->get_active();
+        $data['rooms'] = $this->Room_model->get_active();
+        $data['meeting_rooms'] = $this->Meeting_model->get_active();
+        $data['drivers'] = $this->Driver_model->get_active();
         $this->load->view('ga/template', $data);
     }
 
@@ -296,5 +228,18 @@ class Bookings extends MY_Controller
 
         redirect('ga/Bookings/detail/' . $id);
     }
+
+    private function load_booking_form_data()
+    {
+
+        $data['employees'] = $this->Emp_model->get_active_with_company();
+        $data['vehicles'] = $this->Vehicle_model->get_active();
+        $data['rooms'] = $this->Room_model->get_active();
+        $data['meeting_rooms'] = $this->Meeting_model->get_active();
+        $data['drivers'] = $this->Driver_model->get_active();
+
+        return $data;
+    }
+
     
 }

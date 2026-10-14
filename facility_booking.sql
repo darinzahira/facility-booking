@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Okt 2026 pada 05.39
+-- Waktu pembuatan: 15 Okt 2026 pada 00.24
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 7.4.33
 
@@ -58,7 +58,14 @@ CREATE TABLE `bookings` (
 INSERT INTO `bookings` (`id`, `booking_code`, `employee_id`, `facility_type`, `vehicle_id`, `room_id`, `meeting_room_id`, `driver_id`, `start_date`, `end_date`, `start_time`, `end_time`, `purpose`, `status`, `notes`, `rejection_reason`, `approved_by`, `approved_at`, `created_at`, `updated_at`, `isdelete`) VALUES
 (1, 'BK-20260921235405', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-09-21 23:54:05', NULL, 1),
 (2, 'BK-20260921235518', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'rejected', NULL, 'tidak disetujui', NULL, NULL, '2026-09-21 23:55:18', '2026-09-23 01:34:52', 1),
-(3, 'BK-20260921235931', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'cancelled', NULL, NULL, 1, '2026-09-23 01:34:16', '2026-09-21 23:59:31', '2026-09-23 23:57:03', 1);
+(3, 'BK-20260921235931', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'cancelled', NULL, NULL, 1, '2026-09-23 01:34:16', '2026-09-21 23:59:31', '2026-09-23 23:57:03', 1),
+(4, 'BK-20261010133340', 15, 'room', NULL, NULL, NULL, NULL, '2026-10-12', '2026-10-14', '22:00:00', '21:36:00', 'menginap setelah dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-10 13:33:40', NULL, 1),
+(5, 'BK-20261014075005-855', 14, 'vehicle', NULL, NULL, NULL, NULL, '2026-10-16', '2026-10-18', '10:00:00', '12:54:00', 'dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-10-14 07:50:05', NULL, 1),
+(6, 'BK-20261014194449-834', 14, 'vehicle', NULL, NULL, NULL, NULL, '2026-10-29', '2026-10-31', '19:44:00', '23:48:00', 'dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-14 19:44:49', NULL, 1),
+(7, 'BK-20261015041633-677', 14, 'vehicle', 3, NULL, NULL, 5, '2026-10-30', '2026-10-31', '04:16:00', '08:19:00', 'dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-15 04:16:33', NULL, 1),
+(8, 'BK-20261015041746-553', 15, 'room', NULL, 2, NULL, NULL, '2026-10-16', '2026-10-17', '04:17:00', '08:20:00', 'dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-15 04:17:46', NULL, 1),
+(9, 'BK-20261015044654-349', 14, 'vehicle', 9, NULL, NULL, NULL, '2026-10-23', '2026-10-24', '08:46:00', '09:46:00', 'dinas', 'approved', NULL, NULL, 1, '2026-10-15 04:46:54', '2026-10-15 04:46:54', '2026-10-15 04:46:54', 1),
+(10, 'BK-20261015045120-945', 2, 'room', NULL, 1, NULL, NULL, '2026-10-23', '2026-10-24', '04:51:00', '04:51:00', 'dinas', 'approved', NULL, NULL, 1, '2026-10-15 04:51:20', '2026-10-15 04:51:20', '2026-10-15 04:51:20', 1);
 
 -- --------------------------------------------------------
 
@@ -136,7 +143,7 @@ CREATE TABLE `drivers` (
 --
 
 INSERT INTO `drivers` (`id`, `employee_id`, `driver_code`, `status`, `notes`, `created_at`, `updated_at`, `isdelete`) VALUES
-(5, 11, 'Driver_Ops', 'Tidak Aktif', 'Driver Operasional', '2026-09-20 19:32:23', '2026-09-23 23:29:20', 1),
+(5, 11, 'Driver_Ops', 'Aktif', 'Driver Operasional', '2026-09-20 19:32:23', '2026-10-14 23:17:20', 1),
 (6, 12, 'Driver_AKW', 'Aktif', 'Driver pak Akwan', '2026-09-20 19:49:05', NULL, 0);
 
 -- --------------------------------------------------------
@@ -165,11 +172,11 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (`id`, `employee_code`, `name`, `company_id`, `department_id`, `position`, `phone`, `status`, `created_at`, `updated_at`, `isdelete`) VALUES
 (1, 'EMP001', 'Anggi', 3, 2, 'Staff GA', '087977542121', 1, '2026-09-15 14:39:10', '2026-10-03 16:04:42', 1),
-(2, 'EMP002', 'Darin', 2, 2, 'Recruiter', '087654324568', 1, '2026-09-15 14:39:10', '2026-09-23 23:44:02', 1),
-(11, 'EMP003', 'Michael', 2, 1, 'Driver', '087654324566', 1, '2026-09-20 19:30:31', NULL, 1),
+(2, 'EMP002', 'Darin', 3, 2, 'Recruiter', '087654324568', 1, '2026-09-15 14:39:10', '2026-10-14 00:17:29', 1),
+(11, 'EMP003', 'Michael', 3, 1, 'Driver', '087654324566', 1, '2026-09-20 19:30:31', '2026-10-14 00:17:50', 1),
 (12, 'EMP004', 'Eko', 2, 1, 'Driver', '087654324568', 1, '2026-09-20 19:44:44', NULL, 0),
 (14, 'EMP004', 'Bayu', 3, 1, 'Staff GA', '087654324569', 1, '2026-10-10 02:46:59', NULL, 1),
-(15, 'EMP005', 'Dewi', 5, 1, 'Recruiter', '087654324566', 1, '2026-10-10 03:35:03', NULL, 1);
+(15, 'EMP005', 'Dewi', 5, 1, 'Recruiter', '087654324566', 1, '2026-10-10 03:35:03', '2026-10-10 11:44:48', 1);
 
 -- --------------------------------------------------------
 
@@ -181,8 +188,8 @@ CREATE TABLE `employee_sims` (
   `id` int(10) UNSIGNED NOT NULL,
   `employee_id` int(10) UNSIGNED NOT NULL,
   `sim_type` varchar(20) NOT NULL,
-  `sim_number` varchar(50) NOT NULL,
-  `expired_date` date NOT NULL,
+  `sim_number` varchar(50) DEFAULT NULL,
+  `expired_date` date DEFAULT NULL,
   `sim_photo` varchar(255) DEFAULT NULL,
   `isdelete` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` datetime DEFAULT current_timestamp(),
@@ -194,8 +201,11 @@ CREATE TABLE `employee_sims` (
 --
 
 INSERT INTO `employee_sims` (`id`, `employee_id`, `sim_type`, `sim_number`, `expired_date`, `sim_photo`, `isdelete`, `created_at`, `updated_at`) VALUES
-(1, 1, 'SIM C', '123456789765', '2026-09-30', NULL, 1, '2026-09-30 05:46:55', '2026-09-30 05:46:55'),
-(2, 15, 'SIM A', '123456789765', '2026-10-31', '26d15fd3e9e14e3e9c478ed44db19e28.jpg', 1, '2026-10-10 03:35:03', '2026-10-10 03:35:03');
+(1, 1, 'SIM C', '123456789765', '2026-09-30', 'c27c54705e9c480efb39b4897dd4a4fd.jpg', 1, '2026-09-30 05:46:55', '2026-10-10 11:04:24'),
+(2, 15, 'SIM A', '123456789765', '2026-10-31', '26d15fd3e9e14e3e9c478ed44db19e28.jpg', 1, '2026-10-10 03:35:03', '2026-10-10 03:35:03'),
+(3, 2, 'Belum Ada SIM', '', '0000-00-00', NULL, 1, '2026-10-14 00:17:29', '2026-10-14 00:17:29'),
+(4, 11, 'Belum Ada SIM', '', '0000-00-00', NULL, 1, '2026-10-14 00:17:50', '2026-10-14 00:17:50'),
+(5, 14, 'Belum Ada SIM', '', '0000-00-00', NULL, 1, '2026-10-14 00:17:57', '2026-10-14 00:17:57');
 
 -- --------------------------------------------------------
 
@@ -222,7 +232,7 @@ CREATE TABLE `meeting_rooms` (
 
 INSERT INTO `meeting_rooms` (`id`, `room_code`, `room_name`, `capacity`, `location`, `status`, `notes`, `created_at`, `updated_at`, `isdelete`) VALUES
 (1, 'RE001', 'Ruang Meeting Lantai 3', 8, 'Lantai 3', 'Tersedia', NULL, '2026-09-16 18:47:28', '2026-09-17 00:05:27', 1),
-(2, 'RE002', 'Ruang Meeting Lantai 4', 10, 'Lantai 4', 'Tidak Tersedia', NULL, '2026-09-16 18:47:28', '2026-10-01 21:14:53', 1);
+(2, 'RE002', 'Ruang Meeting Lantai 4', 10, 'Lantai 4', 'Tersedia', NULL, '2026-09-16 18:47:28', '2026-10-14 23:05:01', 1);
 
 -- --------------------------------------------------------
 
@@ -276,12 +286,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `employee_id`, `username`, `password`, `role`, `status`, `last_login`, `created_at`, `updated_at`, `isdelete`) VALUES
-(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-10-10 10:30:50', '2026-09-15 14:43:58', NULL, 1),
-(2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, '2026-09-26 13:46:38', '2026-09-15 14:43:58', NULL, 1),
+(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-10-15 04:06:29', '2026-09-15 14:43:58', NULL, 1),
+(2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, '2026-10-14 21:13:10', '2026-09-15 14:43:58', NULL, 1),
 (11, 11, 'michael', '$2y$10$XU2Kp5gd29M7Tdt9maBxTeb4qASATT0SW8mTdwajpMdnEaj5UCpQC', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1),
 (12, 12, 'eko', '$2y$10$lrA/P9tP9ln.dTt/WGmVJe1qcK51QSWSOYzgFRLjVejYD.fUAGcm6', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 0),
-(14, 14, 'bayu', '$2y$10$LuCSrl6oGI/Rf42lEcV5leDcI4I2UyXyAz.RuCXT2Tt/xqUSCVCwS', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1),
-(15, 15, 'dewi', '$2y$10$.ojEdjEoo7Zpogl4WnSb/.13QVtBKVWasT.YoQL9b9pRoyaXvPsJW', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1);
+(14, 14, 'bayu', '$2y$10$LuCSrl6oGI/Rf42lEcV5leDcI4I2UyXyAz.RuCXT2Tt/xqUSCVCwS', 'employee', 1, '2026-10-14 07:50:20', '0000-00-00 00:00:00', NULL, 1),
+(15, 15, 'dewi', '$2y$10$.ojEdjEoo7Zpogl4WnSb/.13QVtBKVWasT.YoQL9b9pRoyaXvPsJW', 'employee', 1, '2026-10-10 13:32:53', '0000-00-00 00:00:00', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -313,7 +323,7 @@ CREATE TABLE `vehicles` (
 --
 
 INSERT INTO `vehicles` (`id`, `vehicle_code`, `plate_number`, `vehicle_name`, `jenis`, `tahun`, `warna`, `kapasitas`, `lokasi`, `requires_driver`, `status`, `notes`, `created_at`, `updated_at`, `isdelete`, `vehicle_photo`) VALUES
-(1, 'VE001', 'N1234ASD', 'BYD', 'MPV', '2025', 'Putih', 8, 'Head Office', 'Ya', 'Perbaikan', NULL, '2026-09-16 03:02:18', '2026-10-10 02:08:31', 1, 'f23f0c7ddff39fd87fb2805224ad9e35.jpg'),
+(1, 'VE001', 'N1234ASD', 'BYD', 'MPV', '2025', 'Putih', 8, 'Head Office', 'Ya', 'Perbaikan', NULL, '2026-09-16 03:02:18', '2026-10-10 10:56:18', 1, '12d19d222cfb123268182faccee1711b.jpg'),
 (3, 'VE002', 'B9876DE', 'Mobilio', 'MPV', '2015', 'Putih', 8, 'Head Office', 'Ya', 'Aktif', 'Mobil Operasional', '2026-09-16 22:05:21', '2026-10-10 02:14:12', 1, '9b7206067021e7bc323970f24e9f0b59.jpg'),
 (5, 'VE003', 'N1234ASC', 'Mobilio', NULL, '', '', 0, '0', 'Ya', 'Aktif', '', '2026-09-23 23:27:26', '2026-09-23 23:34:35', 0, NULL),
 (9, 'VE003', 'N1234ASS', 'Mobilio', 'MPV', '2016', 'Putih', 8, 'Head Office', 'Tidak', 'Aktif', '', '2026-10-10 00:22:31', NULL, 1, NULL),
@@ -406,7 +416,7 @@ ALTER TABLE `vehicles`
 -- AUTO_INCREMENT untuk tabel `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `company`
@@ -436,7 +446,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT untuk tabel `employee_sims`
 --
 ALTER TABLE `employee_sims`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `meeting_rooms`

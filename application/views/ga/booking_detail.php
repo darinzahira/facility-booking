@@ -8,7 +8,7 @@
         </h1>
 
         <a href="<?= base_url('ga/Bookings'); ?>"
-           class="btn btn-sm btn-secondary">
+           class="btn btn-info">
 
             <i class="fas fa-arrow-left"></i>
             Kembali

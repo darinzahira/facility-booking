@@ -117,6 +117,14 @@
                                         <a href="<?= base_url('ga/Bookings/detail/' . $booking->id); ?>" class="btn btn-outline-info btn-sm">
                                             <i class="far fa-eye"></i>
                                         </a>
+                                        <?php if ($booking->status == 'pending'): ?>
+                                        <a
+                                            href="<?= base_url('ga/Bookings/edit/' . $booking->id); ?>"
+                                            class="btn btn-outline-success btn-sm"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

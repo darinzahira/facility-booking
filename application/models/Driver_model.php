@@ -102,13 +102,17 @@
 		{
 			$this->db->select('drivers.*, employees.name, employees.employee_code');
 			$this->db->from('drivers');
+
 			$this->db->join(
 				'employees',
 				'employees.id = drivers.employee_id'
 			);
+
 			$this->db->where('drivers.status', 'Aktif');
+			$this->db->where('drivers.isdelete', 1);
 
 			return $this->db->get()->result();
 		}
+
 	}
 ?>

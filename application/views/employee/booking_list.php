@@ -56,7 +56,16 @@
                             <td>
                                 <a href="<?= base_url('employee/Bookings/detail/' . $booking->id); ?>" class="btn btn-outline-info btn-sm">
                                 <i class="far fa-eye"></i>
-                                </a></td>
+                                </a>
+                                <?php if ($booking->status == 'pending'): ?>
+                                <a
+                                    href="<?= base_url('employee/Bookings/edit/' . $booking->id); ?>"
+                                    class="btn btn-outline-success btn-sm"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
