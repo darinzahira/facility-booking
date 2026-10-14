@@ -53,9 +53,9 @@
                 <th>No.</th>
                 <th>NIK Karyawan</th>
                 <th>Nama Karyawan</th>
+                <th>Perusahaan</th>
+                <th>SIM</th>
                 <th>Status</th>
-                <th>Created At</th>
-                <th>Updated At</th>
                 <th>Last Login</th>
                 <th>Action</th>
               </tr>
@@ -67,23 +67,27 @@
                 $i++;
                 $id = $list->id;
                 $employee_code = $list->employee_code;
+                $company_name = $list->company_name;
                 $name = $list->name;
                 $status = $list->status;
                 $last_login = $list->last_login;
-                $created_at = $list->created_at;
-                $updated_at = $list->updated_at;
+                $sim_type = $list->sim_type;
               ?>
               <tr>
                 <td><?= $i ?>.</td>
                 <td><?= $employee_code ?></td>
                 <td><?= $name ?></td>
+                <td><?= $company_name ?></td>
+                <td><?php if (!empty($list->sim_type)): ?>
+                        <?= html_escape($list->sim_type); ?>
+                    <?php else: ?>
+                        <span class="text-muted">Belum ada SIM</span>
+                    <?php endif; ?></td>
                 <td><?php if ($status == 1): ?> 
                         Aktif 
                     <?php else: ?> 
                         Tidak Aktif 
                     <?php endif ?></td>
-                <td><?= $created_at ?></td>
-                <td><?= $updated_at ?></td>
                 <td><?= $last_login ?></td>
                 <td>
                   <a href="<?php echo base_url(); ?>ga/Employees/detail/<?= $id ?>" class="btn btn-outline-info btn-sm">

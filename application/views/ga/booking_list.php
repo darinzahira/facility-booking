@@ -1,10 +1,45 @@
-<div class="container-fluid">
+<div class="container-fluid"> 
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Data Booking</h1>
-    </div>
+
+        <p class="mb-4 mt-3">
+            <a href="<?php echo base_url();?>ga/Bookings/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Booking</a>
+        </p>
 
     <div class="card shadow mb-4">
+
+          <?php if ($this->session->flashdata('success')): ?>
+
+          <div class="alert alert-success">
+            <?php echo $this->session->flashdata('success'); ?>
+
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+          </div>
+
+      <?php endif; ?>
+
+      <?php if ($this->session->flashdata('error')): ?>
+
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= $this->session->flashdata('error'); ?>
+
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        </div>
+
+      <?php endif; ?>
+
+      <?php if ($this->session->flashdata('warning')): ?>
+          <div class="alert alert-warning">
+              <?= $this->session->flashdata('warning'); ?>
+              <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+          </div>
+      <?php endif; ?>
 
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">
@@ -38,7 +73,16 @@
                                     <td><?= $no++; ?></td>
                                     <td><?= $booking->booking_code; ?></td>
                                     <td><?= $booking->name; ?></td>
-                                    <td><?= ucfirst($booking->facility_type); ?>
+                                    <td>
+                                        <?php if ($booking->facility_type == 'vehicle'): ?>
+                                                Kendaraan
+                                        <?php elseif ($booking->facility_type == 'room'): ?>
+                                                Kamar
+                                        <?php elseif ($booking->facility_type == 'meeting_room'): ?>
+                                                Ruang Meeting
+                                        <?php else: ?>
+                                                <?= ucfirst($booking->facility_type); ?>
+                                        <?php endif; ?>
                                     </td>
                                     <td><?= date('d-m-Y', strtotime($booking->start_date)); ?>
                                         <?php if ($booking->start_date != $booking->end_date): ?>
@@ -49,19 +93,19 @@
                                     <td>
                                         <?php if ($booking->status == 'pending'): ?>
                                             <span class="badge badge-warning">
-                                                Pending
+                                                Menunggu Persetujuan
                                             </span>
                                         <?php elseif ($booking->status == 'approved'): ?>
                                             <span class="badge badge-success">
-                                                Approved
+                                                Disetujui
                                             </span>
                                         <?php elseif ($booking->status == 'rejected'): ?>
                                             <span class="badge badge-danger">
-                                                Rejected
+                                                Ditolak
                                             </span>
                                         <?php elseif ($booking->status == 'cancelled'): ?>
                                             <span class="badge badge-secondary">
-                                                Cancelled
+                                                Dibatalkan
                                             </span>
                                         <?php else: ?>
                                             <span class="badge badge-secondary">

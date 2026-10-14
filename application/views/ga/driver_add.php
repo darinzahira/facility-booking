@@ -1,10 +1,10 @@
 <!-- Begin Page Content -->
   <div class="container-fluid">
-
+ 
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Driver </h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url(); ?>ga/Drivers" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
+      <a href="<?php echo base_url(); ?>ga/Drivers" class="btn btn-info"><i class="fas fa-angle-left"></i> Kembali</a>
     </p>
 
     <!-- DataTales Example -->

@@ -10,10 +10,6 @@
     $created_at = $editemployee->created_at;
     $role = $editemployee->role;
     $company_name = $editemployee->company_name;
-    $sim_type = $editemployee->sim_type;
-    $sim_number = $editemployee->sim_number;
-    $expired_date = $editemployee->expired_date;
-    $sim_photo = $editemployee->sim_photo;
 ?>
 <!-- Begin Page Content -->
   <div class="container-fluid">
@@ -21,7 +17,7 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Karyawan </h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url(); ?>ga/Employees" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
+      <a href="<?php echo base_url(); ?>ga/Employees" class="btn btn-info"><i class="fas fa-angle-left"></i> Kembali</a>
     </p>
 
     <!-- DataTales Example -->
@@ -192,6 +188,10 @@
               <div class="col-sm-10">
                   <select name="sim_type" class="form-control">
                       <option value="">-- Pilih Jenis SIM --</option>
+                      <option value="Belum Ada SIM"
+                          <?= ($simdata && $simdata->sim_type == 'Belum Ada SIM') ? 'selected' : ''; ?>>
+                          Belum Ada SIM
+                      </option>
                       <option value="SIM A"
                           <?= ($simdata && $simdata->sim_type == 'SIM A') ? 'selected' : ''; ?>>
                           SIM A
@@ -227,7 +227,7 @@
                   <input type="text"
                         name="sim_number"
                         class="form-control"
-                        value="<?= $simdata ? $simdata->sim_number : ''; ?>">
+                        value="<?= set_value('sim_number', $simdata ? $simdata->sim_number : '') ?>">
               <?php echo form_error('sim_number', '<small class="text-danger">', '</small>'); ?>
               </div>
           </div>
@@ -247,31 +247,31 @@
           </div>
 
           <div class="form-group row">
-          <label for="vehicle_photo" class="col-sm-2 col-form-label">
+          <label for="sim_photo" class="col-sm-2 col-form-label">
               Upload SIM
           </label>
 
           <div class="col-sm-10">
 
-              <?php if (!empty($sim_photo)): ?>
+              <?php if (!empty($simdata->sim_photo)): ?>
 
                   <div class="mb-3">
                       <img
-                          src="<?= base_url('uploads/vehicles/' . $vehicle_photo) ?>"
-                          alt="Foto Kendaraan"
+                          src="<?= base_url('uploads/sim/' . $simdata->sim_photo) ?>"
+                          alt="Foto SIM"
                           style="max-width: 300px; max-height: 200px; object-fit: contain;"
                           class="img-thumbnail">
                   </div>
 
               <?php else: ?>
 
-                  <p class="text-muted">Belum ada foto kendaraan.</p>
+                  <p class="text-muted">Belum ada foto SIM.</p>
 
               <?php endif; ?>
 
               <input type="file"
-                    name="vehicle_photo"
-                    id="vehicle_photo"
+                    name="sim_photo"
+                    id="sim_photo"
                     class="form-control-file"
                     accept=".jpg,.jpeg,.png">
 

@@ -23,61 +23,6 @@
 			$this->load->view('ga/template', $data);
 		}
 
-		// public function store()
-		// {
-		// 	$this->form_validation->set_rules('employee_code', 'NIK Karyawan', 'required|callback_check_employee_code');
-		// 	$this->form_validation->set_rules('name', 'Nama Karyawan', 'required');
-		// 	$this->form_validation->set_rules('department_id', 'Departemen', 'required');
-		// 	$this->form_validation->set_rules('company_id', 'Perusahaan', 'required');
-		// 	$this->form_validation->set_rules('position', 'Jabatan', 'required');
-		// 	$this->form_validation->set_rules('phone','No Telpon','required|regex_match[/^[0-9]+$/]');
-		// 	$this->form_validation->set_rules('username', 'Username', 'required|callback_check_username');
-		// 	$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
-		// 	$this->form_validation->set_rules('status', 'Status', 'required');
-		// 	$this->form_validation->set_rules('role', 'Role', 'required');
-		// 	$this->form_validation->set_rules('sim_number','Nomor SIM','required|regex_match[/^[0-9]+$/]');
-		// 	$this->form_validation->set_rules('sim_type','Jenis SIM','required');
-		// 	$this->form_validation->set_rules('expired_date','Masa Berlaku','required');
-
-		// 	// Pesan validasi
-		// 	$this->form_validation->set_message(
-		// 		'required',
-		// 		'{field} wajib diisi.'
-		// 	);
-
-		// 	$this->form_validation->set_message(
-		// 		'regex_match',
-		// 		'{field} hanya boleh menggunakan angka.'
-		// 	);
-
-		// 	if ($this->form_validation->run() == FALSE)
-        //     {
-		// 		$data['departments'] = $this->Dept_model->get_active();
-		// 		$data['company'] = $this->Company_model->get_active();
-		// 		$data['innerdata'] = 'ga/employee_add';
-		// 		$this->load->view('ga/template', $data);
-        //     }
-        //     else
-        //     {
-        //         $result = $this->Emp_model->store();
-		// 		 if ($result) {
-
-		// 			$this->session->set_flashdata(
-		// 				'success',
-		// 				'Data Karyawan berhasil ditambahkan.'
-		// 			);
-
-		// 		} else {
-
-		// 			$this->session->set_flashdata(
-		// 				'error',
-		// 				'Data Karyawan gagal ditambahkan.'
-		// 			);
-		// 		}
-		// 		redirect(base_url() . 'ga/Employees');
-        //     }
-			
-		// }
 		public function store()
 		{
 			$this->form_validation->set_rules('employee_code','NIK Karyawan','required|callback_check_employee_code');
@@ -90,9 +35,7 @@
 			$this->form_validation->set_rules('password', 'Password','required|min_length[6]');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			$this->form_validation->set_rules('role', 'Role', 'required');
-			$this->form_validation->set_rules('sim_number', 'Nomor SIM','required|regex_match[/^[0-9]+$/]');
-			$this->form_validation->set_rules('sim_type', 'Jenis SIM', 'required');
-			$this->form_validation->set_rules('expired_date', 'Masa Berlaku', 'required');
+			$this->form_validation->set_rules('sim_number', 'Nomor SIM','regex_match[/^[0-9]+$/]');
 
 			$this->form_validation->set_message(
 				'required',
@@ -151,6 +94,12 @@
 						'error',
 						strip_tags($this->upload->display_errors('', ''))
 					);
+
+					if (strpos($upload_error, 'larger than the permitted size') !== false) {
+						$upload_error = 'Ukuran foto SIM terlalu besar. Maksimal ukuran foto adalah 2 MB.';
+					}
+
+					$this->session->set_flashdata('error', $upload_error);
 
 					redirect(base_url('ga/Employees/add'));
 					return;
@@ -277,28 +226,41 @@
 			
 			if (!empty($_FILES['sim_photo']['name']))
 			{
-				$config['upload_path']   = FCPATH . 'uploads/sim/';
-				$config['allowed_types'] = 'jpg|jpeg|png';
-				$config['max_size']      = 2048; // 2 MB
-				$config['encrypt_name']  = TRUE;
+		
+				$sim_photo = null;
 
-				$this->load->library('upload', $config);
+				if (
+					isset($_FILES['sim_photo']) &&
+					!empty($_FILES['sim_photo']['name'])
+				) {
+					$config['upload_path']   = FCPATH . 'uploads/sim/';
+					$config['allowed_types'] = 'jpg|jpeg|png';
+					$config['max_size']      = 2048; // Maksimal 2 MB
+					$config['encrypt_name']  = TRUE;
 
-				if (!$this->upload->do_upload('sim_photo'))
-				{
-					$this->session->set_flashdata(
-						'error',
-						$this->upload->display_errors('', '')
-					);
+					// Inisialisasi upload secara eksplisit
+					$this->load->library('upload');
+					$this->upload->initialize($config, TRUE);
 
-					redirect(base_url() . 'ga/Employees/edit/' . $id);
-					return;
+					if (!$this->upload->do_upload('sim_photo')) {
 
+						$error = $this->upload->display_errors('', '');
+
+						
+						if (strpos($upload_error, 'larger than the permitted size') !== false) {
+							$upload_error = 'Ukuran foto SIM terlalu besar. Maksimal ukuran foto adalah 2 MB.';
+						}
+
+						$this->session->set_flashdata('error', $upload_error);
+						redirect('ga/Employees/edit/' . $id);
+						return;
+					}
+
+					$upload_data = $this->upload->data();
+					$sim_photo = $upload_data['file_name'];
 				}
 
-				$upload_data = $this->upload->data();
-
-				$sim_photo = $upload_data['file_name'];
+			
 			}
 
 			$employee_result = $this->Emp_model->update();

@@ -52,11 +52,11 @@
                 <th>ID.</th>
                 <th>Kode Kendaraan</th>
                 <th>Nomor Polisi</th>
-                <th>Nama Kendaraan</th>
+                <th>Brand Kendaraan</th>
                 <th>Status</th>
                 <th>Driver</th>
-                <th>Created At</th>
-                <th>Updated At</th>
+                <th>Kapasitas</th>
+                <th>Lokasi</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -71,8 +71,8 @@
                 $vehicle_name = $list->vehicle_name;
                 $status = $list->status;
                 $requires_driver = $list->requires_driver;
-                $created_at = $list->created_at;
-                $updated_at = $list->updated_at;
+                $kapasitas = $list->kapasitas;
+                $lokasi = $list->lokasi;
               ?>
               <tr>
                 <td><?= $i ?>.</td>
@@ -91,8 +91,8 @@
                     <?php else: ?> 
                         Tidak Wajib
                     <?php endif ?></td>
-                <td><?= $created_at ?></td>
-                <td><?= $updated_at ?></td>
+                <td><?= $kapasitas ?></td>
+                <td><?= $lokasi ?></td>
                 <td>
                   <a href="<?php echo base_url(); ?>ga/Vehicles/detail/<?= $id ?>" class="btn btn-outline-info btn-sm">
                   <i class="far fa-eye"></i>

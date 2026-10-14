@@ -123,31 +123,6 @@
 
 			redirect(base_url('ga/Vehicles'));
 		}
-
-			// if ($this->form_validation->run() == FALSE)
-            // {
-			// 	$data['innerdata'] = 'ga/vehicle_add';
-			// 	$this->load->view('ga/template', $data);
-            // }
-            // else
-            // {
-            //     $result = $this->Vehicle_model->store();
-			// 	 if ($result) {
-
-			// 		$this->session->set_flashdata(
-			// 			'success',
-			// 			'Data Kendaraan berhasil ditambahkan.'
-			// 		);
-
-			// 	} else {
-
-			// 		$this->session->set_flashdata(
-			// 			'error',
-			// 			'Data Kendaraan gagal ditambahkan.'
-			// 		);
-			// 	}
-			// 	redirect(base_url() . 'ga/Vehicles');
-            // }
 			
 
 		public function detail()

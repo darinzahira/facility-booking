@@ -4,7 +4,7 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Kendaraan </h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url(); ?>ga/Vehicles" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
+      <a href="<?php echo base_url(); ?>ga/Vehicles" class="btn btn-info"><i class="fas fa-angle-left"></i> Kembali</a>
     </p>
 
     <!-- DataTales Example -->
@@ -50,7 +50,7 @@
           <div class="form-group row">
             <label for="tahun" class="col-sm-2 col-form-label">Tahun Kendaraan : </label>
             <div class="col-sm-10">
-              <input type="text" name="tahun" class="form-control" id="tahun" placeholder="" autofocus value="<?php echo set_value('tahun');?>">
+              <input type="number" min="0" name="tahun" class="form-control" id="tahun" placeholder="" autofocus value="<?php echo set_value('tahun');?>">
               <?php echo form_error('tahun', '<small class="text-danger">', '</small>'); ?>
             </div>
           </div>

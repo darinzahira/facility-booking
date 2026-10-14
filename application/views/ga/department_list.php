@@ -82,9 +82,9 @@
                 <td><?= $updated_at ?></td>
                 <td>
                   <a href="<?php echo base_url(); ?>ga/Departments/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
-                    <i class="far fa-edit"></i> Edit
+                    <i class="far fa-edit"></i>
                   </a>
-                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Remove</a>
+                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i></a>
                 </td>
               </tr>
               <?php endforeach; ?>
@@ -99,7 +99,7 @@
                   </div>
                   <div class="modal-body">Hapus Data?</div>
                   <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
                     <a class="btn btn-info" href="<?php echo base_url(); ?>ga/Departments/delete/<?= $id ?>">Hapus</a>
                   </div>
                 </div>

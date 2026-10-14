@@ -1,7 +1,7 @@
 <?php  
 
 	class Drivers extends MY_Controller
-	{
+	{ 
 		public function index()
 		{
 			
@@ -17,7 +17,7 @@
 
 		public function add()
 		{
-			$data['employees'] = $this->Driver_model->get_active();
+			$data['employees'] = $this->Emp_model->get_active();
             $data['innerdata'] = 'ga/driver_add';
 			$this->load->view('ga/template', $data);
 		}
@@ -85,7 +85,7 @@
 		{
 			$id = $this->uri->segment(4);
 			$data['editdrivers'] = $this->Driver_model->edit($id);
-            $data['employees'] = $this->Driver_model->get_active();
+            $data['employees'] = $this->Emp_model->get_active();
 			$data['innerdata'] = 'ga/driver_edit';
 			$this->load->view('ga/template', $data);
 		}

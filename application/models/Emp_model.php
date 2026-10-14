@@ -5,11 +5,12 @@
 		// Read
 		public function list()
 		{
-			$this->db->select('employees.*, departments.department_name, users.last_login, company.company_name');
+			$this->db->select('employees.*, departments.department_name, users.last_login, company.company_name, employee_sims.sim_type');
 			$this->db->from('employees');
 			$this->db->join('departments' , 'departments.id = employees.department_id');
 			$this->db->join('users' , 'users.employee_id = employees.id');
 			$this->db->join('company' , 'company.id = employees.company_id');
+			$this->db->join('employee_sims' , 'employee_sims.employee_id = employees.id AND employee_sims.isdelete = 1');
 			$this->db->where('employees.isdelete', 1);
 			$this->db->order_by('employees.id', 'ASC');
 			$sql = $this->db->get('');
@@ -147,7 +148,7 @@
 		// UPDATE
 		public function update()
 		{
-
+ 
 			$this->db->trans_start();
 
 			$id = $this->input->post('id');
@@ -209,6 +210,7 @@
 			$user_data = array(
 				'employee_id' => $id,
 				'username'    => $username,
+				'status'    => $status,
 				'role'        => $role
 			);
 
@@ -263,6 +265,26 @@
 
 			return $query->num_rows() > 0;
 		}
+
+		public function get_active()
+		{
+			$this->db->select('employees.*');
+			$this->db->from('employees');
+			$this->db->where('employees.status', 1);
+			$this->db->where('isdelete', 1);
+
+			return $this->db->get()->result();
+		}
+
 		
+		public function get_active_by_id($id)
+		{
+			$this->db->where('id', $id);
+			$this->db->where('status', 1);
+			$this->db->where('isdelete', 1);
+
+			return $this->db->get('employees')->row();
+		}
+				
 	}
 ?>

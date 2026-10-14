@@ -100,7 +100,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Plat Kendaraan</th>
+                                    <th>Nomor Polisi</th>
                                     <td>
                                         <?= html_escape($plate_number); ?>
                                     </td>

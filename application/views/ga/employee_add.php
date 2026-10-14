@@ -4,7 +4,7 @@
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800"><i class="fas fa-user-friends"></i> Karyawan </h1>
     <p class="mb-4 mt-3">
-      <a href="<?php echo base_url(); ?>ga/Employees" class="btn btn-info"><i class="fas fa-angle-left"></i> Back</a>
+      <a href="<?php echo base_url(); ?>ga/Employees" class="btn btn-info"><i class="fas fa-angle-left"></i> Kembali</a>
     </p>
 
     <!-- DataTales Example -->
@@ -164,6 +164,9 @@
               <div class="col-sm-10">
                   <select name="sim_type" class="form-control">
                       <option value="">-- Pilih Jenis SIM --</option>
+                      <option value="Belum Ada SIM" <?php echo set_select('sim_type', 'Belum Ada SIM'); ?>>
+                          Belum Ada SIM
+                      </option>
                       <option value="SIM A" <?php echo set_select('sim_type', 'SIM A'); ?>>
                           SIM A
                       </option>
