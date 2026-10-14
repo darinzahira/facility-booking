@@ -433,7 +433,7 @@
                             data-target="#rejectModal">
 
                         <i class="fas fa-times"></i>
-                        Reject
+                        Tolak
 
                     </button>
 
@@ -444,7 +444,7 @@
                             data-target="#approveModal">
 
                         <i class="fas fa-check"></i>
-                        Approve
+                        Setujui
 
                     </button>
 

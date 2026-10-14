@@ -114,9 +114,9 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="<?= base_url('ga/Bookings/detail/' . $booking->id); ?>" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                            Detail </a>
+                                        <a href="<?= base_url('ga/Bookings/detail/' . $booking->id); ?>" class="btn btn-outline-info btn-sm">
+                                            <i class="far fa-eye"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
