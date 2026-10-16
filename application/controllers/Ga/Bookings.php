@@ -37,6 +37,7 @@ class Bookings extends MY_Controller
         $this->form_validation->set_rules('end_date','Tanggal Selesai','required');
         $this->form_validation->set_rules('start_time','Jam Mulai','required');
         $this->form_validation->set_rules('end_time','Jam Selesai','required');
+        $this->form_validation->set_rules('participant_count','Jumlah Orang','required|integer|greater_than[0]');
 
         $this->form_validation->set_rules(
             'purpose',
@@ -114,7 +115,6 @@ class Bookings extends MY_Controller
 
         $data['vehicles'] = $this->Vehicle_model->get_active();
         $data['drivers']   = $this->Driver_model->get_active();
-
         $data['innerdata'] = 'ga/booking_detail';
 
         $this->load->view('ga/template', $data);
@@ -239,6 +239,152 @@ class Bookings extends MY_Controller
         $data['drivers'] = $this->Driver_model->get_active();
 
         return $data;
+    }
+
+    public function edit($id)
+    {
+        $booking = $this->Booking_model->get_detail_admin($id);
+
+        if (!$booking) {
+            show_404();
+        }
+
+        // Hanya booking pending yang bisa diedit
+        if ($booking->status != 'pending') {
+            $this->session->set_flashdata(
+                'error',
+                'Hanya booking berstatus pending yang dapat diedit.'
+            );
+
+            redirect('ga/Bookings/detail/' . $id);
+            return;
+        }
+
+        $data = $this->load_booking_form_data();
+        $data['booking'] = $booking;
+        $data['innerdata'] = 'ga/booking_edit';
+
+        $this->load->view('ga/template', $data);
+    }
+
+    public function update($id)
+    {
+        $booking = $this->Booking_model->get_detail_admin($id);
+
+        if (!$booking) {
+            show_404();
+        }
+
+        // Pastikan hanya booking pending yang dapat diedit
+        if ($booking->status != 'pending') {
+            $this->session->set_flashdata(
+                'error',
+                'Hanya booking berstatus pending yang dapat diedit.'
+            );
+
+            redirect('ga/Bookings/detail/' . $id);
+            return;
+        }
+
+        $this->load->library('form_validation');
+
+        $facility_type = $this->input->post('facility_type');
+
+        $this->form_validation->set_rules(
+            'employee_id',
+            'Nama Karyawan',
+            'required|integer'
+        );
+
+        $this->form_validation->set_rules(
+            'facility_type',
+            'Fasilitas',
+            'required|in_list[vehicle,room,meeting_room]'
+        );
+
+        $this->form_validation->set_rules(
+            'start_date',
+            'Tanggal Mulai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'end_date',
+            'Tanggal Selesai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'start_time',
+            'Jam Mulai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'end_time',
+            'Jam Selesai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'purpose',
+            'Keperluan',
+            'required|trim'
+        );
+
+        if ($facility_type == 'vehicle') {
+            $this->form_validation->set_rules(
+                'vehicle_id',
+                'Kendaraan',
+                'required|integer'
+            );
+        } elseif ($facility_type == 'room') {
+            $this->form_validation->set_rules(
+                'room_id',
+                'Kamar',
+                'required|integer'
+            );
+        } elseif ($facility_type == 'meeting_room') {
+            $this->form_validation->set_rules(
+                'meeting_room_id',
+                'Ruang Meeting',
+                'required|integer'
+            );
+        }
+
+        $this->form_validation->set_message(
+            'required',
+            '{field} wajib diisi.'
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+            $data = $this->load_booking_form_data();
+            $data['booking'] = $booking;
+            $data['innerdata'] = 'ga/booking_edit';
+
+            $this->load->view('ga/template', $data);
+            return;
+        }
+
+        $result = $this->Booking_model->update_booking($id);
+
+        if ($result === TRUE) {
+            $this->session->set_flashdata(
+                'success',
+                'Perubahan booking berhasil disimpan.'
+            );
+
+            redirect('ga/Bookings');
+            return;
+        }
+
+        // Jika gagal, tampilkan form kembali dengan pesan kesalahan
+        $data = $this->load_booking_form_data();
+        $data['booking'] = $booking;
+        $data['booking_error'] = $result;
+        $data['innerdata'] = 'ga/booking_edit';
+
+        $this->load->view('ga/template', $data);
     }
 
     

@@ -33,7 +33,7 @@
         <div class="form-group row mt-3">
             <label class="col-sm-2 col-form-label">Nama Karyawan</label>
             <div class="col-sm-10">
-                <select name="employee_id" id="employee_id" class="form-control" required>
+                <select name="employee_id" id="employee_id" class="form-control">
                     <option value="">-- Pilih Karyawan --</option>
                     <?php foreach ($employees as $employee): ?>
                         <option
@@ -47,6 +47,7 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+                <?= form_error('employee_id', '<small class="text-danger">', '</small>'); ?>
             </div>
         </div>
         
@@ -131,7 +132,7 @@
             </label>
 
             <div class="col-sm-10">
-                <select name="driver_id" id="driver_id" class="form-control" disabled>
+                <select name="driver_id" id="driver_id" class="form-control" >
                     <option value="">-- Pilih Driver --</option>
 
                     <?php foreach ($drivers as $driver): ?>
@@ -143,7 +144,6 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-
                 <?= form_error('driver_id', '<small class="text-danger">', '</small>'); ?>
             </div>
         </div>
@@ -214,6 +214,14 @@
             </div>
         </div>
         <div class="form-group row">
+            <label for="participant_count" class="col-sm-2 col-form-label">Jumlah Orang<span class="text-danger"> *</span></label>
+            <div class="col-sm-10">
+            <input type="number" name="participant_count" class="form-control" min="1" value="<?= set_value('participant_count', 1); ?>">
+            <small class="form-text text-muted">Masukkan jumlah orang yang akan menggunakan fasilitas, termasuk pemohon booking.</small>
+            <?php echo form_error('participant_count', '<small class="text-danger">', '</small>'); ?>
+            </div>
+        </div>
+        <div class="form-group row">
             <label for="end_time" class="col-sm-2 col-form-label">Keperluan<span class="text-danger"> *</span></label>
             <div class="col-sm-10">
             <textarea
@@ -233,7 +241,7 @@
         <div class="form-group row">
         <label class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input type="submit" name="btnsave" value="Save" class="btn btn-info">
+            <input type="submit" name="btnsave" value="Simpan" class="btn btn-info">
         </div>
         </div>
 

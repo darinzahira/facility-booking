@@ -1,7 +1,6 @@
 <div class="container-fluid"> 
 
-        <h1 class="h3 mb-0 text-gray-800">Data Booking</h1>
-
+        <h1 class="h3 mb-0 text-gray-800">Daftar Booking</h1>
         <p class="mb-4 mt-3">
             <a href="<?php echo base_url();?>ga/Bookings/add" class="btn btn-info"><i class="fas fa-plus"></i> Tambah Booking</a>
         </p>
@@ -40,18 +39,9 @@
             </button>
           </div>
       <?php endif; ?>
-
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">
-                Daftar Pengajuan Peminjaman
-            </h6>
-        </div>
-
         <div class="card-body">
-
             <div class="table-responsive">
-
-                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
 
                     <thead>
                         <tr>

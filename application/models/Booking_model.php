@@ -8,15 +8,10 @@ class Booking_model extends CI_Model
         $end_date   = $this->input->post('end_date');
         $start_time = $this->input->post('start_time');
         $end_time   = $this->input->post('end_time');
+        $participant_count   = $this->input->post('participant_count');
 
         // Validasi rentang tanggal
         if ($end_date < $start_date) {
-            // $this->session->set_flashdata(
-            //     'error',
-            //     'Tanggal selesai tidak boleh mendahului tanggal mulai.'
-            // );
-
-            // redirect('ga/Bookings/add');
             return 'Tanggal selesai tidak boleh mendahului tanggal mulai.';
         }
 
@@ -25,12 +20,6 @@ class Booking_model extends CI_Model
             $start_date == $end_date &&
             $end_time <= $start_time
         ) {
-            // $this->session->set_flashdata(
-            //     'error',
-            //     'Jam selesai harus setelah jam mulai.'
-            // );
-
-            // redirect('ga/Bookings/add');
             return 'Jam selesai harus setelah jam mulai.';
         }
 
@@ -176,6 +165,7 @@ class Booking_model extends CI_Model
             'start_time'       => $start_time,
             'end_time'         => $end_time,
             'purpose'          => trim($this->input->post('purpose')),
+            'participant_count' => $participant_count,
             'status'           => 'approved',
             'notes'            => NULL,
             'rejection_reason' => NULL,
@@ -206,14 +196,13 @@ class Booking_model extends CI_Model
             bookings.*,
 
             employees.name,
-
             vehicles.vehicle_name,
             vehicles.plate_number,
-
+            vehicles.kapasitas AS kapasitas_kendaraan,
             rooms.room_name,
-
+            rooms.kapasitas AS kapasitas_kamar,
             meeting_rooms.room_name AS meeting_room_name,
-
+            meeting_rooms.kapasitas AS kapasitas_meeting,
             driver_employee.name AS driver_name
         ');
 
@@ -400,7 +389,7 @@ class Booking_model extends CI_Model
 
         // Cari booking approved yang waktunya beririsan
         $this->db->from('bookings');
-        $this->db->where('status', 'approved');
+        $this->db->where_in('status', array('pending', 'approved'));
 
         // Kondisi bentrok waktu:
         // jadwal lama dimulai sebelum jadwal baru berakhir,
@@ -442,7 +431,7 @@ class Booking_model extends CI_Model
         // Periksa bentrok driver jika driver dipilih
         if (!empty($driver_id)) {
             $this->db->from('bookings');
-            $this->db->where('status', 'approved');
+            $this->db->where_in('status', array('pending', 'approved'));
             $this->db->where('driver_id', $driver_id);
 
             $this->db->where(
@@ -469,6 +458,188 @@ class Booking_model extends CI_Model
         }
 
         return TRUE;
+    }
+
+    public function update_booking($id)
+    {
+        // Ambil booking yang akan diedit
+        $booking = $this->db->get_where('bookings', array(
+            'id'     => $id,
+            'status' => 'pending'
+        ))->row();
+
+        if (!$booking) {
+            return 'Booking tidak ditemukan atau sudah tidak berstatus pending.';
+        }
+
+        $employee_id = $this->input->post('employee_id');
+        $facility_type = $this->input->post('facility_type');
+
+        $start_date = $this->input->post('start_date');
+        $end_date   = $this->input->post('end_date');
+        $start_time = $this->input->post('start_time');
+        $end_time   = $this->input->post('end_time');
+
+        // Validasi tanggal
+        if ($end_date < $start_date) {
+            return 'Tanggal selesai tidak boleh mendahului tanggal mulai.';
+        }
+
+        // Validasi jam jika tanggalnya sama
+        if (
+            $start_date == $end_date &&
+            $end_time <= $start_time
+        ) {
+            return 'Jam selesai harus setelah jam mulai.';
+        }
+
+        // Validasi karyawan
+        $employee = $this->db->get_where('employees', array(
+            'id'       => $employee_id,
+            'status'   => 1,
+            'isdelete' => 1
+        ))->row();
+
+        if (!$employee) {
+            return 'Karyawan tidak ditemukan atau tidak aktif.';
+        }
+
+        // Reset semua ID fasilitas agar tidak menyimpan
+        // ID fasilitas lama ketika jenis fasilitas berubah
+        $vehicle_id      = NULL;
+        $room_id         = NULL;
+        $meeting_room_id = NULL;
+        $driver_id       = NULL;
+
+        // Validasi fasilitas yang dipilih
+        if ($facility_type == 'vehicle') {
+
+            $vehicle_id = $this->input->post('vehicle_id');
+
+            if (empty($vehicle_id)) {
+                return 'Silakan pilih kendaraan.';
+            }
+
+            $vehicle = $this->db->get_where('vehicles', array(
+                'id'       => $vehicle_id,
+                'status'   => 'Aktif',
+                'isdelete' => 1
+            ))->row();
+
+            if (!$vehicle) {
+                return 'Kendaraan tidak ditemukan atau tidak aktif.';
+            }
+
+            $driver_id = $this->input->post('driver_id');
+
+            if (
+                $vehicle->requires_driver == 'Ya' &&
+                empty($driver_id)
+            ) {
+                return 'Kendaraan ini wajib menggunakan driver.';
+            }
+
+            if (!empty($driver_id)) {
+                $driver = $this->db->get_where('drivers', array(
+                    'id'       => $driver_id,
+                    'status'   => 'Aktif',
+                    'isdelete' => 1
+                ))->row();
+
+                if (!$driver) {
+                    return 'Driver tidak ditemukan atau tidak aktif.';
+                }
+            } else {
+                $driver_id = NULL;
+            }
+
+            $facility_id = $vehicle_id;
+
+        } elseif ($facility_type == 'room') {
+
+            $room_id = $this->input->post('room_id');
+
+            if (empty($room_id)) {
+                return 'Silakan pilih kamar.';
+            }
+
+            $room = $this->db->get_where('rooms', array(
+                'id'       => $room_id,
+                'status'   => 'Tersedia',
+                'isdelete' => 1
+            ))->row();
+
+            if (!$room) {
+                return 'Kamar tidak ditemukan atau tidak tersedia.';
+            }
+
+            $facility_id = $room_id;
+
+        } elseif ($facility_type == 'meeting_room') {
+
+            $meeting_room_id = $this->input->post('meeting_room_id');
+
+            if (empty($meeting_room_id)) {
+                return 'Silakan pilih ruang meeting.';
+            }
+
+            $meeting_room = $this->db->get_where('meeting_rooms', array(
+                'id'       => $meeting_room_id,
+                'status'   => 'Tersedia',
+                'isdelete' => 1
+            ))->row();
+
+            if (!$meeting_room) {
+                return 'Ruang meeting tidak ditemukan atau tidak tersedia.';
+            }
+
+            $facility_id = $meeting_room_id;
+
+        } else {
+            return 'Jenis fasilitas tidak valid.';
+        }
+
+        // Periksa bentrok jadwal.
+        // ID booking yang sedang diedit dikecualikan.
+        $availability = $this->check_availability(
+            $facility_type,
+            $facility_id,
+            $driver_id,
+            $start_date,
+            $end_date,
+            $start_time,
+            $end_time,
+            $id
+        );
+
+        if ($availability !== TRUE) {
+            return $availability;
+        }
+
+        // Perbarui data tanpa mengubah status booking
+        $data = array(
+            'employee_id'     => $employee_id,
+            'facility_type'   => $facility_type,
+            'vehicle_id'      => $vehicle_id,
+            'room_id'         => $room_id,
+            'meeting_room_id' => $meeting_room_id,
+            'driver_id'       => $driver_id,
+            'start_date'      => $start_date,
+            'end_date'        => $end_date,
+            'start_time'      => $start_time,
+            'end_time'        => $end_time,
+            'purpose'         => trim($this->input->post('purpose')),
+            'updated_at'      => date('Y-m-d H:i:s')
+        );
+
+        $this->db->where('id', $id);
+        $this->db->where('status', 'pending');
+
+        if ($this->db->update('bookings', $data)) {
+            return TRUE;
+        }
+
+        return 'Perubahan booking gagal disimpan ke database.';
     }
 
 

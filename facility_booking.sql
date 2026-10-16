@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Okt 2026 pada 00.24
+-- Waktu pembuatan: 16 Okt 2026 pada 02.07
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 7.4.33
 
@@ -41,6 +41,7 @@ CREATE TABLE `bookings` (
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
   `purpose` text NOT NULL,
+  `participant_count` int(10) UNSIGNED NOT NULL DEFAULT 1,
   `status` enum('pending','approved','rejected','cancelled') NOT NULL DEFAULT 'pending',
   `notes` text DEFAULT NULL,
   `rejection_reason` text DEFAULT NULL,
@@ -55,17 +56,19 @@ CREATE TABLE `bookings` (
 -- Dumping data untuk tabel `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `booking_code`, `employee_id`, `facility_type`, `vehicle_id`, `room_id`, `meeting_room_id`, `driver_id`, `start_date`, `end_date`, `start_time`, `end_time`, `purpose`, `status`, `notes`, `rejection_reason`, `approved_by`, `approved_at`, `created_at`, `updated_at`, `isdelete`) VALUES
-(1, 'BK-20260921235405', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-09-21 23:54:05', NULL, 1),
-(2, 'BK-20260921235518', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'rejected', NULL, 'tidak disetujui', NULL, NULL, '2026-09-21 23:55:18', '2026-09-23 01:34:52', 1),
-(3, 'BK-20260921235931', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 'cancelled', NULL, NULL, 1, '2026-09-23 01:34:16', '2026-09-21 23:59:31', '2026-09-23 23:57:03', 1),
-(4, 'BK-20261010133340', 15, 'room', NULL, NULL, NULL, NULL, '2026-10-12', '2026-10-14', '22:00:00', '21:36:00', 'menginap setelah dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-10 13:33:40', NULL, 1),
-(5, 'BK-20261014075005-855', 14, 'vehicle', NULL, NULL, NULL, NULL, '2026-10-16', '2026-10-18', '10:00:00', '12:54:00', 'dinas ke semarang', 'pending', NULL, NULL, NULL, NULL, '2026-10-14 07:50:05', NULL, 1),
-(6, 'BK-20261014194449-834', 14, 'vehicle', NULL, NULL, NULL, NULL, '2026-10-29', '2026-10-31', '19:44:00', '23:48:00', 'dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-14 19:44:49', NULL, 1),
-(7, 'BK-20261015041633-677', 14, 'vehicle', 3, NULL, NULL, 5, '2026-10-30', '2026-10-31', '04:16:00', '08:19:00', 'dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-15 04:16:33', NULL, 1),
-(8, 'BK-20261015041746-553', 15, 'room', NULL, 2, NULL, NULL, '2026-10-16', '2026-10-17', '04:17:00', '08:20:00', 'dinas', 'pending', NULL, NULL, NULL, NULL, '2026-10-15 04:17:46', NULL, 1),
-(9, 'BK-20261015044654-349', 14, 'vehicle', 9, NULL, NULL, NULL, '2026-10-23', '2026-10-24', '08:46:00', '09:46:00', 'dinas', 'approved', NULL, NULL, 1, '2026-10-15 04:46:54', '2026-10-15 04:46:54', '2026-10-15 04:46:54', 1),
-(10, 'BK-20261015045120-945', 2, 'room', NULL, 1, NULL, NULL, '2026-10-23', '2026-10-24', '04:51:00', '04:51:00', 'dinas', 'approved', NULL, NULL, 1, '2026-10-15 04:51:20', '2026-10-15 04:51:20', '2026-10-15 04:51:20', 1);
+INSERT INTO `bookings` (`id`, `booking_code`, `employee_id`, `facility_type`, `vehicle_id`, `room_id`, `meeting_room_id`, `driver_id`, `start_date`, `end_date`, `start_time`, `end_time`, `purpose`, `participant_count`, `status`, `notes`, `rejection_reason`, `approved_by`, `approved_at`, `created_at`, `updated_at`, `isdelete`) VALUES
+(1, 'BK-20260921235405', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 1, 'pending', NULL, NULL, NULL, NULL, '2026-09-21 23:54:05', NULL, 1),
+(2, 'BK-20260921235518', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 1, 'rejected', NULL, 'tidak disetujui', NULL, NULL, '2026-09-21 23:55:18', '2026-09-23 01:34:52', 1),
+(3, 'BK-20260921235931', 2, 'vehicle', NULL, NULL, NULL, NULL, '2026-09-23', '2026-09-25', '04:30:00', '11:30:00', 'Dinas ke semarang', 1, 'cancelled', NULL, NULL, 1, '2026-09-23 01:34:16', '2026-09-21 23:59:31', '2026-09-23 23:57:03', 1),
+(4, 'BK-20261010133340', 15, 'room', NULL, NULL, NULL, NULL, '2026-10-12', '2026-10-14', '22:00:00', '21:36:00', 'menginap setelah dinas', 1, 'pending', NULL, NULL, NULL, NULL, '2026-10-10 13:33:40', NULL, 1),
+(5, 'BK-20261014075005-855', 14, 'vehicle', NULL, NULL, NULL, NULL, '2026-10-16', '2026-10-18', '10:00:00', '12:54:00', 'dinas ke semarang', 1, 'pending', NULL, NULL, NULL, NULL, '2026-10-14 07:50:05', NULL, 1),
+(6, 'BK-20261014194449-834', 14, 'vehicle', NULL, NULL, NULL, NULL, '2026-10-29', '2026-10-31', '19:44:00', '23:48:00', 'dinas', 1, 'pending', NULL, NULL, NULL, NULL, '2026-10-14 19:44:49', NULL, 1),
+(7, 'BK-20261015041633-677', 14, 'meeting_room', NULL, NULL, 1, NULL, '2026-10-23', '2026-10-24', '04:16:00', '10:19:00', 'dinas ke puri', 1, 'rejected', NULL, 'sudah digunakan', NULL, NULL, '2026-10-15 04:16:33', '2026-10-15 23:25:56', 1),
+(8, 'BK-20261015041746-553', 15, 'room', NULL, 2, NULL, NULL, '2026-10-16', '2026-10-17', '04:17:00', '08:20:00', 'dinas', 1, 'pending', NULL, NULL, NULL, NULL, '2026-10-15 04:17:46', '2026-10-15 23:25:03', 1),
+(9, 'BK-20261015044654-349', 14, 'vehicle', 9, NULL, NULL, NULL, '2026-10-23', '2026-10-24', '08:46:00', '09:46:00', 'dinas', 1, 'approved', NULL, NULL, 1, '2026-10-15 04:46:54', '2026-10-15 04:46:54', '2026-10-15 04:46:54', 1),
+(10, 'BK-20261015045120-945', 2, 'room', NULL, 1, NULL, NULL, '2026-10-23', '2026-10-24', '04:51:00', '04:51:00', 'dinas', 1, 'approved', NULL, NULL, 1, '2026-10-15 04:51:20', '2026-10-15 04:51:20', '2026-10-15 04:51:20', 1),
+(11, 'BK-20261015232712-875', 15, 'meeting_room', NULL, NULL, 1, NULL, '2026-10-23', '2026-10-24', '04:26:00', '10:26:00', 'interview', 1, 'approved', NULL, NULL, 1, '2026-10-15 23:27:12', '2026-10-15 23:27:12', '2026-10-15 23:27:12', 1),
+(12, 'BK-20261016011648-437', 2, 'vehicle', 10, NULL, NULL, NULL, '2026-10-23', '2026-10-24', '05:16:00', '02:16:00', 'dinas ke alsut', 4, 'approved', NULL, NULL, 1, '2026-10-16 01:16:48', '2026-10-16 01:16:48', '2026-10-16 01:16:48', 1);
 
 -- --------------------------------------------------------
 
@@ -286,7 +289,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `employee_id`, `username`, `password`, `role`, `status`, `last_login`, `created_at`, `updated_at`, `isdelete`) VALUES
-(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-10-15 04:06:29', '2026-09-15 14:43:58', NULL, 1),
+(1, 1, 'anggi', '$2y$10$59Ic3cxSsZFHQFQ4MjPnbOo/5qGV8Ua5dhT4jCLMtgr3F4eLk.7W6', 'admin', 1, '2026-10-15 22:25:51', '2026-09-15 14:43:58', NULL, 1),
 (2, 2, 'darin', '$2y$10$8mCfFSXPBuc0Izh9Jhbm9uQ7e44e.TN8ed4uFS0ET702fk2CCXise', 'employee', 1, '2026-10-14 21:13:10', '2026-09-15 14:43:58', NULL, 1),
 (11, 11, 'michael', '$2y$10$XU2Kp5gd29M7Tdt9maBxTeb4qASATT0SW8mTdwajpMdnEaj5UCpQC', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 1),
 (12, 12, 'eko', '$2y$10$lrA/P9tP9ln.dTt/WGmVJe1qcK51QSWSOYzgFRLjVejYD.fUAGcm6', 'employee', 1, NULL, '0000-00-00 00:00:00', NULL, 0),
@@ -416,7 +419,7 @@ ALTER TABLE `vehicles`
 -- AUTO_INCREMENT untuk tabel `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `company`

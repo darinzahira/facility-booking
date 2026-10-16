@@ -1,6 +1,6 @@
 <div class="container-fluid"> 
 
-        <h1 class="h3 mb-0 text-gray-800">Data Booking Pending</h1>
+        <h1 class="h3 mb-0 text-gray-800">Daftar Booking Pending</h1>
         <p class="mb-4 mt-3"></p>
 
     <div class="card shadow mb-4">
@@ -37,13 +37,12 @@
             </button>
           </div>
       <?php endif; ?>
-      <br>
 
         <div class="card-body">
 
             <div class="table-responsive">
 
-                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
 
                     <thead>
                         <tr>

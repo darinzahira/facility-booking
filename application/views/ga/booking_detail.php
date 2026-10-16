@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid"> 
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -37,385 +37,344 @@
 
     <?php endif; ?>
 
-
     <!-- Detail Booking -->
 
-    <div class="card shadow mb-4">
-
-        <div class="card-header py-3">
-
-            <h6 class="m-0 font-weight-bold text-primary">
-                Informasi Pengajuan
-            </h6>
-
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Informasi Pemohon
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="35%">NIK Pemohon</th>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Pemohon</th>
+                                    <td>
+                                        <?= $booking->name; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Jabatan</th>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Perusahaan</th>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Nomor Telpon</th>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
-
-        <div class="card-body">
-
-            <div class="row">
-
-                <!-- Kode Booking -->
-                <div class="col-md-6 mb-3">
-
-                    <label class="font-weight-bold">
-                        Kode Booking
-                    </label>
-
-                    <div>
-                        <?= $booking->booking_code; ?>
-                    </div>
-
+        <!-- Informasi Pengajuan -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Informasi Pengajuan
+                    </h6>
                 </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="35%">Kode Booking</th>
+                                    <td>
+                                        <?= $booking->booking_code; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Fasilitas</th>
+                                    <td>
+                                        <!-- <?= ucfirst($booking->facility_type); ?> -->
+                                        <?php if ($booking->facility_type == 'vehicle'): ?>
+                                            Kendaraan
+                                        <?php elseif ($booking->facility_type == 'room'): ?>
+                                            Kamar
+                                        <?php else: ?>
+                                            Ruang Meeting
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Status Pengajuan</th>
+                                    <td>
+                                        <?php if ($booking->status == 'pending'): ?>
 
+                                        <span class="badge badge-warning">
+                                            Pending
+                                        </span>
 
-                <!-- Pemohon -->
-                <div class="col-md-6 mb-3">
+                                    <?php elseif ($booking->status == 'approved'): ?>
 
-                    <label class="font-weight-bold">
-                        Pemohon
-                    </label>
+                                        <span class="badge badge-success">
+                                            Approved
+                                        </span>
 
-                    <div>
-                        <?= $booking->name; ?>
+                                    <?php elseif ($booking->status == 'rejected'): ?>
+
+                                        <span class="badge badge-danger">
+                                            Rejected
+                                        </span>
+
+                                    <?php elseif ($booking->status == 'cancelled'): ?>
+
+                                        <span class="badge badge-secondary">
+                                            Cancelled
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge badge-secondary">
+                                            <?= ucfirst($booking->status); ?>
+                                        </span>
+
+                                    <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php if ($booking->status == 'rejected' && !empty($booking->rejection_reason)): ?>
+                                <tr>
+                                    <th>Alasan Penolakan</th>
+                                    <td>
+                                        <?= nl2br(htmlspecialchars($booking->rejection_reason)); ?>
+
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+                                <tr>
+                                    <th>Jumlah Orang</th>
+                                    <td>
+                                        <?= $booking->participant_count; ?> Orang
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <td>
+                                        <?php if ($booking->start_date && $booking->end_date): ?>
+
+                                            <?= date('d-m-Y', strtotime($booking->start_date)); ?>
+                                             s/d 
+                                            <?= date('d-m-Y', strtotime($booking->end_date)); ?> 
+
+                                        <?php else: ?>
+
+                                            <span class="text-muted">
+                                                Tidak ada Tanggal khusus
+                                            </span>
+
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <td>
+                                        <?php if ($booking->start_time && $booking->end_time): ?>
+
+                                            <?= date('H:i', strtotime($booking->start_time)); ?> WIB
+                                            -
+                                            <?= date('H:i', strtotime($booking->end_time)); ?> WIB
+
+                                        <?php else: ?>
+
+                                            <span class="text-muted">
+                                                Tidak ada waktu khusus
+                                            </span>
+
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
-
-
-                <!-- Fasilitas -->
-                <div class="col-md-6 mb-3">
-
-                    <label class="font-weight-bold">
-                        Fasilitas
-                    </label>
-
-                    <div>
-                        <?= ucfirst($booking->facility_type); ?>
-                    </div>
-
+                <?php if ($booking->facility_type == 'vehicle'): ?>
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Informasi Kendaraan
+                    </h6>
                 </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="35%">Kendaraan</th>
+                                    <td>
+                                        <?php if (!empty($booking->vehicle_name)): ?>
 
+                                            <?= $booking->vehicle_name; ?>
 
-                <!-- Status -->
-                <div class="col-md-6 mb-3">
+                                        <?php else: ?>
 
-                    <label class="font-weight-bold">
-                        Status
-                    </label>
+                                            <span class="text-muted">
+                                                Belum ditentukan
+                                            </span>
 
-                    <div>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Nomor Polisi</th>
+                                    <td>
+                                        <?php if (!empty($booking->plate_number)): ?>
 
-                        <?php if ($booking->status == 'pending'): ?>
+                                            <?= $booking->plate_number; ?>
 
-                            <span class="badge badge-warning">
-                                Pending
-                            </span>
+                                        <?php else: ?>
 
-                        <?php elseif ($booking->status == 'approved'): ?>
+                                            <span class="text-muted">
+                                                Belum ditentukan
+                                            </span>
 
-                            <span class="badge badge-success">
-                                Approved
-                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                </tr>
+                                <!-- <tr>
+                                    <th>Kapasitas</th>
+                                    <td>
+                                        <?= $booking->kapasitas_kendaraan; ?> Orang
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <th>Driver</th>
+                                    <td>
+                                        <?php if (!empty($booking->driver_name)): ?>
 
-                        <?php elseif ($booking->status == 'rejected'): ?>
+                                            <?= $booking->driver_name; ?>
 
-                            <span class="badge badge-danger">
-                                Rejected
-                            </span>
+                                        <?php else: ?>
 
-                        <?php elseif ($booking->status == 'cancelled'): ?>
+                                            <span class="text-muted">
+                                                Belum ditentukan
+                                            </span>
 
-                            <span class="badge badge-secondary">
-                                Cancelled
-                            </span>
-
-                        <?php else: ?>
-
-                            <span class="badge badge-secondary">
-                                <?= ucfirst($booking->status); ?>
-                            </span>
-
-                        <?php endif; ?>
-
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Keperluan</th>
+                                    <td>
+                                        <?= nl2br(htmlspecialchars($booking->purpose)); ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
-
-
-                <!-- Tanggal Mulai -->
-                <div class="col-md-6 mb-3">
-
-                    <label class="font-weight-bold">
-                        Tanggal Mulai
-                    </label>
-
-                    <div>
-                        <?= date('d-m-Y', strtotime($booking->start_date)); ?>
-                    </div>
-
-                </div>
-
-
-                <!-- Tanggal Selesai -->
-                <div class="col-md-6 mb-3">
-
-                    <label class="font-weight-bold">
-                        Tanggal Selesai
-                    </label>
-
-                    <div>
-                        <?= date('d-m-Y', strtotime($booking->end_date)); ?>
-                    </div>
-
-                </div>
-
-
-                <!-- Jam -->
-                <div class="col-md-6 mb-3">
-
-                    <label class="font-weight-bold">
-                        Waktu
-                    </label>
-
-                    <div>
-
-                        <?php if ($booking->start_time && $booking->end_time): ?>
-
-                            <?= date('H:i', strtotime($booking->start_time)); ?>
-                            -
-                            <?= date('H:i', strtotime($booking->end_time)); ?>
-
-                        <?php else: ?>
-
-                            <span class="text-muted">
-                                Tidak ada waktu khusus
-                            </span>
-
-                        <?php endif; ?>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Keperluan -->
-                <div class="col-md-12 mb-3">
-
-                    <label class="font-weight-bold">
-                        Keperluan
-                    </label>
-
-                    <div class="border rounded p-3">
-
-                        <?= nl2br(htmlspecialchars($booking->purpose)); ?>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- Informasi Kendaraan -->
-
-    <?php if ($booking->facility_type == 'vehicle'): ?>
-
-        <div class="card shadow mb-4">
-
-            <div class="card-header py-3">
-
-                <h6 class="m-0 font-weight-bold text-primary">
-                    Informasi Kendaraan
-                </h6>
-
-            </div>
-
-            <div class="card-body">
-
-                <div class="row">
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="font-weight-bold">
-                            Kendaraan
-                        </label>
-
-                        <div>
-
-                            <?php if (!empty($booking->vehicle_name)): ?>
-
-                                <?= $booking->vehicle_name; ?>
-
-                            <?php else: ?>
-
-                                <span class="text-muted">
-                                    Belum ditentukan
-                                </span>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="font-weight-bold">
-                            Nomor Polisi
-                        </label>
-
-                        <div>
-
-                            <?php if (!empty($booking->plate_number)): ?>
-
-                                <?= $booking->plate_number; ?>
-
-                            <?php else: ?>
-
-                                <span class="text-muted">
-                                    Belum ditentukan
-                                </span>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="font-weight-bold">
-                            Driver
-                        </label>
-
-                        <div>
-
-                            <?php if (!empty($booking->driver_name)): ?>
-
-                                <?= $booking->driver_name; ?>
-
-                            <?php else: ?>
-
-                                <span class="text-muted">
-                                    Belum ditentukan
-                                </span>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    <?php endif; ?>
-
-
-    <!-- Informasi Ruangan -->
-
-    <?php if ($booking->facility_type == 'room'): ?>
-
-        <div class="card shadow mb-4">
-
-            <div class="card-header py-3">
-
-                <h6 class="m-0 font-weight-bold text-primary">
-                    Informasi Ruangan
-                </h6>
-
-            </div>
-
-            <div class="card-body">
-
-                <?php if (!empty($booking->room_name)): ?>
-
-                    <?= $booking->room_name; ?>
-
-                <?php else: ?>
-
-                    <span class="text-muted">
-                        Ruangan belum ditentukan.
-                    </span>
-
                 <?php endif; ?>
+                <?php if ($booking->facility_type == 'room'): ?>
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Informasi Kamar
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="35%">Kamar</th>
+                                    <td>
+                                        <?php if (!empty($booking->room_name)): ?>
 
-            </div>
+                                            <?= $booking->room_name; ?>
 
-        </div>
+                                        <?php else: ?>
 
-    <?php endif; ?>
+                                            <span class="text-muted">
+                                                Kamar belum ditentukan.
+                                            </span>
 
-
-    <!-- Informasi Meeting Room -->
-
-    <?php if ($booking->facility_type == 'meeting_room'): ?>
-
-        <div class="card shadow mb-4">
-
-            <div class="card-header py-3">
-
-                <h6 class="m-0 font-weight-bold text-primary">
-                    Informasi Meeting Room
-                </h6>
-
-            </div>
-
-            <div class="card-body">
-
-                <?php if (!empty($booking->meeting_room_name)): ?>
-
-                    <?= $booking->meeting_room_name; ?>
-
-                <?php else: ?>
-
-                    <span class="text-muted">
-                        Meeting room belum ditentukan.
-                    </span>
-
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>Kapasitas</th>
+                                    <td>
+                                        <?= $booking->kapasitas_kamar; ?> Orang
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <th>Keperluan</th>
+                                    <td>
+                                        <?= nl2br(htmlspecialchars($booking->purpose)); ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <?php endif; ?>
+                <?php if ($booking->facility_type == 'meeting_room'): ?>
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Informasi Ruang Meeting
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="35%">Ruang Meeting</th>
+                                    <td>
+                                        <?php if (!empty($booking->meeting_room_name)): ?>
 
+                                            <?= $booking->meeting_room_name; ?>
+
+                                        <?php else: ?>
+
+                                            <span class="text-muted">
+                                                Meeting room belum ditentukan.
+                                            </span>
+
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>Kapasitas</th>
+                                    <td>
+                                        <?= $booking->kapasitas_meeting; ?> Orang
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <th>Keperluan</th>
+                                    <td>
+                                        <?= nl2br(htmlspecialchars($booking->purpose)); ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
-
         </div>
-
-    <?php endif; ?>
-
-
-    <!-- Alasan Penolakan -->
-
-    <?php if ($booking->status == 'rejected' && !empty($booking->rejection_reason)): ?>
-
-        <div class="card shadow mb-4">
-
-            <div class="card-header py-3">
-
-                <h6 class="m-0 font-weight-bold text-danger">
-                    Alasan Penolakan
-                </h6>
-
-            </div>
-
-            <div class="card-body">
-
-                <?= nl2br(htmlspecialchars($booking->rejection_reason)); ?>
-
-            </div>
-
-        </div>
-
-    <?php endif; ?>
-
+    </div> 
 
     <!-- Tombol Approval -->
 
