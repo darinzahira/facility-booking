@@ -54,7 +54,7 @@
                                 <tr>
                                     <th width="35%">NIK Pemohon</th>
                                     <td>
-                                        
+                                        <?= $booking->employee_code; ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -66,19 +66,19 @@
                                 <tr>
                                     <th>Jabatan</th>
                                     <td>
-                                        
+                                        <?= $booking->position; ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Perusahaan</th>
                                     <td>
-                                        
+                                        <?= $booking->company_name; ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Nomor Telpon</th>
                                     <td>
-                                        
+                                        <?= $booking->phone; ?>
                                     </td>
                                 </tr>
                             </tbody>
@@ -253,12 +253,22 @@
                                     </td>
                                 </tr>
                                 </tr>
-                                <!-- <tr>
+                                <tr>
                                     <th>Kapasitas</th>
                                     <td>
-                                        <?= $booking->kapasitas_kendaraan; ?> Orang
+                                        <?php if (!empty($booking->kapasitas_kendaraan)): ?>
+
+                                             <?= $booking->kapasitas_kendaraan; ?> Orang
+
+                                        <?php else: ?>
+
+                                            <span class="text-muted">
+                                                Belum ditentukan
+                                            </span>
+
+                                        <?php endif; ?>
                                     </td>
-                                </tr> -->
+                                </tr>
                                 <tr>
                                     <th>Driver</th>
                                     <td>
@@ -312,12 +322,22 @@
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                                <!-- <tr>
+                                <tr>
                                     <th>Kapasitas</th>
                                     <td>
-                                        <?= $booking->kapasitas_kamar; ?> Orang
+                                        <?php if (!empty($booking->kapasitas_kamar)): ?>
+
+                                            <?= $booking->kapasitas_kamar; ?> Orang
+
+                                        <?php else: ?>
+
+                                            <span class="text-muted">
+                                                Kamar belum ditentukan.
+                                            </span>
+
+                                        <?php endif; ?>
                                     </td>
-                                </tr> -->
+                                </tr>
                                 <tr>
                                     <th>Keperluan</th>
                                     <td>
@@ -355,12 +375,22 @@
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                                <!-- <tr>
+                                <tr>
                                     <th>Kapasitas</th>
                                     <td>
-                                        <?= $booking->kapasitas_meeting; ?> Orang
+                                        <?php if (!empty($booking->kapasitas_meeting)): ?>
+
+                                            <?= $booking->kapasitas_meeting; ?> Orang
+
+                                        <?php else: ?>
+
+                                            <span class="text-muted">
+                                                Meeting room belum ditentukan.
+                                            </span>
+
+                                        <?php endif; ?>
                                     </td>
-                                </tr> -->
+                                </tr>
                                 <tr>
                                     <th>Keperluan</th>
                                     <td>

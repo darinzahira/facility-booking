@@ -61,6 +61,12 @@
                     class="form-control"
                     value="<?= set_value('start_time'); ?>"
                 >
+
+                <?php echo form_error(
+                    'start_time',
+                    '<small class="text-danger">',
+                    '</small>'
+                ); ?>
             </div>
 
 
@@ -73,6 +79,30 @@
                     class="form-control"
                     value="<?= set_value('end_time'); ?>"
                 >
+
+                <?php echo form_error(
+                    'end_time',
+                    '<small class="text-danger">',
+                    '</small>'
+                ); ?>
+            </div>
+
+            <div class="form-group">
+                <label>Jumlah Orang<span class="text-danger"> *</span></label>
+
+                <input
+                    type="number"
+                    name="participant_count"
+                    class="form-control"
+                    min = "1"
+                    value="<?= set_value('participant_count', 1); ?>"
+                >
+
+                <?php echo form_error(
+                    'participant_count',
+                    '<small class="text-danger">',
+                    '</small>'
+                ); ?>
             </div>
 
 

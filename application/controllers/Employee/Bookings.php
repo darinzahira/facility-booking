@@ -15,7 +15,7 @@ class Bookings extends MY_Controller
     }
 
     public function index()
-    {
+    { 
         $employee_id = $this->session->userdata('employee_id');
         $data['bookings'] = $this->Booking_model->get_by_employee($employee_id);
         $data['innerdata'] = 'employee/booking_list';
@@ -98,8 +98,11 @@ class Bookings extends MY_Controller
         $this->form_validation->set_rules('facility_type', 'Fasilitas', 'required');
         $this->form_validation->set_rules('start_date', 'Tanggal Mulai', 'required');
         $this->form_validation->set_rules('end_date', 'Tanggal Selesai', 'required');
+        $this->form_validation->set_rules('start_time','Jam Mulai','required');
+        $this->form_validation->set_rules('end_time','Jam Selesai','required');
         $this->form_validation->set_rules('purpose', 'Keperluan', 'required');
-        $this->form_validation->set_message('required','{field} wajib diisi.');
+        $this->form_validation->set_rules('participant_count', 'Jumlah Orang', 'required');
+        $this->form_validation->set_message('required','{field} wajib diisi.'); 
 
         if ($this->form_validation->run() == FALSE)
         {
@@ -126,6 +129,7 @@ class Bookings extends MY_Controller
             'end_time'        => $this->input->post('end_time') ?: NULL,
             'purpose'         => $this->input->post('purpose'),
             'status'          => 'pending',
+            'participant_count' => (int) $this->input->post('participant_count'),
             'notes'           => NULL,
             'rejection_reason'=> NULL,
             'approved_by'     => NULL,
@@ -134,32 +138,153 @@ class Bookings extends MY_Controller
             'updated_at'      => NULL
         );
 
-        $result = $this->Booking_model->store($data);
+        $result = $this->Booking_model->store_employee($data);
 
-        if ($result)
-        {
+        if ($result === TRUE) {
             $this->session->set_flashdata(
                 'success',
                 'Pengajuan peminjaman berhasil dibuat.'
             );
-        }
-        else
-        {
-            $this->session->set_flashdata(
-                'error',
-                'Pengajuan peminjaman gagal dibuat.'
-            );
+        } else {
+            $this->session->set_flashdata('error', $result);
         }
 
-        redirect(base_url() . 'employee/Bookings');
+        redirect('employee/Bookings');
     }
 
     
     public function edit()
     {
         $id = $this->uri->segment(4);
+        $employee_id = $this->session->userdata('employee_id');
         $data['editdata'] = $this->Booking_model->get_detail($id, $employee_id);
         $data['innerdata'] = 'employee/booking_edit';
         $this->load->view('employee/template', $data);
     }
+
+    public function update($id)
+    {
+        $employee_id = $this->session->userdata('employee_id');
+
+        // Pastikan booking milik karyawan ini dan masih pending
+        $booking = $this->Booking_model->get_detail($id, $employee_id);
+
+        if (!$booking) {
+            show_404();
+            return;
+        }
+
+        if ($booking->status != 'pending') {
+            $this->session->set_flashdata(
+                'error',
+                'Hanya booking berstatus pending yang dapat diedit.'
+            );
+            redirect('employee/Bookings');
+            return;
+        }
+
+        // Validasi form
+        $this->form_validation->set_rules(
+            'facility_type',
+            'Fasilitas',
+            'required|in_list[vehicle,room,meeting_room]'
+        );
+
+        $this->form_validation->set_rules(
+            'start_date',
+            'Tanggal Mulai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'end_date',
+            'Tanggal Selesai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'start_time',
+            'Jam Mulai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'end_time',
+            'Jam Selesai',
+            'required'
+        );
+
+        $this->form_validation->set_rules(
+            'purpose',
+            'Keperluan',
+            'required|trim'
+        );
+
+        $this->form_validation->set_rules(
+            'participant_count',
+            'Jumlah Peserta',
+            'required|integer|greater_than[0]'
+        );
+
+        $this->form_validation->set_message(
+            'required',
+            '{field} wajib diisi.'
+        );
+
+        $this->form_validation->set_message(
+            'in_list',
+            'Pilihan {field} tidak valid.'
+        );
+
+        $this->form_validation->set_message(
+            'integer',
+            '{field} harus berupa bilangan bulat.'
+        );
+
+        $this->form_validation->set_message(
+            'greater_than',
+            '{field} minimal 1 orang.'
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+            // Kembalikan ke form edit beserta data booking
+            $data['editdata'] = $booking;
+
+            $data['innerdata'] = 'employee/booking_edit';
+
+            $this->load->view('employee/template', $data);
+            return;
+        }
+
+        // Data yang boleh diubah oleh karyawan
+        $update_data = array(
+            'facility_type' => $this->input->post('facility_type', TRUE),
+            'start_date' => $this->input->post('start_date', TRUE),
+            'end_date' => $this->input->post('end_date', TRUE),
+            'start_time' => $this->input->post('start_time', TRUE),
+            'end_time' => $this->input->post('end_time', TRUE),
+            'purpose' => trim($this->input->post('purpose', TRUE)),
+            'participant_count' => (int) $this->input->post('participant_count'),
+            'updated_at' => date('Y-m-d H:i:s')
+        );
+
+        $result = $this->Booking_model->update_employee(
+            $id,
+            $employee_id,
+            $update_data
+        );
+
+        if ($result === TRUE) {
+            $this->session->set_flashdata(
+                'success',
+                'Booking berhasil diperbarui.'
+            );
+
+            redirect('employee/Bookings/detail/' . $id);
+        } else {
+            $this->session->set_flashdata('error', $result);
+            redirect('employee/Bookings/edit/' . $id);
+        }
+    }
+
 }

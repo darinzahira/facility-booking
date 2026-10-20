@@ -10,7 +10,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SaranaKita</title>
+  <title>BookHub</title>
 
   <link rel="icon" type="image/png" href="<?php echo base_url(); ?>assets/logo.png">
 
@@ -57,7 +57,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <em><i class="far fa-flag"></i></em>
         </div>
-        <div class="sidebar-brand-text mx-3">SaranaKita</div>
+        <div class="sidebar-brand-text mx-3">BookHub</div>
       </a>
 
       <!-- Divider -->

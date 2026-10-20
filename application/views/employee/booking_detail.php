@@ -63,13 +63,22 @@
                 :
                 <?= $booking->start_time
                     ? date('H:i', strtotime($booking->start_time))
-                    : '-'; ?>
+                    : '-'; ?> WIB
 
                 s/d
 
                 <?= $booking->end_time
                     ? date('H:i', strtotime($booking->end_time))
-                    : '-'; ?>
+                    : '-'; ?> WIB
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-3 font-weight-bold">
+                Jumlah Orang
+            </div>
+            <div class="col-md-9">
+                : <?= nl2br(htmlspecialchars($booking->participant_count)); ?> Orang
             </div>
         </div>
 
@@ -243,7 +252,7 @@
 
             <a
                 href="<?= base_url('employee/Bookings/edit/' . $booking->id); ?>"
-                class="btn btn-info"
+                class="btn btn-success"
             >
                 <i class="fas fa-edit"></i>
                 Edit

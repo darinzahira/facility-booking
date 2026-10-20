@@ -279,6 +279,15 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="participant_count" class="col-sm-2 col-form-label">Jumlah Orang<span class="text-danger"> *</span></label>
+                    <div class="col-sm-10">
+                    <input type="number" name="participant_count" class="form-control" min="1" value="<?= set_value('participant_count', 1); ?>">
+                    <small class="form-text text-muted">Masukkan jumlah orang yang akan menggunakan fasilitas, termasuk pemohon booking.</small>
+                    <?php echo form_error('participant_count', '<small class="text-danger">', '</small>'); ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">
                         Keperluan <span class="text-danger">*</span>
                     </label>

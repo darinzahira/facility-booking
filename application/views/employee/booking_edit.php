@@ -1,14 +1,12 @@
-<?php  
-  foreach ($editdata as $e)
-  {
-    $id = $e->id;
-    $facility_type = $e->facility_type;
-    $start_date = $e->start_date;
-    $end_date = $e->end_date;
-    $start_time = $e->start_time;
-    $end_time = $e->end_time;
-    $purpose = $e->purpose;
-  } 
+<?php
+    $id = $editdata->id;
+    $facility_type = $editdata->facility_type;
+    $start_date = $editdata->start_date;
+    $end_date = $editdata->end_date;
+    $start_time = $editdata->start_time;
+    $end_time = $editdata->end_time;
+    $purpose = $editdata->purpose;
+    $participant_count = $editdata->participant_count;
 ?>
 
 <div class="card shadow mb-4">
@@ -22,26 +20,49 @@
     <div class="card-body">
 
         <form method="post"
-              action="<?= base_url(); ?>employee/Bookings/store">
+              action="<?= base_url('employee/Bookings/update/' . $id); ?>">
 
             <input type="hidden" name="id" value="<?= $id ?>">
             <div class="form-group">
                 <label>Fasilitas<span class="text-danger"> *</span></label>
-                <select name="facility_type" class="form-control" >
+
+                <select name="facility_type" class="form-control">
                     <option value=""> -- Pilih Fasilitas -- </option>
-                    <option value="vehicle" <?= set_select('facility_type', 'vehicle'); ?>>
+
+                    <option value="vehicle"
+                        <?= set_select(
+                            'facility_type',
+                            'vehicle',
+                            $facility_type == 'vehicle'
+                        ); ?>>
                         Kendaraan
                     </option>
-                    <option value="room" <?= set_select('facility_type', 'room'); ?>>
+
+                    <option value="room"
+                        <?= set_select(
+                            'facility_type',
+                            'room',
+                            $facility_type == 'room'
+                        ); ?>>
                         Kamar
                     </option>
-                    <option value="meeting_room" <?= set_select('facility_type', 'meeting_room'); ?>>
+
+                    <option value="meeting_room"
+                        <?= set_select(
+                            'facility_type',
+                            'meeting_room',
+                            $facility_type == 'meeting_room'
+                        ); ?>>
                         Meeting Room
                     </option>
                 </select>
-                <?php echo form_error( 'facility_type', '<small class="text-danger">', '</small>' ); ?>
-            </div>
 
+                <?php echo form_error(
+                    'facility_type',
+                    '<small class="text-danger">',
+                    '</small>'
+                ); ?>
+            </div>
 
             <div class="form-group">
                 <label>Tanggal Mulai<span class="text-danger"> *</span></label>
@@ -65,7 +86,6 @@
                 ); ?>
             </div>
 
-
             <div class="form-group">
                 <label>Jam Mulai<span class="text-danger"> *</span></label>
 
@@ -76,7 +96,6 @@
                     value="<?= set_value('start_time',$start_time); ?>"
                 >
             </div>
-
 
             <div class="form-group">
                 <label>Jam Selesai<span class="text-danger"> *</span></label>
@@ -89,6 +108,23 @@
                 >
             </div>
 
+            <div class="form-group">
+                <label>Jumlah Orang<span class="text-danger"> *</span></label> 
+
+                <input
+                    type="number"
+                    name="participant_count"
+                    class="form-control"
+                    min="1"
+                    value="<?= set_value('participant_count', $participant_count); ?>"
+                >
+
+                <?php echo form_error(
+                    'participant_count',
+                    '<small class="text-danger">',
+                    '</small>'
+                ); ?>
+            </div>
 
             <div class="form-group">
                 <label>Keperluan<span class="text-danger"> *</span></label> 
