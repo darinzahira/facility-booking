@@ -344,6 +344,13 @@ document.getElementById('togglePassword').addEventListener('click', function () 
 
 });
 </script>
+<script>
+$(document).ready(function() {
+    $('#confirmApproveButton').on('click', function() {
+        $('#approveBookingForm').trigger('submit');
+    });
+});
+</script>
 
 </body>
 

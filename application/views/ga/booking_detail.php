@@ -411,13 +411,10 @@
     <?php if ($booking->status == 'pending'): ?>
 
         <div class="card shadow mb-4">
-
             <div class="card-body">
-
                 <div class="d-flex justify-content-end">
-
                     <button type="button"
-                            class="btn btn-danger mr-2"
+                            class="btn btn-danger mb-3 mt-3 mr-2"
                             data-toggle="modal"
                             data-target="#rejectModal">
 
@@ -426,16 +423,9 @@
 
                     </button>
 
-
-                    <button type="button"
-                            class="btn btn-success"
-                            data-toggle="modal"
-                            data-target="#approveModal">
-
-                        <i class="fas fa-check"></i>
-                        Setujui
-
-                    </button>
+                    <p class="mb-3 mt-3">
+                        <a href="<?= base_url('ga/Bookings/approved/' . $booking->id); ?>" class="btn btn-success"><i class="fas fa-check"></i> Setujui</a>
+                    </p>
 
                 </div>
 
@@ -451,7 +441,7 @@
 <!-- ========================= -->
 <!-- MODAL APPROVE -->
 <!-- ========================= -->
-
+<!-- 
 <div class="modal fade"
      id="approveModal"
      tabindex="-1"
@@ -514,7 +504,7 @@
 
     </div>
 
-</div>
+</div> -->
 
 
 <!-- ========================= -->

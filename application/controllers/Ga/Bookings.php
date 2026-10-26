@@ -115,7 +115,26 @@ class Bookings extends MY_Controller
 
         $data['vehicles'] = $this->Vehicle_model->get_active();
         $data['drivers']   = $this->Driver_model->get_active();
+        $data['rooms'] = $this->Room_model->get_active();
+        $data['meeting_rooms']   = $this->Meeting_model->get_active();
         $data['innerdata'] = 'ga/booking_detail';
+
+        $this->load->view('ga/template', $data);
+    }
+
+    public function approved($id)
+    {
+        $data['booking'] = $this->Booking_model->get_detail_admin($id);
+
+        if (!$data['booking']) {
+            show_404();
+        }
+
+        $data['vehicles'] = $this->Vehicle_model->get_active();
+        $data['drivers']   = $this->Driver_model->get_active();
+        $data['rooms'] = $this->Room_model->get_active();
+        $data['meeting_rooms']   = $this->Meeting_model->get_active();
+        $data['innerdata'] = 'ga/booking_approval';
 
         $this->load->view('ga/template', $data);
     }
@@ -386,6 +405,32 @@ class Bookings extends MY_Controller
 
         $this->load->view('ga/template', $data);
     }
-
     
+    public function assign_approve($id)
+    {
+        // Pastikan permintaan berasal dari form POST
+        if ($this->input->method(TRUE) != 'POST') {
+            show_404();
+            return;
+        }
+
+        $result = $this->Booking_model->assign_and_approve($id);
+
+        if ($result === TRUE) {
+            $this->session->set_flashdata(
+                'success',
+                'Booking berhasil disetujui dan fasilitas berhasil ditetapkan.'
+            );
+
+        redirect('ga/Bookings/detail/' . $id);
+
+        } else {
+            $this->session->set_flashdata('error', $result);
+        redirect('ga/Bookings/approved/' . $id);
+
+        }
+
+    }
+
+
 }

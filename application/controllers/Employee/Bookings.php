@@ -286,5 +286,253 @@ class Bookings extends MY_Controller
             redirect('employee/Bookings/edit/' . $id);
         }
     }
+    
+    public function vehicle_usage($id)
+    {
+        $this->check_employee();
+
+        $employee_id = $this->session->userdata('employee_id');
+
+        $booking = $this->db
+            ->where('id', $id)
+            ->where('employee_id', $employee_id)
+            ->where('facility_type', 'vehicle')
+            ->where('status', 'approved')
+            ->get('bookings')
+            ->row();
+
+        if (!$booking) {
+            $this->session->set_flashdata(
+                'error',
+                'Booking tidak ditemukan atau belum disetujui.'
+            );
+
+            redirect('employee/Bookings');
+            return;
+        }
+
+        $this->load->model('Booking_vehicle_usage_model');
+
+        $usage = $this->Booking_vehicle_usage_model
+            ->get_by_booking($id);
+
+        if (!$usage) {
+            $this->Booking_vehicle_usage_model
+                ->create_initial($id);
+
+            $usage = $this->Booking_vehicle_usage_model
+                ->get_by_booking($id);
+        }
+
+        if (!$usage) {
+            $this->session->set_flashdata(
+                'error',
+                'Data pemakaian kendaraan gagal disiapkan.'
+            );
+
+            redirect('employee/Bookings/detail/' . $id);
+            return;
+        }
+
+        $data['booking'] = $booking;
+        $data['usage'] = $usage;
+        $data['innerdata'] = 'employee/vehicle_usage_form';
+
+        $this->load->view('employee/template', $data);
+    }
+
+    public function save_vehicle_usage($id)
+    {
+        $this->check_employee();
+
+        if ($this->input->method(TRUE) != 'POST') {
+            show_404();
+            return;
+        }
+
+        $employee_id = $this->session->userdata('employee_id');
+
+        // Pastikan booking milik karyawan, sudah disetujui,
+        // dan merupakan booking kendaraan.
+        $booking = $this->db
+            ->where('id', $id)
+            ->where('employee_id', $employee_id)
+            ->where('facility_type', 'vehicle')
+            ->where('status', 'approved')
+            ->get('bookings')
+            ->row();
+
+        if (!$booking) {
+            $this->session->set_flashdata(
+                'error',
+                'Booking tidak ditemukan atau tidak dapat diproses.'
+            );
+
+            redirect('employee/Bookings');
+            return;
+        }
+
+        $this->load->model('Booking_vehicle_usage_model');
+
+        $usage = $this->Booking_vehicle_usage_model->get_by_booking($id);
+
+        if (
+            !$usage ||
+            $usage->status_penggunaan != 'belum_mulai' ||
+            !empty($usage->foto_km_awal) ||
+            !empty($usage->foto_bbm_awal)
+        ) {
+            $this->session->set_flashdata(
+                'error',
+                'Data awal sudah tersimpan atau tidak dapat diproses.'
+            );
+
+            redirect('employee/Bookings/vehicle_usage/' . $id);
+            return;
+        }
+
+        // Validasi kilometer awal
+        $km_awal = $this->input->post('km_awal', TRUE);
+
+        if (
+            $km_awal === '' ||
+            $km_awal === NULL ||
+            !ctype_digit((string) $km_awal)
+        ) {
+            $this->session->set_flashdata(
+                'error',
+                'Kilometer awal wajib diisi dengan angka bulat nonnegatif.'
+            );
+
+            redirect('employee/Bookings/vehicle_usage/' . $id);
+            return;
+        }
+
+        // Folder upload
+        $upload_path = FCPATH . 'uploads/vehicle_usage/';
+
+        if (!is_dir($upload_path)) {
+            if (!mkdir($upload_path, 0755, TRUE)) {
+                $this->session->set_flashdata(
+                    'error',
+                    'Folder upload tidak dapat dibuat.'
+                );
+
+                redirect('employee/Bookings/vehicle_usage/' . $id);
+                return;
+            }
+        }
+
+        if (!is_writable($upload_path)) {
+            $this->session->set_flashdata(
+                'error',
+                'Folder upload tidak dapat ditulisi.'
+            );
+
+            redirect('employee/Bookings/vehicle_usage/' . $id);
+            return;
+        }
+
+        // Pastikan kedua file dipilih
+        if (
+            empty($_FILES['foto_km_awal']['name']) ||
+            empty($_FILES['foto_bbm_awal']['name'])
+        ) {
+            $this->session->set_flashdata(
+                'error',
+                'Foto kilometer awal dan foto BBM wajib diunggah.'
+            );
+
+            redirect('employee/Bookings/vehicle_usage/' . $id);
+            return;
+        }
+
+        $this->load->library('upload');
+
+        $saved_files = array();
+
+        $file_fields = array(
+            'foto_km_awal',
+            'foto_bbm_awal'
+        );
+
+        foreach ($file_fields as $field) {
+            $config = array(
+                'upload_path'   => $upload_path,
+                'allowed_types' => 'jpg|jpeg|png|webp',
+                'max_size'      => 2048,
+                'encrypt_name'  => TRUE,
+                'detect_mime'   => TRUE,
+                'mod_mime_fix'  => TRUE
+            );
+
+            $this->upload->initialize($config, TRUE);
+
+            if (!$this->upload->do_upload($field)) {
+                $error = strip_tags($this->upload->display_errors('', ''));
+
+                // Hapus foto pertama jika foto kedua gagal diunggah
+                foreach ($saved_files as $file) {
+                    if (is_file($upload_path . $file)) {
+                        unlink($upload_path . $file);
+                    }
+                }
+
+                $this->session->set_flashdata(
+                    'error',
+                    'Upload gagal: ' . $error
+                );
+
+                redirect('employee/Bookings/vehicle_usage/' . $id);
+                return;
+            }
+
+            $file_data = $this->upload->data();
+            $saved_files[$field] = $file_data['file_name'];
+        }
+
+        $data = array(
+            'km_awal'       => (int) $km_awal,
+            'foto_km_awal'  => $saved_files['foto_km_awal'],
+            'foto_bbm_awal' => $saved_files['foto_bbm_awal']
+        );
+
+        $this->db->trans_begin();
+
+        $saved = $this->Booking_vehicle_usage_model
+            ->save_initial($id, $data);
+
+        if (
+            $saved &&
+            $this->db->trans_status() !== FALSE
+        ) {
+            $this->db->trans_commit();
+
+            $this->session->set_flashdata(
+                'success',
+                'Data kilometer awal dan foto BBM berhasil disimpan.'
+            );
+
+            redirect('employee/Bookings/vehicle_usage/' . $id);
+            return;
+        }
+
+        $this->db->trans_rollback();
+
+        // Hapus file jika penyimpanan database gagal
+        foreach ($saved_files as $file) {
+            if (is_file($upload_path . $file)) {
+                unlink($upload_path . $file);
+            }
+        }
+
+        $this->session->set_flashdata(
+            'error',
+            'Data awal gagal disimpan. Silakan coba kembali.'
+        );
+
+        redirect('employee/Bookings/vehicle_usage/' . $id);
+    }
+
 
 }

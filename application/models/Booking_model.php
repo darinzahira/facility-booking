@@ -833,5 +833,172 @@ class Booking_model extends CI_Model
         return 'Booking gagal diperbarui. Silakan coba kembali.';
     }
 
+    public function assign_and_approve($id)
+    {
+        // Hanya booking pending yang dapat ditugaskan
+        $booking = $this->db->get_where('bookings', array(
+            'id' => $id,
+            'status' => 'pending'
+        ))->row();
+
+        if (!$booking) {
+            return 'Booking tidak ditemukan atau sudah tidak pending.';
+        }
+
+        $facility_type = $booking->facility_type;
+
+        $vehicle_id = NULL;
+        $room_id = NULL;
+        $meeting_room_id = NULL;
+        $driver_id = NULL;
+
+        $participant_count = (int) $booking->participant_count;
+
+        // Tentukan fasilitas berdasarkan jenis pengajuan
+        if ($facility_type == 'vehicle') {
+
+            $vehicle_id = (int) $this->input->post('vehicle_id');
+
+            if ($vehicle_id < 1) {
+                return 'Silakan pilih kendaraan.';
+            }
+
+            $vehicle = $this->db->get_where('vehicles', array(
+                'id' => $vehicle_id,
+                'status' => 'Aktif',
+                'isdelete' => 1
+            ))->row();
+
+            if (!$vehicle) {
+                return 'Kendaraan tidak ditemukan atau tidak aktif.';
+            }
+
+            if ($participant_count > (int) $vehicle->kapasitas) {
+                return 'Jumlah orang melebihi kapasitas kendaraan.';
+            }
+
+            $driver_id = $this->input->post('driver_id');
+
+            if ($vehicle->requires_driver == 'Ya' && empty($driver_id)) {
+                return 'Kendaraan ini wajib menggunakan driver.';
+            }
+
+            if (!empty($driver_id)) {
+                $driver_id = (int) $driver_id;
+
+                $driver = $this->db->get_where('drivers', array(
+                    'id' => $driver_id,
+                    'status' => 'Aktif',
+                    'isdelete' => 1
+                ))->row();
+
+                if (!$driver) {
+                    return 'Driver tidak ditemukan atau tidak aktif.';
+                }
+            } else {
+                $driver_id = NULL;
+            }
+
+            $facility_id = $vehicle_id;
+
+        } elseif ($facility_type == 'room') {
+
+            $room_id = (int) $this->input->post('room_id');
+
+            if ($room_id < 1) {
+                return 'Silakan pilih kamar.';
+            }
+
+            $room = $this->db->get_where('rooms', array(
+                'id' => $room_id,
+                'status' => 'Tersedia',
+                'isdelete' => 1
+            ))->row();
+
+            if (!$room) {
+                return 'Kamar tidak ditemukan atau tidak tersedia.';
+            }
+
+            if ($participant_count > (int) $room->capacity) {
+                return 'Jumlah orang melebihi kapasitas kamar.';
+            }
+
+            $facility_id = $room_id;
+
+        } elseif ($facility_type == 'meeting_room') {
+
+            $meeting_room_id = (int) $this->input->post('meeting_room_id');
+
+            if ($meeting_room_id < 1) {
+                return 'Silakan pilih meeting room.';
+            }
+
+            $meeting_room = $this->db->get_where('meeting_rooms', array(
+                'id' => $meeting_room_id,
+                'status' => 'Tersedia',
+                'isdelete' => 1
+            ))->row();
+
+            if (!$meeting_room) {
+                return 'Meeting room tidak ditemukan atau tidak tersedia.';
+            }
+
+            if ($participant_count > (int) $meeting_room->capacity) {
+                return 'Jumlah orang melebihi kapasitas meeting room.';
+            }
+
+            $facility_id = $meeting_room_id;
+
+        } else {
+            return 'Jenis fasilitas booking tidak valid.';
+        }
+
+        // Mulai transaksi database
+        $this->db->trans_begin();
+
+        // Periksa bentrok jadwal fasilitas dan driver
+        $availability = $this->check_availability(
+            $facility_type,
+            $facility_id,
+            $driver_id,
+            $booking->start_date,
+            $booking->end_date,
+            $booking->start_time,
+            $booking->end_time,
+            $id
+        );
+
+        if ($availability !== TRUE) {
+            $this->db->trans_rollback();
+            return $availability;
+        }
+
+        // Simpan fasilitas dan setujui booking sekaligus
+        $update_data = array(
+            'vehicle_id' => $vehicle_id,
+            'room_id' => $room_id,
+            'meeting_room_id' => $meeting_room_id,
+            'driver_id' => $driver_id,
+            'status' => 'approved',
+            'approved_by' => $this->session->userdata('user_id'),
+            'approved_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        );
+
+        $this->db->where('id', $id);
+        $this->db->where('status', 'pending');
+        $this->db->update('bookings', $update_data);
+
+        if ($this->db->affected_rows() != 1 || $this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return 'Booking gagal disetujui. Silakan periksa kembali.';
+        }
+
+        $this->db->trans_commit();
+
+        return TRUE;
+    }
+
+
 
 }
