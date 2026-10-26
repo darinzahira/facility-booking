@@ -534,5 +534,212 @@ class Bookings extends MY_Controller
         redirect('employee/Bookings/vehicle_usage/' . $id);
     }
 
+    public function vehicle_return($id)
+    {
+        $this->check_employee();
+
+        $employee_id = $this->session->userdata('employee_id');
+
+        // Pastikan booking milik karyawan yang sedang login.
+        $booking = $this->db
+            ->where('id', $id)
+            ->where('employee_id', $employee_id)
+            ->where('facility_type', 'vehicle')
+            ->where('status', 'approved')
+            ->get('bookings')
+            ->row();
+
+        if (!$booking) {
+            show_404();
+            return;
+        }
+
+        $this->load->model('Booking_vehicle_usage_model');
+
+        $usage = $this->Booking_vehicle_usage_model
+            ->get_by_booking($id);
+
+        // Pengembalian hanya untuk kendaraan yang sedang digunakan.
+        if (!$usage || $usage->status_penggunaan !== 'digunakan') {
+            $this->session->set_flashdata(
+                'error',
+                'Kendaraan belum dapat diproses untuk pengembalian.'
+            );
+
+            redirect('employee/Bookings');
+            return;
+        }
+
+        $data['booking'] = $booking;
+        $data['usage'] = $usage;
+        $data['innerdata'] = 'employee/vehicle_return_form';
+
+        $this->load->view('employee/template', $data);
+    }
+
+    public function save_vehicle_return($id)
+    {
+        $this->check_employee();
+
+        if ($this->input->method(TRUE) !== 'POST') {
+            show_404();
+            return;
+        }
+
+        $employee_id = $this->session->userdata('employee_id');
+
+        $booking = $this->db
+            ->where('id', $id)
+            ->where('employee_id', $employee_id)
+            ->where('facility_type', 'vehicle')
+            ->where('status', 'approved')
+            ->get('bookings')
+            ->row();
+
+        if (!$booking) {
+            show_404();
+            return;
+        }
+
+        $this->load->model('Booking_vehicle_usage_model');
+
+        $usage = $this->Booking_vehicle_usage_model
+            ->get_by_booking($id);
+
+        if (!$usage || $usage->status_penggunaan !== 'digunakan') {
+            $this->session->set_flashdata(
+                'error',
+                'Status penggunaan kendaraan tidak valid.'
+            );
+
+            redirect('employee/Bookings');
+            return;
+        }
+
+        $km_akhir = trim((string) $this->input->post('km_akhir'));
+
+        if (
+            $km_akhir === '' ||
+            !ctype_digit($km_akhir) ||
+            (float) $km_akhir < (float) $usage->km_awal
+        ) {
+            $this->session->set_flashdata(
+                'error',
+                'Kilometer akhir wajib berupa angka bulat dan tidak boleh kurang dari kilometer awal.'
+            );
+
+            redirect('employee/Bookings/vehicle_return/' . $id);
+            return;
+        }
+
+        $upload_path = FCPATH . 'uploads/vehicle_usage/';
+
+        if (
+            !is_dir($upload_path) &&
+            !mkdir($upload_path, 0755, TRUE)
+        ) {
+            $this->session->set_flashdata(
+                'error',
+                'Folder upload tidak dapat dibuat.'
+            );
+
+            redirect('employee/Bookings/vehicle_return/' . $id);
+            return;
+        }
+
+        $this->load->library('upload');
+
+        $uploaded_files = array();
+        $fields = array('foto_km_akhir', 'foto_bbm_akhir');
+
+        foreach ($fields as $field) {
+            if (
+                !isset($_FILES[$field]) ||
+                empty($_FILES[$field]['name'])
+            ) {
+                $this->session->set_flashdata(
+                    'error',
+                    'Foto kilometer akhir dan foto BBM akhir wajib diunggah.'
+                );
+
+                redirect('employee/Bookings/vehicle_return/' . $id);
+                return;
+            }
+        }
+
+        foreach ($fields as $field) {
+            $config = array(
+                'upload_path'   => $upload_path,
+                'allowed_types' => 'jpg|jpeg|png|webp',
+                'max_size'      => 2048,
+                'encrypt_name'  => TRUE,
+                'detect_mime'   => TRUE,
+                'mod_mime_fix'  => TRUE
+            );
+
+            $this->upload->initialize($config, TRUE);
+
+            if (!$this->upload->do_upload($field)) {
+                foreach ($uploaded_files as $file) {
+                    if (is_file($upload_path . $file)) {
+                        unlink($upload_path . $file);
+                    }
+                }
+
+                $this->session->set_flashdata(
+                    'error',
+                    $this->upload->display_errors('', '')
+                );
+
+                redirect('employee/Bookings/vehicle_return/' . $id);
+                return;
+            }
+
+            $file_data = $this->upload->data();
+            $uploaded_files[] = $file_data['file_name'];
+        }
+
+        $data = array(
+            'km_akhir'      => (int) $km_akhir,
+            'foto_km_akhir' => $uploaded_files[0],
+            'foto_bbm_akhir' => $uploaded_files[1]
+        );
+
+        $this->db->trans_begin();
+
+        $saved = $this->Booking_vehicle_usage_model
+            ->save_return($id, $data);
+
+        if (
+            !$saved ||
+            $this->db->trans_status() === FALSE
+        ) {
+            $this->db->trans_rollback();
+
+            foreach ($uploaded_files as $file) {
+                if (is_file($upload_path . $file)) {
+                    unlink($upload_path . $file);
+                }
+            }
+
+            $this->session->set_flashdata(
+                'error',
+                'Data pengembalian gagal disimpan. Silakan coba kembali.'
+            );
+
+            redirect('employee/Bookings/vehicle_return/' . $id);
+            return;
+        }
+
+        $this->db->trans_commit();
+
+        $this->session->set_flashdata(
+            'success',
+            'Data pengembalian berhasil dikirim dan menunggu pemeriksaan GA.'
+        );
+
+        redirect('employee/Bookings/vehicle_return/' . $id);
+    }
+
 
 }

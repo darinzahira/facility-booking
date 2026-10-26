@@ -287,13 +287,41 @@ class Booking_model extends CI_Model
     }
 
 
+    // public function get_by_employee($employee_id)
+    // {
+    //     $this->db->select('bookings.*, booking_vehicle_usage.status_penggunaan');
+    //     $this->db->join(
+    //         'booking_vehicle_usage',
+    //         'booking_vehicle_usage.booking_id = bookings.id',
+    //         'left'
+    //     );    
+    //     $this->db->where('employee_id', $employee_id);
+    //     $this->db->order_by('created_at', 'DESC');
+
+    //     return $this->db->get('bookings')->result();
+    // }
+
+    
     public function get_by_employee($employee_id)
     {
-        $this->db->where('employee_id', $employee_id);
-        $this->db->order_by('created_at', 'DESC');
+        $this->db->select(
+            'bookings.*, booking_vehicle_usage.status_penggunaan'
+        );
 
-        return $this->db->get('bookings')->result();
+        $this->db->from('bookings');
+
+        $this->db->join(
+            'booking_vehicle_usage',
+            'booking_vehicle_usage.booking_id = bookings.id',
+            'left'
+        );
+
+        $this->db->where('bookings.employee_id', $employee_id);
+        $this->db->order_by('bookings.created_at', 'DESC');
+
+        return $this->db->get()->result();
     }
+
 
     public function get_detail($id, $employee_id)
     {
@@ -304,7 +332,8 @@ class Booking_model extends CI_Model
             vehicles.plate_number,
             rooms.room_name,
             meeting_rooms.room_name AS meeting_room_name,
-            driver_employee.name AS driver_name
+            driver_employee.name AS driver_name,
+            booking_vehicle_usage.status_penggunaan
         ');
 
         $this->db->from('bookings');
@@ -348,6 +377,12 @@ class Booking_model extends CI_Model
         $this->db->join(
             'employees AS driver_employee',
             'driver_employee.id = drivers.employee_id',
+            'left'
+        );
+
+        $this->db->join(
+            'booking_vehicle_usage',
+            'booking_vehicle_usage.booking_id = bookings.id',
             'left'
         );
 

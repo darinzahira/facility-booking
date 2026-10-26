@@ -191,9 +191,9 @@
 
       <!-- Tour Nav Item -->
       <li class="nav-item">
-        <a class="nav-link" href="">
-          <i class="fas fa-key"></i>
-          <span>Kunci</span></a>
+        <a class="nav-link" href="<?= site_url('ga/Bookings/vehicle_usage_list'); ?>">
+          <i class="fas fa-clipboard-check"></i>
+          <span>Pemeriksaan Kendaraan</span></a>
       </li>
 
       <!-- Divider -->

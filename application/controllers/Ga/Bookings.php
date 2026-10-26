@@ -431,6 +431,69 @@ class Bookings extends MY_Controller
         }
 
     }
+    
+    public function vehicle_usage_list()
+    {
+        $data['usages'] =
+            $this->Booking_vehicle_usage_model->get_pending_inspection();
 
+        $data['innerdata'] = 'ga/vehicle_usage_list';
+
+        $this->load->view('ga/template', $data);
+    }
+
+    public function vehicle_usage_detail($booking_id)
+    {
+        $booking = $this->Booking_model->get_detail_admin($booking_id);
+
+        if (!$booking || $booking->facility_type !== 'vehicle') {
+            show_404();
+            return;
+        }
+
+        $usage =
+            $this->Booking_vehicle_usage_model->get_by_booking($booking_id);
+
+        if (!$usage) {
+            show_404();
+            return;
+        }
+
+        $data['booking'] = $booking;
+        $data['usage'] = $usage;
+        $data['innerdata'] = 'ga/vehicle_usage_detail';
+
+        $this->load->view('ga/template', $data);
+    }
+
+    public function complete_vehicle_usage($booking_id)
+    {
+        if ($this->input->method(TRUE) !== 'POST') {
+            show_404();
+            return;
+        }
+
+        $booking = $this->Booking_model->get_detail_admin($booking_id);
+
+        if (!$booking || $booking->facility_type !== 'vehicle') {
+            show_404();
+            return;
+        }
+
+        $result =
+            $this->Booking_vehicle_usage_model
+                ->complete_inspection($booking_id);
+
+        if ($result === TRUE) {
+            $this->session->set_flashdata(
+                'success',
+                'Pemeriksaan kendaraan selesai.'
+            );
+        } else {
+            $this->session->set_flashdata('error', $result);
+        }
+
+        redirect('ga/Bookings/vehicle_usage_detail/' . $booking_id);
+    }
 
 }

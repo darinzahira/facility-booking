@@ -65,7 +65,7 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <?php endif; ?>
-                                <?php if (
+                                <!-- <?php if (
                                     $booking->facility_type == 'vehicle' &&
                                     $booking->status == 'approved'
                                 ) : ?>
@@ -77,6 +77,52 @@
                                         <i class="fas fa-camera"></i>
                                     </a>
 
+                                <?php endif; ?> -->
+                                <?php if (
+                                    $booking->facility_type == 'vehicle' &&
+                                    $booking->status == 'approved'
+                                ) : ?>
+
+                                    <?php if (
+                                        empty($booking->status_penggunaan) ||
+                                        $booking->status_penggunaan == 'belum_mulai'
+                                    ) : ?>
+
+                                        <a href="<?= base_url(
+                                            'employee/Bookings/vehicle_usage/' . $booking->id
+                                        ); ?>"
+                                        class="btn btn-outline-primary btn-sm"
+                                        title="Upload Foto Kendaraan">
+                                            <i class="fas fa-camera"></i>
+                                        </a>
+
+                                    <?php else : ?>
+
+                                        <a href="<?= base_url(
+                                            'employee/Bookings/vehicle_usage/' . $booking->id
+                                        ); ?>"
+                                        class="btn btn-outline-success btn-sm"
+                                        title="Lihat Data Pemakaian">
+                                            <i class="fas fa-clipboard-check"></i>
+                                        </a>
+
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+                                
+                                <?php if (
+                                    $booking->facility_type == 'vehicle' &&
+                                    $booking->status == 'approved' &&
+                                    isset($booking->status_penggunaan) &&
+                                    $booking->status_penggunaan == 'digunakan'
+                                ): ?>
+                                    <a
+                                        href="<?= base_url('employee/Bookings/vehicle_return/' . $booking->id); ?>"
+                                        class="btn btn-outline-warning btn-sm"
+                                        title="Pengembalian Kendaraan"
+                                    >
+                                        <i class="fas fa-undo"></i>
+                                    </a>
                                 <?php endif; ?>
                             </td>
                         </tr>

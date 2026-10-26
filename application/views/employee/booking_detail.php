@@ -7,7 +7,6 @@
     </div>
 
     <div class="card-body">
-
         <!-- INFORMASI BOOKING -->
         <h6 class="font-weight-bold text-dark mb-3">
             Informasi Booking
@@ -260,7 +259,7 @@
 
             <?php endif; ?>
             
-            <?php if (
+            <!-- <?php if (
                 $booking->facility_type == 'vehicle' &&
                 $booking->status == 'approved'
             ) : ?>
@@ -271,6 +270,37 @@
                 class="btn btn-primary">
                     <i class="fas fa-camera"></i> Upload Foto Kendaraan
                 </a>
+
+            <?php endif; ?> -->
+            <?php if (
+                $booking->facility_type == 'vehicle' &&
+                $booking->status == 'approved'
+            ) : ?>
+
+                <?php if (
+                    empty($booking->status_penggunaan) ||
+                    $booking->status_penggunaan == 'belum_mulai'
+                ) : ?>
+
+                    <a href="<?= base_url(
+                        'employee/Bookings/vehicle_usage/' . $booking->id
+                    ); ?>"
+                    class="btn btn-primary"
+                    title="Upload Foto Kendaraan">
+                        <i class="fas fa-camera"></i> Upload Foto Kendaraan
+                    </a>
+
+                <?php else : ?>
+
+                    <a href="<?= base_url(
+                        'employee/Bookings/vehicle_usage/' . $booking->id
+                    ); ?>"
+                    class="btn btn-success"
+                    title="Lihat Data Pemakaian">
+                        <i class="fas fa-clipboard-check"></i> Lihat Data Pemakaian
+                    </a>
+
+                <?php endif; ?>
 
             <?php endif; ?>
 
