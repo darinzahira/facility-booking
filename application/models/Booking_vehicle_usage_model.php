@@ -52,9 +52,15 @@ class Booking_vehicle_usage_model extends CI_Model
             return FALSE;
         }
 
+        $data['status_penggunaan'] = 'digunakan';
+        $data['tanggal_mulai'] = date('Y-m-d H:i:s');
+
         return $this->db
             ->where('booking_id', $booking_id)
             ->where('status_penggunaan', 'belum_mulai')
+            ->where('foto_km_awal IS NULL', NULL, FALSE)
+            ->where('foto_bbm_awal IS NULL', NULL, FALSE)
             ->update($this->table, $data);
+
     }
 }

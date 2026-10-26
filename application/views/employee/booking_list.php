@@ -65,6 +65,19 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <?php endif; ?>
+                                <?php if (
+                                    $booking->facility_type == 'vehicle' &&
+                                    $booking->status == 'approved'
+                                ) : ?>
+
+                                    <a href="<?= base_url(
+                                        'employee/Bookings/vehicle_usage/' . $booking->id
+                                    ); ?>"
+                                    class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-camera"></i>
+                                    </a>
+
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

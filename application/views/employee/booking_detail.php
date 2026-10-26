@@ -259,6 +259,20 @@
             </a>
 
             <?php endif; ?>
+            
+            <?php if (
+                $booking->facility_type == 'vehicle' &&
+                $booking->status == 'approved'
+            ) : ?>
+
+                <a href="<?= base_url(
+                    'employee/Bookings/vehicle_usage/' . $booking->id
+                ); ?>"
+                class="btn btn-primary">
+                    <i class="fas fa-camera"></i> Upload Foto Kendaraan
+                </a>
+
+            <?php endif; ?>
 
             <?php if ($booking->status == 'pending' || $booking->status == 'approved'): ?>
 
