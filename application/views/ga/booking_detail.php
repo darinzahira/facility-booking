@@ -109,7 +109,6 @@
                                 <tr>
                                     <th>Fasilitas</th>
                                     <td>
-                                        <!-- <?= ucfirst($booking->facility_type); ?> -->
                                         <?php if ($booking->facility_type == 'vehicle'): ?>
                                             Kendaraan
                                         <?php elseif ($booking->facility_type == 'room'): ?>

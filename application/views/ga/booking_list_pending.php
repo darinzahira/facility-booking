@@ -63,7 +63,13 @@
                                 <tr>
                                     <td><?= $no++; ?></td>
                                     <td><?= $booking->booking_code; ?></td>
-                                    <td><?= $booking->name; ?></td>
+                                    <td><?= $booking->name; ?>
+                                        <br>
+                                            <small class="text-muted">
+                                                <?= html_escape(
+                                                    $booking->employee_code ?: '-'
+                                                ); ?>
+                                            </small></td>
                                     <td>
                                         <?php if ($booking->facility_type == 'vehicle'): ?>
                                                 Kendaraan
@@ -80,6 +86,16 @@
                                             s/d
                                             <?= date('d-m-Y', strtotime($booking->end_date)); ?>
                                         <?php endif; ?>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= html_escape(
+                                                substr($booking->start_time, 0, 5)
+                                            ); ?> WIB 
+                                            -
+                                            <?= html_escape(
+                                                substr($booking->end_time, 0, 5)
+                                            ); ?> WIB 
+                                        </small>
                                     </td>
                                     <td>
                                         <?php if ($booking->status == 'pending'): ?>

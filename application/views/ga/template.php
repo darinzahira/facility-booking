@@ -299,15 +299,15 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Log Out?</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Logout</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body">Are you sure to log out?</div>
+        <div class="modal-body">Apakah kamu yakin ingin keluar?</div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-info" href="<?php echo base_url().'Login/logout'; ?>">Logout</a>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+          <a class="btn btn-danger" href="<?php echo base_url().'Login/logout'; ?>">Ya, Logout</a>
         </div>
       </div>
     </div>

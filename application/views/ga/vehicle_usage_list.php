@@ -25,7 +25,7 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%">
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -84,19 +84,31 @@
                                     </td>
 
                                     <td>
-                                        <?= html_escape($usage->tanggal_mulai); ?>
+                                        <?= date(
+                                            'd-m-Y',
+                                            strtotime($usage->tanggal_mulai)
+                                        ); ?>
                                     </td>
 
                                     <td>
-                                        <?= html_escape($usage->tanggal_selesai); ?>
+                                        <?= date(
+                                            'd-m-Y',
+                                            strtotime($usage->tanggal_selesai)
+                                        ); ?>
                                     </td>
 
                                     <td>
-                                        <?= html_escape($usage->km_awal); ?> km
+                                        <?= $usage->km_awal !== null
+                                            && $usage->km_awal !== ''
+                                            ? number_format((float) $usage->km_awal, 0, ',', '.') . ' km'
+                                            : '-'; ?>
                                     </td>
 
                                     <td>
-                                        <?= html_escape($usage->km_akhir); ?> km
+                                        <?= $usage->km_akhir !== null
+                                            && $usage->km_akhir !== ''
+                                            ? number_format((float) $usage->km_akhir, 0, ',', '.') . ' km'
+                                            : '-'; ?>
                                     </td>
 
                                     <td>

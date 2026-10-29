@@ -306,7 +306,6 @@ class Booking_model extends CI_Model
         return $this->db->get()->result();
     }
 
-
     public function get_detail($id, $employee_id)
     {
         $this->db->select('
@@ -381,7 +380,8 @@ class Booking_model extends CI_Model
     {
         $this->db->select('
             bookings.*,
-            employees.name
+            employees.name,
+            employees.employee_code
         ');
 
         $this->db->from('bookings');
@@ -401,7 +401,8 @@ class Booking_model extends CI_Model
     {
         $this->db->select('
             bookings.*,
-            employees.name
+            employees.name,
+            employees.employee_code
         ');
 
         $this->db->from('bookings');

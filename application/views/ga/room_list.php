@@ -89,9 +89,9 @@
                 <td><?= $updated_at ?></td>
                 <td>
                   <a href="<?php echo base_url(); ?>ga/Rooms/edit/<?= $id ?>" class="btn btn-outline-success btn-sm">
-                    <i class="far fa-edit"></i> Edit
+                    <i class="far fa-edit"></i>
                   </a>
-                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> Remove</a>
+                  <a href="" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="far fa-trash-alt"></i> </a>
                 </td>
               </tr>
               <?php endforeach; ?>

@@ -1,8 +1,21 @@
-<div class="container-fluid">
+<div class="container-fluid"> 
 
-    <h1 class="h3 mb-4 text-gray-800">
-        Detail Pemeriksaan Kendaraan
-    </h1>
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+        <h1 class="h3 mb-0 text-gray-800">
+            Detail Pemeriksaan Kendaraan
+        </h1>
+
+        <a href="<?= base_url('ga/Bookings/vehicle_usage_list'); ?>"
+           class="btn btn-info">
+
+            <i class="fas fa-arrow-left"></i>
+            Kembali
+
+        </a>
+
+    </div>
 
     <?php if ($this->session->flashdata('success')): ?>
         <div class="alert alert-success">
@@ -49,13 +62,14 @@
             </p>
 
             <p>
-                <strong>ID Karyawan:</strong>
-                <?= html_escape($booking->employee_id); ?>
+                <strong>Nama Karyawan:</strong>
+                <?= html_escape($booking->name); ?>
             </p>
 
             <p>
-                <strong>ID Kendaraan:</strong>
-                <?= html_escape($booking->vehicle_id); ?>
+                <strong>Kendaraan:</strong>
+                <?= html_escape($booking->vehicle_name); ?>
+                <?= html_escape($booking->plate_number); ?>
             </p>
 
             <p>
@@ -64,20 +78,40 @@
             </p>
 
             <p>
-                <strong>Waktu Mulai:</strong>
-                <?= html_escape($booking->start_date); ?>
-                <?= html_escape($booking->start_time); ?>
+                <strong>Waktu Mulai Booking:</strong>
+                <?= !empty($booking->start_date)
+                ? date('d-m-Y', strtotime($booking->start_date))
+                : '-'; ?> (
+                <?= !empty($booking->start_time)
+                ? date('H:i', strtotime($booking->start_time))
+                : '-'; ?> WIB)
             </p>
 
             <p>
                 <strong>Waktu Selesai Booking:</strong>
-                <?= html_escape($booking->end_date); ?>
-                <?= html_escape($booking->end_time); ?>
+                <?= !empty($booking->end_date)
+                ? date('d-m-Y', strtotime($booking->end_date))
+                : '-'; ?> (
+                <?= !empty($booking->end_time)
+                ? date('H:i', strtotime($booking->end_time))
+                : '-'; ?> WIB)
             </p>
 
             <p>
                 <strong>Status Penggunaan:</strong>
-                <?= html_escape($usage->status_penggunaan); ?>
+                <?php if ($booking->status_penggunaan == 'belum_mulai'): ?>
+                    <span class="badge badge-secondary">Belum Mulai</span>
+                <?php elseif ($booking->status_penggunaan == 'digunakan'): ?>
+                    <span class="badge badge-primary">Sedang Digunakan</span>
+                <?php elseif ($booking->status_penggunaan == 'menunggu_pemeriksaan'): ?>
+                    <span class="badge badge-warning">Menunggu Pemeriksaan</span>
+                <?php elseif ($booking->status_penggunaan == 'selesai'): ?>
+                    <span class="badge badge-success">Selesai</span>
+                <?php else: ?>
+                    <span class="badge badge-secondary">
+                        <?= htmlspecialchars($booking->status_penggunaan); ?>
+                    </span>
+                <?php endif; ?>
             </p>
         </div>
     </div>
@@ -331,13 +365,5 @@
     </div>
 
 <?php endif; ?>
-
-    <a
-        href="<?= site_url('ga/Bookings/vehicle_usage_list'); ?>"
-        class="btn btn-secondary mb-4"
-    >
-        <i class="fas fa-arrow-left"></i>
-        Kembali
-    </a>
 
 </div>

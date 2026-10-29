@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Booking_vehicle_usage_model extends CI_Model
-{
+{ 
     private $table = 'booking_vehicle_usage'; 
 
     public function get_by_booking($booking_id)

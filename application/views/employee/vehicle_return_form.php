@@ -1,6 +1,22 @@
 
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Pengembalian Kendaraan</h1>
+
+<!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+        <h1 class="h3 mb-0 text-gray-800">
+            Pengembalian Kendaraan
+        </h1>
+
+        <a href="<?= base_url('employee/Bookings/detail/' . $booking->id); ?>"
+           class="btn btn-info">
+
+            <i class="fas fa-arrow-left"></i>
+            Kembali
+
+        </a>
+
+    </div>
 
     <?php if ($this->session->flashdata('success')): ?>
         <div class="alert alert-success">
@@ -91,6 +107,13 @@
                         <i class="fas fa-paper-plane"></i>
                         Kirim Data Pengembalian
                     </button>
+<!-- 
+                    <a
+                        href="<?= base_url('employee/Bookings/detail/' . $booking->id); ?>"
+                        class="btn btn-secondary mt-3"
+                    >
+                        Kembali
+                    </a> -->
                 </form>
 
             <?php else: ?>
@@ -98,18 +121,24 @@
                 <div class="alert alert-info">
                     Data pengembalian sudah dikirim. Status:
                     <strong>
-                        <?= html_escape($usage->status_penggunaan); ?>
+                        <?php if ($usage->status_penggunaan == 'belum_mulai'): ?>
+                            Belum Mulai
+                        <?php elseif ($usage->status_penggunaan == 'digunakan'): ?>
+                            Sedang Digunakan
+                        <?php elseif ($usage->status_penggunaan == 'menunggu_pemeriksaan'): ?>
+                            Menunggu Pemeriksaan
+                        <?php elseif ($usage->status_penggunaan == 'selesai'): ?>
+                            Selesai
+                        <?php else: ?>
+                            
+                                <?= htmlspecialchars($usage->status_penggunaan); ?>
+                            
+                        <?php endif; ?>
                     </strong>
                 </div>
 
             <?php endif; ?>
 
-            <a
-                href="<?= base_url('employee/Bookings/detail/' . $booking->id); ?>"
-                class="btn btn-secondary mt-3"
-            >
-                Kembali ke Detail Booking
-            </a>
         </div>
     </div>
 </div>

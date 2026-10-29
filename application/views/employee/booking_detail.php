@@ -33,9 +33,15 @@
         <div class="row mb-2">
             <div class="col-md-3 font-weight-bold">
                 Fasilitas
-            </div>
+            </div> 
             <div class="col-md-9">
-                : <?= ucfirst(str_replace('_', ' ', $booking->facility_type)); ?>
+                : <?php if ($booking->facility_type == 'vehicle'): ?>
+                                            Kendaraan
+                                        <?php elseif ($booking->facility_type == 'room'): ?>
+                                            Kamar
+                                        <?php else: ?>
+                                            Ruang Meeting
+                                        <?php endif; ?>
             </div>
         </div>
 

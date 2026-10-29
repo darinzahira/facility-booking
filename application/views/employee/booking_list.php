@@ -43,7 +43,24 @@
                                 <?php else: ?> 
                                     Ruang Meeting
                                 <?php endif ?></td>
-                            <td><?= $booking->start_date; ?> - <?= $booking->end_date; ?></td>
+                            <td>
+                                <!-- <?= $booking->start_date; ?> s/d <?= $booking->end_date; ?> -->
+                                <?= date('d-m-Y', strtotime($booking->start_date)); ?>
+                                        <?php if ($booking->start_date != $booking->end_date): ?>
+                                            s/d
+                                            <?= date('d-m-Y', strtotime($booking->end_date)); ?>
+                                        <?php endif; ?>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= html_escape(
+                                                substr($booking->start_time, 0, 5)
+                                            ); ?> WIB 
+                                            -
+                                            <?= html_escape(
+                                                substr($booking->end_time, 0, 5)
+                                            ); ?> WIB 
+                                        </small>
+                            </td>
                             <td><?php if ($booking->status == 'pending'): ?> 
                                     Menunggu Persetujuan 
                                 <?php elseif ($booking->status == 'approved'): ?> 
