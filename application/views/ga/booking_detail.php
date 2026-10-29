@@ -296,6 +296,210 @@
                     </div>
                 </div>
                 <?php endif; ?>
+                
+                <?php if ($booking->facility_type == 'vehicle'): ?>
+
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            Riwayat Penggunaan Kendaraan
+                        </h6>
+                    </div>
+
+                    <div class="card-body">
+
+                        <?php
+                        $ada_data_penggunaan =
+                            !empty($booking->status_penggunaan) ||
+                            !empty($booking->foto_km_awal) ||
+                            !empty($booking->foto_bbm_awal) ||
+                            !empty($booking->foto_km_akhir) ||
+                            !empty($booking->foto_bbm_akhir);
+                        ?>
+
+                        <?php if ($ada_data_penggunaan): ?>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="font-weight-bold text-primary">
+                                            Data Awal Penggunaan
+                                        </h6>
+
+                                        <p class="mb-2">
+                                            <strong>Kilometer Awal:</strong>
+                                            <?= $booking->km_awal !== null
+                                                && $booking->km_awal !== ''
+                                                ? number_format((float) $booking->km_awal, 0, ',', '.') . ' km'
+                                                : '-'; ?>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <strong>Tanggal Mulai:</strong>
+                                            <?php if (!empty($booking->tanggal_mulai)): ?>
+                                                <?= date('d-m-Y H:i', strtotime($booking->tanggal_mulai)); ?>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </p>
+
+                                        <div class="form-group mt-3">
+                                            <label class="font-weight-bold">
+                                                Foto Kilometer Awal
+                                            </label>
+
+                                            <?php if (!empty($booking->foto_km_awal)): ?>
+                                                <a href="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_km_awal))); ?>"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <img
+                                                        src="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_km_awal))); ?>"
+                                                        alt="Foto kilometer awal"
+                                                        class="img-thumbnail d-block"
+                                                        style="width:100%; max-height:220px; object-fit:contain;">
+                                                </a>
+                                            <?php else: ?>
+                                                <p class="text-muted">Foto belum tersedia.</p>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <div class="form-group mb-0">
+                                            <label class="font-weight-bold">
+                                                Foto BBM Awal
+                                            </label>
+
+                                            <?php if (!empty($booking->foto_bbm_awal)): ?>
+                                                <a href="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_bbm_awal))); ?>"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <img
+                                                        src="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_bbm_awal))); ?>"
+                                                        alt="Foto BBM awal"
+                                                        class="img-thumbnail d-block"
+                                                        style="width:100%; max-height:220px; object-fit:contain;">
+                                                </a>
+                                            <?php else: ?>
+                                                <p class="text-muted">Foto belum tersedia.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="font-weight-bold text-primary">
+                                            Data Akhir Penggunaan
+                                        </h6>
+
+                                        <p class="mb-2">
+                                            <strong>Kilometer Akhir:</strong>
+                                            <?= $booking->km_akhir !== null
+                                                && $booking->km_akhir !== ''
+                                                ? number_format((float) $booking->km_akhir, 0, ',', '.') . ' km'
+                                                : '-'; ?>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <strong>Tanggal Selesai:</strong>
+                                            <?php if (!empty($booking->tanggal_selesai)): ?>
+                                                <?= date('d-m-Y H:i', strtotime($booking->tanggal_selesai)); ?>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </p>
+
+                                        <?php if (
+                                            $booking->km_awal !== null &&
+                                            $booking->km_awal !== '' &&
+                                            $booking->km_akhir !== null &&
+                                            $booking->km_akhir !== ''
+                                        ): ?>
+                                            <p class="mb-2">
+                                                <strong>Total Jarak:</strong>
+                                                <?php
+                                                $total_jarak = (float) $booking->km_akhir
+                                                    - (float) $booking->km_awal;
+                                                ?>
+                                                <?= number_format($total_jarak, 0, ',', '.'); ?> km
+                                            </p>
+                                        <?php endif; ?>
+
+                                        <div class="form-group mt-3">
+                                            <label class="font-weight-bold">
+                                                Foto Kilometer Akhir
+                                            </label>
+
+                                            <?php if (!empty($booking->foto_km_akhir)): ?>
+                                                <a href="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_km_akhir))); ?>"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <img
+                                                        src="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_km_akhir))); ?>"
+                                                        alt="Foto kilometer akhir"
+                                                        class="img-thumbnail d-block"
+                                                        style="width:100%; max-height:220px; object-fit:contain;">
+                                                </a>
+                                            <?php else: ?>
+                                                <p class="text-muted">Foto belum tersedia.</p>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <div class="form-group mb-0">
+                                            <label class="font-weight-bold">
+                                                Foto BBM Akhir
+                                            </label>
+
+                                            <?php if (!empty($booking->foto_bbm_akhir)): ?>
+                                                <a href="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_bbm_akhir))); ?>"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <img
+                                                        src="<?= base_url('uploads/vehicle_usage/' . rawurlencode(basename($booking->foto_bbm_akhir))); ?>"
+                                                        alt="Foto BBM akhir"
+                                                        class="img-thumbnail d-block"
+                                                        style="width:100%; max-height:220px; object-fit:contain;">
+                                                </a>
+                                            <?php else: ?>
+                                                <p class="text-muted">Foto belum tersedia.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <strong>Status Penggunaan:</strong>
+
+                                <?php if ($booking->status_penggunaan == 'belum_mulai'): ?>
+                                    <span class="badge badge-secondary">Belum Mulai</span>
+                                <?php elseif ($booking->status_penggunaan == 'digunakan'): ?>
+                                    <span class="badge badge-primary">Sedang Digunakan</span>
+                                <?php elseif ($booking->status_penggunaan == 'menunggu_pemeriksaan'): ?>
+                                    <span class="badge badge-warning">Menunggu Pemeriksaan</span>
+                                <?php elseif ($booking->status_penggunaan == 'selesai'): ?>
+                                    <span class="badge badge-success">Selesai</span>
+                                <?php else: ?>
+                                    <span class="badge badge-secondary">
+                                        <?= htmlspecialchars($booking->status_penggunaan); ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+
+                            <small class="text-muted d-block mt-2">
+                                Klik foto untuk melihat ukuran gambar yang lebih besar.
+                            </small>
+
+                        <?php else: ?>
+
+                            <div class="alert alert-info mb-0">
+                                Belum ada data penggunaan kendaraan.
+                            </div>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                <?php endif; ?>
+
                 <?php if ($booking->facility_type == 'room'): ?>
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">

@@ -30,8 +30,8 @@
                         <tr>
                             <th>No.</th>
                             <th>Kode Booking</th>
-                            <th>ID Karyawan</th>
-                            <th>ID Kendaraan</th>
+                            <th>Karyawan</th>
+                            <th>Kendaraan</th>
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Pengembalian</th>
                             <th>KM Awal</th>
@@ -43,22 +43,62 @@
                     <tbody>
                         <?php if (!empty($usages)): ?>
                             <?php $no = 1; ?>
+
                             <?php foreach ($usages as $usage): ?>
                                 <tr>
                                     <td><?= $no++; ?></td>
+
                                     <td>
                                         <?= html_escape($usage->booking_code); ?>
                                     </td>
-                                    <td><?= html_escape($usage->employee_id); ?></td>
-                                    <td><?= html_escape($usage->vehicle_id); ?></td>
+
+                                    <td>
+                                        <strong>
+                                            <?= html_escape(
+                                                $usage->employee_name
+                                                ?: 'Karyawan tidak ditemukan'
+                                            ); ?>
+                                        </strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= html_escape(
+                                                $usage->employee_code
+                                                ?: '-'
+                                            ); ?>
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            <?= html_escape(
+                                                $usage->vehicle_name
+                                                ?: 'Kendaraan tidak ditemukan'
+                                            ); ?>
+                                        </strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= html_escape(
+                                                $usage->plate_number ?: '-'
+                                            ); ?>
+                                        </small>
+                                    </td>
+
                                     <td>
                                         <?= html_escape($usage->tanggal_mulai); ?>
                                     </td>
+
                                     <td>
                                         <?= html_escape($usage->tanggal_selesai); ?>
                                     </td>
-                                    <td><?= html_escape($usage->km_awal); ?></td>
-                                    <td><?= html_escape($usage->km_akhir); ?></td>
+
+                                    <td>
+                                        <?= html_escape($usage->km_awal); ?> km
+                                    </td>
+
+                                    <td>
+                                        <?= html_escape($usage->km_akhir); ?> km
+                                    </td>
+
                                     <td>
                                         <a
                                             href="<?= site_url(
@@ -73,6 +113,7 @@
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+
                         <?php else: ?>
                             <tr>
                                 <td colspan="9" class="text-center">

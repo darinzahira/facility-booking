@@ -285,22 +285,6 @@ class Booking_model extends CI_Model
 
         return 'Pengajuan booking gagal disimpan ke database.';
     }
-
-
-    // public function get_by_employee($employee_id)
-    // {
-    //     $this->db->select('bookings.*, booking_vehicle_usage.status_penggunaan');
-    //     $this->db->join(
-    //         'booking_vehicle_usage',
-    //         'booking_vehicle_usage.booking_id = bookings.id',
-    //         'left'
-    //     );    
-    //     $this->db->where('employee_id', $employee_id);
-    //     $this->db->order_by('created_at', 'DESC');
-
-    //     return $this->db->get('bookings')->result();
-    // }
-
     
     public function get_by_employee($employee_id)
     {
@@ -464,7 +448,18 @@ class Booking_model extends CI_Model
             meeting_rooms.room_name AS meeting_room_name,
             meeting_rooms.capacity AS kapasitas_meeting,
 
-            driver_employee.name AS driver_name
+            driver_employee.name AS driver_name,
+
+            booking_vehicle_usage.km_awal,
+            booking_vehicle_usage.foto_km_awal,
+            booking_vehicle_usage.foto_bbm_awal,
+            booking_vehicle_usage.tanggal_mulai,
+
+            booking_vehicle_usage.km_akhir,
+            booking_vehicle_usage.foto_km_akhir,
+            booking_vehicle_usage.foto_bbm_akhir,
+            booking_vehicle_usage.tanggal_selesai,
+            booking_vehicle_usage.status_penggunaan
         ');
 
         $this->db->from('bookings');
@@ -510,6 +505,13 @@ class Booking_model extends CI_Model
         $this->db->join(
             'employees AS driver_employee',
             'driver_employee.id = drivers.employee_id',
+            'left'
+        );
+
+        // Penggunaan fasilitas
+        $this->db->join(
+            'booking_vehicle_usage',
+            'booking_vehicle_usage.booking_id = bookings.id',
             'left'
         );
 
@@ -571,6 +573,37 @@ class Booking_model extends CI_Model
 
         if ($this->db->count_all_results() > 0) {
             return 'Fasilitas sudah digunakan pada jadwal tersebut.';
+        }
+
+        // Khusus kendaraan:
+        // blokir kendaraan yang masih digunakan atau belum selesai
+        // diperiksa oleh GA, meskipun jadwal booking baru berbeda.
+        if ($facility_type == 'vehicle') {
+
+            $this->db->from('bookings');
+
+            $this->db->join(
+                'booking_vehicle_usage',
+                'booking_vehicle_usage.booking_id = bookings.id',
+                'inner'
+            );
+
+            $this->db->where('bookings.facility_type', 'vehicle');
+            $this->db->where('bookings.vehicle_id', $facility_id);
+
+            $this->db->where_in(
+                'booking_vehicle_usage.status_penggunaan',
+                array('digunakan', 'menunggu_pemeriksaan')
+            );
+
+            // Abaikan booking yang sedang diperiksa atau diedit.
+            if ($exclude_booking_id !== NULL) {
+                $this->db->where('bookings.id !=', $exclude_booking_id);
+            }
+
+            if ($this->db->count_all_results() > 0) {
+                return 'Kendaraan masih digunakan atau pengembaliannya belum selesai diperiksa oleh GA.';
+            }
         }
 
         // Periksa bentrok driver jika driver dipilih
@@ -1034,6 +1067,103 @@ class Booking_model extends CI_Model
         return TRUE;
     }
 
+    public function get_usage_report($filters = array())
+    {
+        $this->db->select('
+            bookings.id,
+            bookings.booking_code,
+            bookings.employee_id,
+            bookings.facility_type,
+            bookings.start_date,
+            bookings.end_date,
+            bookings.start_time,
+            bookings.end_time,
+            bookings.purpose,
+            bookings.status,
 
+            employees.name AS employee_name,
+            employees.employee_code,
+
+            vehicles.vehicle_name,
+            vehicles.plate_number,
+
+            rooms.room_name,
+
+            meeting_rooms.room_name AS meeting_room_name,
+
+            booking_vehicle_usage.km_awal,
+            booking_vehicle_usage.km_akhir,
+            booking_vehicle_usage.status_penggunaan
+        ');
+
+        $this->db->from('bookings');
+
+        $this->db->join(
+            'employees',
+            'employees.id = bookings.employee_id',
+            'left'
+        );
+
+        $this->db->join(
+            'vehicles',
+            'vehicles.id = bookings.vehicle_id',
+            'left'
+        );
+
+        $this->db->join(
+            'rooms',
+            'rooms.id = bookings.room_id',
+            'left'
+        );
+
+        $this->db->join(
+            'meeting_rooms',
+            'meeting_rooms.id = bookings.meeting_room_id',
+            'left'
+        );
+
+        $this->db->join(
+            'booking_vehicle_usage',
+            'booking_vehicle_usage.booking_id = bookings.id',
+            'left'
+        );
+
+        // Filter berdasarkan periode jadwal booking.
+        // Booking yang melintasi periode filter juga akan ditampilkan.
+        if (!empty($filters['start_date'])) {
+            $this->db->where(
+                'bookings.end_date >=',
+                $filters['start_date']
+            );
+        }
+
+        if (!empty($filters['end_date'])) {
+            $this->db->where(
+                'bookings.start_date <=',
+                $filters['end_date']
+            );
+        }
+
+        // Filter jenis fasilitas
+        if (!empty($filters['facility_type'])) {
+            $this->db->where(
+                'bookings.facility_type',
+                $filters['facility_type']
+            );
+        }
+
+        // Filter status booking
+        if (!empty($filters['status'])) {
+            $this->db->where(
+                'bookings.status',
+                $filters['status']
+            );
+        }
+
+        $this->db->order_by('bookings.start_date', 'DESC');
+        $this->db->order_by('bookings.start_time', 'DESC');
+
+        return $this->db->get()->result();
+    }
 
 }

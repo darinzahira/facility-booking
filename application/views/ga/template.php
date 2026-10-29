@@ -140,7 +140,7 @@
           </div>
         </div>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-suitcase"></i>
           <span>Jadwal</span>
@@ -153,7 +153,7 @@
             <a class="collapse-item" href="">Detail Jadwal</a>
           </div>
         </div>
-      </li>
+      </li> -->
 
       <!-- Divider -->
       <hr class="sidebar-divider">
@@ -194,6 +194,12 @@
         <a class="nav-link" href="<?= site_url('ga/Bookings/vehicle_usage_list'); ?>">
           <i class="fas fa-clipboard-check"></i>
           <span>Pemeriksaan Kendaraan</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= site_url('ga/Bookings/report'); ?>">
+            <i class="fas fa-fw fa-chart-bar"></i>
+            <span>Laporan Penggunaan Fasilitas</span>
+        </a>
       </li>
 
       <!-- Divider -->

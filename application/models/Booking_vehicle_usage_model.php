@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Booking_vehicle_usage_model extends CI_Model
 {
-    private $table = 'booking_vehicle_usage';
+    private $table = 'booking_vehicle_usage'; 
 
     public function get_by_booking($booking_id)
     {
@@ -128,18 +128,35 @@ class Booking_vehicle_usage_model extends CI_Model
                 bookings.end_date,
                 bookings.start_time,
                 bookings.end_time,
-                bookings.purpose
+                bookings.purpose,
+                employees.name AS employee_name,
+                employees.employee_code,
+                vehicles.vehicle_name,
+                vehicles.plate_number
             ')
             ->from('booking_vehicle_usage')
             ->join(
                 'bookings',
                 'bookings.id = booking_vehicle_usage.booking_id'
             )
+            ->join(
+                'employees',
+                'employees.id = bookings.employee_id',
+                'left'
+            )
+            ->join(
+                'vehicles',
+                'vehicles.id = bookings.vehicle_id',
+                'left'
+            )
             ->where(
                 'booking_vehicle_usage.status_penggunaan',
                 'menunggu_pemeriksaan'
             )
-            ->order_by('booking_vehicle_usage.tanggal_selesai', 'ASC')
+            ->order_by(
+                'booking_vehicle_usage.tanggal_selesai',
+                'ASC'
+            )
             ->get()
             ->result();
     }

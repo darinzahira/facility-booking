@@ -8,7 +8,6 @@ class Bookings extends MY_Controller
 
         // Pastikan user sudah login
         $this->check_admin();
-        $this->load->model('Booking_model');
         $this->load->helper('url');
     }
 
@@ -434,9 +433,7 @@ class Bookings extends MY_Controller
     
     public function vehicle_usage_list()
     {
-        $data['usages'] =
-            $this->Booking_vehicle_usage_model->get_pending_inspection();
-
+        $data['usages'] = $this->Booking_vehicle_usage_model->get_pending_inspection();
         $data['innerdata'] = 'ga/vehicle_usage_list';
 
         $this->load->view('ga/template', $data);
@@ -494,6 +491,263 @@ class Bookings extends MY_Controller
         }
 
         redirect('ga/Bookings/vehicle_usage_detail/' . $booking_id);
+    }
+
+    public function report()
+    {
+        $filters = array();
+
+        // Ambil filter tanggal dari URL
+        $start_date = $this->input->get('start_date', TRUE);
+        $end_date   = $this->input->get('end_date', TRUE);
+
+        // Validasi tanggal agar formatnya benar
+        foreach (array(
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ) as $key => $date) {
+
+            if (!empty($date)) {
+                $parts = explode('-', $date);
+
+                if (
+                    count($parts) == 3 &&
+                    checkdate(
+                        (int) $parts[1],
+                        (int) $parts[2],
+                        (int) $parts[0]
+                    ) &&
+                    preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)
+                ) {
+                    $filters[$key] = $date;
+                }
+            }
+        }
+
+        // Jenis fasilitas yang diizinkan
+        $facility_type = $this->input->get('facility_type', TRUE);
+
+        if (in_array(
+            $facility_type,
+            array('vehicle', 'room', 'meeting_room')
+        )) {
+            $filters['facility_type'] = $facility_type;
+        }
+
+        // Status booking yang diizinkan
+        $status = $this->input->get('status', TRUE);
+
+        if (in_array(
+            $status,
+            array('pending', 'approved', 'rejected', 'cancelled')
+        )) {
+            $filters['status'] = $status;
+        }
+
+        $data['filters'] = $filters;
+        $data['reports'] = $this->Booking_model
+            ->get_usage_report($filters);
+        
+        // Ringkasan laporan mengikuti filter yang aktif
+        $data['summary'] = array(
+            'total' => count($data['reports']),
+            'approved' => 0,
+            'vehicle' => 0,
+            'in_use' => 0,
+            'pending_inspection' => 0
+        );
+
+        foreach ($data['reports'] as $row) {
+
+            if ($row->status == 'approved') {
+                $data['summary']['approved']++;
+            }
+
+            if ($row->facility_type == 'vehicle' &&
+                $row->status == 'approved') {
+
+                $data['summary']['vehicle']++;
+
+                if ($row->status_penggunaan == 'digunakan') {
+                    $data['summary']['in_use']++;
+                }
+
+                if ($row->status_penggunaan == 'menunggu_pemeriksaan') {
+                    $data['summary']['pending_inspection']++;
+                }
+            }
+        }
+
+        $data['innerdata'] = 'ga/usage_report';
+
+        $this->load->view('ga/template', $data);
+    }
+    
+    public function export_csv()
+    {
+        // Ambil filter yang sama seperti halaman laporan
+        $filters = array();
+
+        $start_date = $this->input->get('start_date', TRUE);
+        $end_date   = $this->input->get('end_date', TRUE);
+
+        foreach (array(
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ) as $key => $date) {
+
+            if (!empty($date)) {
+                $parts = explode('-', $date);
+
+                if (
+                    count($parts) == 3 &&
+                    preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) &&
+                    checkdate(
+                        (int) $parts[1],
+                        (int) $parts[2],
+                        (int) $parts[0]
+                    )
+                ) {
+                    $filters[$key] = $date;
+                }
+            }
+        }
+
+        $facility_type = $this->input->get('facility_type', TRUE);
+
+        if (in_array(
+            $facility_type,
+            array('vehicle', 'room', 'meeting_room')
+        )) {
+            $filters['facility_type'] = $facility_type;
+        }
+
+        $status = $this->input->get('status', TRUE);
+
+        if (in_array(
+            $status,
+            array('pending', 'approved', 'rejected', 'cancelled')
+        )) {
+            $filters['status'] = $status;
+        }
+
+        $reports = $this->Booking_model->get_usage_report($filters);
+
+        // Siapkan file CSV agar bisa dibuka dengan Excel
+        $filename = 'laporan_penggunaan_fasilitas_' .
+            date('Ymd_His') . '.csv';
+
+        // Siapkan header unduhan
+        $filename = 'laporan_penggunaan_fasilitas_' .
+            date('Ymd_His') . '.csv';
+
+        if (ob_get_length()) {
+            ob_clean();
+        }
+
+        header('Content-Type: text/csv; charset=UTF-8');
+        header(
+            'Content-Disposition: attachment; filename="' .
+            $filename . '"'
+        );
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        // BOM UTF-8 agar karakter terbaca baik di Excel
+        echo "\xEF\xBB\xBF";
+
+        $output = fopen('php://output', 'w');
+
+        // Header kolom
+        fputcsv($output, array(
+            'Kode Booking',
+            'Kode Karyawan',
+            'Nama Karyawan',
+            'Jenis Fasilitas',
+            'Nama Fasilitas',
+            'Tanggal Mulai',
+            'Tanggal Selesai',
+            'Jam Mulai',
+            'Jam Selesai',
+            'Keperluan',
+            'Status Booking',
+            'Status Penggunaan',
+            'KM Awal',
+            'KM Akhir',
+            'Jarak Tempuh (KM)'
+        ), ';');
+
+        // Isi data
+        foreach ($reports as $row) {
+            $facility_name = '-';
+
+            if ($row->facility_type == 'vehicle') {
+                $facility_name = ($row->vehicle_name ?: '-') .
+                    ' (' . ($row->plate_number ?: '-') . ')';
+            } elseif ($row->facility_type == 'room') {
+                $facility_name = $row->room_name ?: '-';
+            } elseif ($row->facility_type == 'meeting_room') {
+                $facility_name = $row->meeting_room_name ?: '-';
+            }
+
+            $facility_labels = array(
+                'vehicle' => 'Kendaraan',
+                'room' => 'Kamar',
+                'meeting_room' => 'Ruang Meeting'
+            );
+
+            $booking_labels = array(
+                'pending' => 'Menunggu Persetujuan',
+                'approved' => 'Disetujui',
+                'rejected' => 'Ditolak',
+                'cancelled' => 'Dibatalkan'
+            );
+
+            $usage_labels = array(
+                'belum_mulai' => 'Belum Mulai',
+                'digunakan' => 'Sedang Digunakan',
+                'menunggu_pemeriksaan' => 'Menunggu Pemeriksaan GA',
+                'selesai' => 'Selesai Diperiksa'
+            );
+
+            $km_awal = $row->km_awal;
+            $km_akhir = $row->km_akhir;
+            $jarak = '';
+
+            if ($km_awal !== NULL && $km_akhir !== NULL) {
+                $jarak = (int) $km_akhir - (int) $km_awal;
+            }
+
+            fputcsv($output, array(
+                $row->booking_code,
+                $row->employee_code ?: '-',
+                $row->employee_name ?: '-',
+                isset($facility_labels[$row->facility_type])
+                    ? $facility_labels[$row->facility_type]
+                    : $row->facility_type,
+                $facility_name,
+                $row->start_date,
+                $row->end_date,
+                $row->start_time,
+                $row->end_time,
+                $row->purpose,
+                isset($booking_labels[$row->status])
+                    ? $booking_labels[$row->status]
+                    : $row->status,
+                isset($usage_labels[$row->status_penggunaan])
+                    ? $usage_labels[$row->status_penggunaan]
+                    : ($row->facility_type == 'vehicle'
+                        ? 'Belum Ada Data'
+                        : '-'),
+                $km_awal,
+                $km_akhir,
+                $jarak
+            ), ';');
+        }
+
+        fclose($output);
+        exit;
     }
 
 }
